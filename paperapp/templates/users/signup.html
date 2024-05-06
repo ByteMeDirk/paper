@@ -1,7 +1,24 @@
-<h1>Signup</h1>
-<form method="POST">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Signup</button>
-    <a href="{% url 'login' %}">Already have account?</a>
-</form>
+{% extends "base.html" %}
+
+{% block content %}
+    <form method="POST">
+        {% csrf_token %}
+        <div class="card">
+            <div class="card-header">
+                Sign Up!
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">Become a Creator on Paper.App</h5>
+                <p class="card-text">Creators can submit their own media to the site, and manage their content.</p>
+                <div class="mb-3">
+                    {{ form.as_p }}
+                </div>
+                <button type="submit" class="btn btn-primary">Signup</button>
+            </div>
+            <div class="card-footer text-body-secondary">
+
+                <a href="{% url 'login' %}">Already have account?</a>
+            </div>
+        </div>
+    </form>
+{% endblock %}

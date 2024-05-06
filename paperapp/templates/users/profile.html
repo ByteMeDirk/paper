@@ -1,11 +1,37 @@
-<h1>Profile</h1>
-<form method="POST" enctype="multipart/form-data">
-    {# Show Profile Image if there is one, else show default #}
-    <img src="{{ profile.avatar.url }}" alt="Profile Image">
-    {% if profile.avatar %}
-        <img src="media/{{ profile.avatar }}" alt="Profile Image">
-    {% endif %}
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Update</button>
-</form>
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Profile</h1>
+
+    <div class="row">
+
+        <div class="col-4">
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="card">
+                    {% if profile.avatar %}
+                        <img class="card-img-top" src="{{ profile.avatar.url }}" alt="Profile Image">
+                    {% else %}
+                        <img class="card-img-top" src="/media/avatars/default.png" , alt="Default Profile Image">
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title">{{ profile }}</h5>
+                        {{ form.as_p }}
+                        <button type="submit" class="btn btn-primary">Update</button>
+                        <hr>
+                        <small class="text-muted mt-2">* Usernames can not be edited as they represent your distinct
+                            identity on
+                            the
+                            site, if it needs to be fixed, contact and administrator. </small>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div class="col-8">
+            Users posts will be shown here.
+        </div>
+
+    </div>
+
+{% endblock %}

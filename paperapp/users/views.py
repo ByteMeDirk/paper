@@ -1,5 +1,7 @@
-from django.shortcuts import render, redirect
+from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
+from django.shortcuts import render, redirect
+
 from .forms import SignupForm, LoginForm, ProfileForm
 
 
@@ -11,6 +13,7 @@ def user_signup(request):
         form = SignupForm(request.POST)
         if form.is_valid():
             form.save()
+            messages.success(request, "Account created successfully.")
             return redirect("login")
     else:
         form = SignupForm()
@@ -29,6 +32,7 @@ def user_login(request):
             user = authenticate(request, username=username, password=password)
             if user:
                 login(request, user)
+                messages.success(request, "You are now logged in.")
                 return redirect("home")
     else:
         form = LoginForm()
@@ -40,6 +44,7 @@ def user_logout(request):
     This view logs out the user and redirects to the login page.
     """
     logout(request)
+    messages.info(request, "You have been logged out.")
     return redirect("login")
 
 
@@ -58,10 +63,10 @@ def user_profile(request):
             profile = form.save(commit=False)
             profile.user = request.user
             profile.save()
+            messages.success(request, "Profile updated successfully.")
             return redirect("profile")
     else:
         # Populate the form with the existing profile data
         form = ProfileForm(instance=profile)
 
-    return render(request, "users/profile.html", {"form": form})
-
+    return render(request, "users/profile.html", {"form": form, "profile": profile})
