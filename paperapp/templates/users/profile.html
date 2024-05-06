@@ -1,0 +1,11 @@
+<h1>Profile</h1>
+<form method="POST" enctype="multipart/form-data">
+    {# Show Profile Image if there is one, else show default #}
+    <img src="{{ profile.avatar.url }}" alt="Profile Image">
+    {% if profile.avatar %}
+        <img src="media/{{ profile.avatar }}" alt="Profile Image">
+    {% endif %}
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Update</button>
+</form>
