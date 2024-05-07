@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     "multimedia",
     "api",
     "taggit",
+    "embed_video"
 ]
 
 MIDDLEWARE = [

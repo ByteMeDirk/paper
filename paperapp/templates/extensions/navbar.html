@@ -7,14 +7,16 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
             <div class="navbar-nav">
-                <a class="nav-link active" aria-current="page" href="{% url 'home' %}">Home</a>
+                <a class="nav-link {% if request.path == '/' %}active{% endif %}" {% if request.path == '/' %}aria-current="page"{% endif %} href="{% url 'home' %}">Home</a>
+                <a class="nav-link {% if request.path == '/wiki/' %}active{% endif %}" {% if request.path == '/wiki/' %}aria-current="page"{% endif %} href="{% url 'wiki' %}">Wiki</a>
+                <a class="nav-link {% if request.path == '/about/' %}active{% endif %}" {% if request.path == '/about/' %}aria-current="page"{% endif %} href="{% url 'about' %}">About</a>
             </div>
             {# Float Right Navbar Buttons #}
             <div class="navbar-nav ms-auto">
-                <a class="nav-link text-success" href="{% url 'select_post_type' %}">Post</a>
+                <a class="nav-link text-success {% if request.path == '/select_post_type/' %}active{% endif %}" {% if request.path == '/select_post_type/' %}aria-current="page"{% endif %} href="{% url 'select_post_type' %}">Post</a>
                 {% if request.user.is_authenticated %}
                     <a class="nav-link text-danger" href="{% url 'logout' %}">Logout</a>
-                    <a class="nav-link" href="{% url 'profile' %}">{{ request.user }}</a>
+                    <a class="nav-link {% if request.path == '/profile/' %}active{% endif %}" {% if request.path == '/profile/' %}aria-current="page"{% endif %} href="{% url 'profile' %}">{{ request.user }}</a>
                 {% else %}
                     <a class="nav-link text-primary" href="{% url 'login' %}">Login</a>
                     <a class="nav-link" href="{% url 'signup' %}">Signup</a>

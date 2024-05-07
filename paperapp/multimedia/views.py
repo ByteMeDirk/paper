@@ -1,10 +1,12 @@
-from django.contrib import messages
-from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, redirect
 import os
 import uuid
-from django.core.files.base import ContentFile
+
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, redirect, get_object_or_404
+
 from .forms import ImagePostForm, VideoPostForm, AudioPostForm
+from .models import VideoPost, AudioPost, ImagePost
 
 
 @login_required
@@ -34,8 +36,10 @@ def create_post(request, post_type):
 
             # Change File name to a unique name
             file_name = str(uuid.uuid4())
-            ext = os.path.splitext(post.file.name)[1]
-            post.file.name = file_name + ext
+            file_ext = os.path.splitext(post.file.name)[1]
+            post.file.name = file_name + file_ext
+            thumbnail_ext = os.path.splitext(post.thumbnail.name)[1]
+            post.thumbnail.name = file_name + thumbnail_ext
 
             post.save()
             form.save_m2m()  # Save many-to-many fields
@@ -50,4 +54,56 @@ def create_post(request, post_type):
         else:
             form = ImagePostForm()
 
-    return render(request, "multimedia/create_post.html", {"form": form, "post_type": post_type})
+    return render(
+        request, "multimedia/create_post.html", {"form": form, "post_type": post_type}
+    )
+
+
+def edit_post(request, post_type, post_id):
+    """
+    This view allows the user to edit a post of the specified type.
+    """
+    if post_type == "video":
+        post = get_object_or_404(VideoPost, pk=post_id)
+        form = VideoPostForm(request.POST or None, request.FILES or None, instance=post)
+    elif post_type == "audio":
+        post = get_object_or_404(AudioPost, pk=post_id)
+        form = AudioPostForm(request.POST or None, request.FILES or None, instance=post)
+    else:
+        post = get_object_or_404(ImagePost, pk=post_id)
+        form = ImagePostForm(request.POST or None, request.FILES or None, instance=post)
+
+    if request.method == "POST":
+        if form.is_valid():
+            post = form.save(commit=False)
+            post.author = request.user
+
+            # Change File name to a unique name
+            file_name = str(uuid.uuid4())
+            ext = os.path.splitext(post.file.name)[1]
+            post.file.name = file_name + ext
+
+            post.save()
+            form.save_m2m()  # Save many-to-many fields
+            messages.success(request, "Post updated successfully.")
+            return redirect("home")
+
+    return render(
+        request, "multimedia/edit_post.html", {"form": form, "post_type": post_type}
+    )
+
+
+def delete_post(request, post_type, post_id):
+    """
+    This view allows the user to delete a post of the specified type.
+    """
+    if post_type == "video":
+        post = get_object_or_404(VideoPost, pk=post_id)
+    elif post_type == "audio":
+        post = get_object_or_404(AudioPost, pk=post_id)
+    else:
+        post = get_object_or_404(ImagePost, pk=post_id)
+
+    post.delete()
+    messages.success(request, "Post deleted successfully.")
+    return redirect("home")

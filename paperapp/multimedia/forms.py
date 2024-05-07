@@ -1,10 +1,8 @@
-import datetime
-
 from django import forms
-from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.models import User
-from .models import ImagePost, VideoPost, AudioPost
 from taggit.forms import TagField, TagWidget
+
+from .models import ImagePost, VideoPost, AudioPost
+
 
 class ImagePostForm(forms.ModelForm):
     class Meta:
@@ -138,3 +136,23 @@ class AudioPostForm(forms.ModelForm):
         )
     )
 
+
+class SearchMediaForm(forms.Form):
+    search_by_tags = TagField(
+        widget=TagWidget(
+            attrs={
+                "class": "form-control",
+                "placeholder": "Search by tags",
+            }
+        )
+    )
+
+    # Sort by most popular, most recent, or standard
+    sort_by = forms.ChoiceField(
+        choices=[("popular", "Popular"), ("recent", "Recent"), ("standard", "Hot")],
+        widget=forms.Select(
+            attrs={
+                "class": "form-control",
+            }
+        ),
+    )

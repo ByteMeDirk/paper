@@ -20,11 +20,13 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
 
-from .views import home
+from .views import home, wiki, about
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("", home, name="home"),
+    path("wiki/", wiki, name="wiki"),
+    path("about/", about, name="about"),
     path("", include("users.urls")),
     path("", include("multimedia.urls")),
 ]

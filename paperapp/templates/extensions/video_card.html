@@ -1,0 +1,52 @@
+<!-- Card -->
+<div class="card" style="height: 25rem" data-bs-toggle="modal" data-bs-target="#imageModal{{ video.id }}">
+    <img src="{{ video.file.url }}" class="card-img-top" alt="...">
+    <div class="card-body">
+        <h5 class="card-title">{{ video.title|truncatechars:25 }}</h5>
+        <small class="card-text">{{ video.description|truncatechars:40 }}</small><br>
+        <small class="card-text text-muted">
+            Author: {{ video.author }}<br>{{ video.created_at }}
+        </small>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="imageModal{{ video.id }}" tabindex="-1" aria-labelledby="imageModalLabel{{ video.id }}"
+     aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="imageModalLabel{{ video.id }}">{{ video.title }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <img src="{{ video.file.url }}" class="img-fluid" alt="...">
+                <p>{{ video.description }}</p>
+                <small class="text-muted">
+                    {# Author Name #}
+                    Author: <a href="#">{{ video.author }}</a><br>
+                    {# Created or Edited #}
+                    {% if video.created_at == video.updated_at %}
+                        Created: {{ video.created_at }}
+                    {% else %}
+                        Edited: {{ video.updated_at }}
+                    {% endif %}
+                </small>
+            </div>
+            <div class="modal-footer">
+                <small class="text-muted">
+                    {# Image Tags #}
+                    Tags:
+                    {% for tag in video.tags.all %}
+                        <a href="#" class="badge bg-secondary">{{ tag.name }}</a>
+                    {% endfor %}<br>
+                    {# Image Size #}
+                    Size: {{ video.file.size }} <br>
+                    {# Image Dimensions #}
+                    Dimensions: {{ video.file.width }} x {{ video.file.height }}
+                    <br>
+                </small>
+            </div>
+        </div>
+    </div>
+</div>

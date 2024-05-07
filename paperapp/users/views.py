@@ -1,5 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 
 from .forms import SignupForm, LoginForm, ProfileForm
@@ -50,6 +51,7 @@ def user_logout(request):
     return redirect("login")
 
 
+@login_required(login_url="login")
 def user_profile(request):
     """
     This view displays the user profile page. They can edit their profile information here.

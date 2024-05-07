@@ -105,7 +105,9 @@ class ProfileForm(forms.ModelForm):
 
     birth_date = forms.DateField(
         widget=forms.SelectDateWidget(
-            years=range(datetime.date.today().year - 100, datetime.date.today().year + 1),
+            years=range(
+                datetime.date.today().year - 100, datetime.date.today().year + 1
+            ),
             attrs={
                 "class": "form-control",
             },
