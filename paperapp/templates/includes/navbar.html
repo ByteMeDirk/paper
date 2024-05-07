@@ -8,6 +8,17 @@
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
             <div class="navbar-nav">
                 <a class="nav-link {% if request.path == '/' %}active{% endif %}" {% if request.path == '/' %}aria-current="page"{% endif %} href="{% url 'home' %}">Home</a>
+                {# Dropdown Gallery #}
+                <div class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle {% if request.path == '/gallery/' %}active{% endif %}" {% if request.path == '/gallery/' %}aria-current="page"{% endif %} href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Gallery
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                        <li><a class="dropdown-item" href="#">Images</a></li>
+                        <li><a class="dropdown-item" href="#">Video</a></li>
+                        <li><a class="dropdown-item" href="#">Audio</a></li>
+                    </ul>
+                </div>
                 <a class="nav-link {% if request.path == '/wiki/' %}active{% endif %}" {% if request.path == '/wiki/' %}aria-current="page"{% endif %} href="{% url 'wiki' %}">Wiki</a>
                 <a class="nav-link {% if request.path == '/about/' %}active{% endif %}" {% if request.path == '/about/' %}aria-current="page"{% endif %} href="{% url 'about' %}">About</a>
             </div>

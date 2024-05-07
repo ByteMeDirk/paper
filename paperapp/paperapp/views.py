@@ -27,10 +27,22 @@ def home(request):
     video_page_obj = video_paginator.get_page(video_page_number)
     audio_page_obj = audio_paginator.get_page(audio_page_number)
 
+    # Other Stats to be added
+    recent_20_tags = ImagePost.tags.most_common()[:20]
+    total_image_posts = ImagePost.objects.count()
+    total_video_posts = VideoPost.objects.count()
+    total_audio_posts = AudioPost.objects.count()
+
     return render(request, "home.html", {
         "image_page_obj": image_page_obj,
         "video_page_obj": video_page_obj,
         "audio_page_obj": audio_page_obj,
+        "recent_20_tags": recent_20_tags,
+        "media_count": {
+            "image": total_image_posts,
+            "video": total_video_posts,
+            "audio": total_audio_posts,
+        }
     })
 
 
