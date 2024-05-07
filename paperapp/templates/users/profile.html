@@ -16,7 +16,13 @@
                     {% endif %}
                     <div class="card-body">
                         <h5 class="card-title">{{ profile }}</h5>
-                        {{ form.as_p }}
+                        {% for field in form %}
+                            <p>
+                                {{ field.label_tag }}<br>
+                                {{ field }}
+                                <small class="text-muted">{{ field.help_text }}</small>
+                            </p>
+                        {% endfor %}
                         <button type="submit" class="btn btn-primary">Update</button>
                         <hr>
                         <small class="text-muted mt-2">* Usernames can not be edited as they represent your distinct

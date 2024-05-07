@@ -1,3 +1,4 @@
+from PIL import Image
 from django.contrib.auth.models import User
 from django.db import models
 from django.db.models.signals import post_save
@@ -28,3 +29,22 @@ class Profile(models.Model):
 
     def __str__(self):
         return self.user.username
+
+    def save(
+        self, *args, **kwargs
+    ):
+        """
+        Crop the input image to a square and save it.
+        """
+        super().save(*args, **kwargs)
+        if self.avatar:
+            image = Image.open(self.avatar)
+            width, height = image.size
+            if width != height:
+                crop = min(width, height)
+                left = (width - crop) / 2
+                top = (height - crop) / 2
+                right = (width + crop) / 2
+                bottom = (height + crop) / 2
+                image = image.crop((left, top, right, bottom))
+                image.save(self.avatar.path)

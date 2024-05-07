@@ -119,5 +119,6 @@ class ProfileForm(forms.ModelForm):
             attrs={
                 "class": "form-control",
             }
-        )
+        ),
+        help_text="Picture will be cropped to a square.",
     )
