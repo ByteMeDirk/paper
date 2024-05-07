@@ -1,0 +1,7 @@
+{% if image.content_rating == "Explicit" %}
+    border border-danger
+{% elif image.content_rating == "Mature" %}
+    border border-warning
+{% else %}
+    border border-primary
+{% endif %}

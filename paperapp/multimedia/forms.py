@@ -109,7 +109,7 @@ class VideoPostForm(forms.ModelForm):
 class AudioPostForm(forms.ModelForm):
     class Meta:
         model = AudioPost
-        fields = ["title", "description", "file", "content_rating", "tags"]
+        fields = ["title", "description", "thumbnail", "file", "content_rating", "tags"]
 
     title = forms.CharField(
         widget=forms.TextInput(
@@ -125,6 +125,15 @@ class AudioPostForm(forms.ModelForm):
             attrs={
                 "class": "form-control",
                 "placeholder": "Description",
+            }
+        )
+    )
+
+    thumbnail = forms.ImageField(
+        widget=forms.FileInput(
+            attrs={
+                "class": "form-control",
+                "placeholder": "Thumbnail",
             }
         )
     )

@@ -1,34 +1,45 @@
 {% extends "base.html" %}
-{% load embed_video_tags %}
 
 {% block content %}
     <div class="row">
         <div class="col-lg-3 col-md-4 col-sm-12">
-            <div class="tags-search">
-                {# This is a search form that can take a list of tags, and return media that matches the tags #}
-                <form method="POST">
-                    {% csrf_token %}
-                    {{ form.as_p }}
-                    <button class="btn btn-info" type="submit">Search</button>
-                    <a class="btn btn-secondary" href="{% url 'home' %}">Clear</a>
-                </form>
-                <hr>
-                <p>Recent Tags:</p>
-                {% for tag in tags %}
-                    <a href="#" class="badge bg-secondary">{{ tag.name }}</a>
-                {% endfor %}
-            </div>
+            Search and stuff.
         </div>
         <div class="col-lg-9 col-md-8 col-sm-12">
-            {% include 'extensions/multimedia_accordion.html' %}
+            <h2>Recent Submissions</h2>
+            <hr>
+            <h5>Images</h5>
+            <div class="row mb-2">  {# Start the row here #}
+                {% for image in image_page_obj %}
+                    <div class="col-3">  {# Each card is a column within the row #}
+                        {% include 'includes/card.image.html' %}
+                    </div>
+                {% endfor %}
+            </div>
+            {# End the row here #}
+            {% include 'includes/pagination.image.html' %}
+            <hr>
+            <h5>Videos</h5>
+            <div class="row mb-2">  {# Start the row here #}
+                {% for video in video_page_obj %}
+                    <div class="col-3">  {# Each card is a column within the row #}
+                        {% include 'includes/card.video.html' %}
+                    </div>
+                {% endfor %}
+            </div>
+            {# End the row here #}
+            {% include 'includes/pagination.video.html' %}
+            <hr>
+            <h5>Audio</h5>
+            <div class="row mb-2">  {# Start the row here #}
+                {% for audio in audio_page_obj %}
+                    <div class="col-3">  {# Each card is a column within the row #}
+                        {% include 'includes/card.audio.html' %}
+                    </div>
+                {% endfor %}
+            </div>
+            {# End the row here #}
+            {% include 'includes/pagination.audio.html' %}
         </div>
     </div>
-
-    <style>
-        .fixed-size-preview {
-            width: 100%; /* or any other fixed width */
-            height: 200px; /* or any other fixed height */
-            object-fit: cover; /* this will make sure the image covers the whole area without distortion */
-        }
-    </style>
 {% endblock %}
