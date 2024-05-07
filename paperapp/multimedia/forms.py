@@ -1,7 +1,7 @@
 from django import forms
 from taggit.forms import TagField, TagWidget
 
-from .models import ImagePost, VideoPost, AudioPost
+from .models import ImagePost, VideoPost, AudioPost, MediaRating
 
 
 class ImagePostForm(forms.ModelForm):

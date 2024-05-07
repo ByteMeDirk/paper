@@ -29,6 +29,7 @@
                     </p>
                     <h5>{{ audio.title }}</h5>
                     <p>{{ audio.description }}</p>
+                {% include 'includes/utils/util.audio_vote.html' %}
                     <hr>
                     <p>
                         {% for tag in audio.tags.all %}

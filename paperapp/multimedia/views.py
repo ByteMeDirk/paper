@@ -4,10 +4,11 @@ import uuid
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
+from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 
 from .forms import ImagePostForm, VideoPostForm, AudioPostForm
-from .models import VideoPost, AudioPost, ImagePost
+from .models import VideoPost, AudioPost, ImagePost, MediaRating
 
 
 @login_required(login_url="login")
@@ -142,3 +143,37 @@ def search(request):
         'video_results': video_results,
         'audio_results': audio_results,
     })
+
+
+def vote(request, media_id, media_type, vote_type):
+    if request.user.is_authenticated:
+        media_kwargs = {
+            'image_id': None,
+            'video_id': None,
+            'audio_id': None,
+        }
+
+        if media_type == 'image':
+            media = ImagePost.objects.get(id=media_id)
+            media_kwargs['image_id'] = media
+        elif media_type == 'video':
+            media = VideoPost.objects.get(id=media_id)
+            media_kwargs['video_id'] = media
+        else:  # audio
+            media = AudioPost.objects.get(id=media_id)
+            media_kwargs['audio_id'] = media
+
+        vote, created = MediaRating.objects.get_or_create(user=request.user, **media_kwargs)
+
+        if vote_type == 'up':
+            vote.vote = 1
+        else:  # down
+            vote.vote = -1
+
+        vote.save()
+
+        total_votes = MediaRating.get_total_votes(media_id, media_type)
+
+        return JsonResponse({"success": True, "total_votes": total_votes})
+    else:
+        return JsonResponse({"success": False, "message": "User not authenticated"})

@@ -1,6 +1,7 @@
 {# Users under 18 can only view general content. #}
 {% if request.user.profile.age >= 18 and image.media_rating != "general" %}
-    <div class="card mt-2 {% include 'includes/utils/util.image_content_rating.border_color.html' %}" data-bs-toggle="modal" data-bs-target="#imageModal{{ image.id }}" style="min-height: 20rem">
+    <div class="card mt-2 {% include 'includes/utils/util.image_content_rating.border_color.html' %}"
+         data-bs-toggle="modal" data-bs-target="#imageModal{{ image.id }}" style="min-height: 20rem">
         <img src="{{ image.file.url }}" class="card-img-top" alt="{{ image.title }}"
              style="width: 100%; height: 10rem; object-fit: cover;">
         <div class="card-body">
@@ -29,6 +30,7 @@
                     </p>
                     <h5>{{ image.title }}</h5>
                     <p>{{ image.description }}</p>
+                    {% include 'includes/utils/util.image_vote.html' %}
                     <hr>
                     <p>
                         {% for tag in image.tags.all %}

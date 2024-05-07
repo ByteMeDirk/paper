@@ -1,0 +1,11 @@
+<div class="btn-group" role="group">
+    <button disabled class="btn btn-outline-primary" id="vote-count-audio-{{ audio.id }}">
+        {{ audio.get_vote_count }}
+    </button>
+    <button class="btn btn-outline-primary vote" data-media-id="{{ audio.id }}" data-media-type="audio" data-vote-type="up">
+        Upvote
+    </button>
+    <button class="btn btn-outline-primary vote" data-media-id="{{ audio.id }}" data-media-type="audio" data-vote-type="down">
+        Downvote
+    </button>
+</div>
