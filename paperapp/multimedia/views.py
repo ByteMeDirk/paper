@@ -9,7 +9,7 @@ from .forms import ImagePostForm, VideoPostForm, AudioPostForm
 from .models import VideoPost, AudioPost, ImagePost
 
 
-@login_required
+@login_required(login_url="login")
 def select_post_type(request):
     """
     This view allows the user to select the type of post they want to create.
@@ -17,7 +17,7 @@ def select_post_type(request):
     return render(request, "multimedia/select_post_type.html")
 
 
-@login_required
+@login_required(login_url="login")
 def create_post(request, post_type):
     """
     This view allows the user to create a post of the specified type.
@@ -59,6 +59,7 @@ def create_post(request, post_type):
     )
 
 
+@login_required(login_url="login")
 def edit_post(request, post_type, post_id):
     """
     This view allows the user to edit a post of the specified type.
@@ -93,6 +94,7 @@ def edit_post(request, post_type, post_id):
     )
 
 
+@login_required(login_url="login")
 def delete_post(request, post_type, post_id):
     """
     This view allows the user to delete a post of the specified type.

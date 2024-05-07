@@ -1,14 +1,18 @@
 <!-- Card -->
-<div class="card" style="height: 25rem" data-bs-toggle="modal" data-bs-target="#imageModal{{ image.id }}">
-    <img src="{{ image.file.url }}" class="card-img-top" alt="...">
-    <div class="card-body">
-        <h5 class="card-title">{{ image.title|truncatechars:25 }}</h5>
-        <small class="card-text">{{ image.description|truncatechars:40 }}</small><br>
-        <small class="card-text text-muted">
-            Author: {{ image.author }}<br>{{ image.created_at }}
-        </small>
+{% if request.user.profile.age >= 18 %}
+    <div class="card mt-2" data-bs-toggle="modal" data-bs-target="#imageModal{{ image.id }}">
+        <img src="{{ image.file.url }}" class="card-img-top fixed-size-preview" alt="...">
+        <div class="card-body">
+            <h5 class="card-title">{{ image.title|truncatechars:45 }}</h5>
+            <small class="card-text">{{ image.description|truncatechars:45 }}</small><br>
+            <small class="card-text text-muted">
+                            <img src="{{ image.author.profile.avatar.url }}" alt="Author's profile picture"
+                     style="width: 20px; height: 20px; object-fit: cover;">
+                {{ image.author }}<br>{{ image.created_at }}
+            </small>
+        </div>
     </div>
-</div>
+{% endif %}
 
 <!-- Modal -->
 <div class="modal fade" id="imageModal{{ image.id }}" tabindex="-1" aria-labelledby="imageModalLabel{{ image.id }}"
@@ -20,31 +24,34 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <img src="{{ image.file.url }}" class="img-fluid" alt="...">
+                <img src="{{ image.file.url }}" class="img-fluid" alt="{{ image.description }}">
                 <p>{{ image.description }}</p>
+                <small class="card-text text-muted">
+                    <img src="{{ image.author.profile.avatar.url }}" alt="Author's profile picture"
+                         style="width: 20px; height: 20px; object-fit: cover;">
+                    {{ image.author }}
+                </small>
+                <p>
+                    {# Image Tags #}
+                    Tags:
+                    {% for tag in image.tags.all %}
+                        <a href="#" class="badge bg-info">{{ tag.name }}</a>
+                    {% endfor %}<br>
+                </p>
+            </div>
+            <div class="modal-footer">
                 <small class="text-muted">
-                    {# Author Name #}
-                    Author: <a href="#">{{ image.author }}</a><br>
+                    {# Image Size #}
+                    Size: {{ image.file.size }} <br>
+                    {# Image Dimensions #}
+                    Dimensions: {{ image.file.width }} x {{ image.file.height }}
+                    <br>
                     {# Created or Edited #}
                     {% if image.created_at == image.updated_at %}
                         Created: {{ image.created_at }}
                     {% else %}
                         Edited: {{ image.updated_at }}
                     {% endif %}
-                </small>
-            </div>
-            <div class="modal-footer">
-                <small class="text-muted">
-                    {# Image Tags #}
-                    Tags:
-                    {% for tag in image.tags.all %}
-                        <a href="#" class="badge bg-secondary">{{ tag.name }}</a>
-                    {% endfor %}<br>
-                    {# Image Size #}
-                    Size: {{ image.file.size }} <br>
-                    {# Image Dimensions #}
-                    Dimensions: {{ image.file.width }} x {{ image.file.height }}
-                    <br>
                 </small>
             </div>
         </div>

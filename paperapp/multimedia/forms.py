@@ -164,7 +164,8 @@ class SearchMediaForm(forms.Form):
                 "class": "form-control",
                 "placeholder": "Search by tags",
             }
-        )
+        ),
+        required=False,
     )
 
     # Sort by most popular, most recent, or standard
@@ -175,6 +176,7 @@ class SearchMediaForm(forms.Form):
                 "class": "form-control",
             }
         ),
+        required=False,
     )
 
     # Filter by content rating
@@ -185,4 +187,5 @@ class SearchMediaForm(forms.Form):
                 "class": "form-control",
             }
         ),
+        required=False,
     )

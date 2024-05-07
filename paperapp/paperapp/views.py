@@ -1,9 +1,11 @@
+from django.contrib import messages
+from django.db.models import Count
 from django.shortcuts import render
+
 from multimedia.forms import SearchMediaForm
 from multimedia.models import ImagePost, VideoPost, AudioPost
-from django.db.models import Count, Q
-from django.contrib import messages
-import logging
+
+
 def home(request):
     """
     Home page allows for content search. Once search is run, media content is displayed.
@@ -15,15 +17,18 @@ def home(request):
     tags = tags.union(VideoPost.tags.all())
     tags = tags.union(AudioPost.tags.all())
 
-    def filter_closure(media_object, tags, sort):
+    def filter_closure(media_object, tags, sort, content_rating=None):
         """
-        Filter media content by tags and sort by date or popularity.
+        Filter media content by tags, content rating and sort by date or popularity.
         """
-        print(f"Filtering {media_object} by tags: {tags} and sort: {sort}")
+        print(f"Filtering {media_object} by tags: {tags}, content rating: {content_rating} and sort: {sort}")
         if tags:
             media = media_object.objects.filter(tags__name__in=tags).distinct()
         else:
             media = media_object.objects.all()
+
+        if content_rating:
+            media = media.filter(content_rating=content_rating)
 
         if sort == "hot":
             media = media.annotate(
@@ -43,10 +48,11 @@ def home(request):
         if form.is_valid():
             search_by_tags = form.cleaned_data["search_by_tags"]
             sort_by = form.cleaned_data["sort_by"]
+            content_rating = form.cleaned_data["content_rating"]
 
-            video_media = filter_closure(VideoPost, search_by_tags, sort_by)
-            audio_media = filter_closure(AudioPost, search_by_tags, sort_by)
-            image_media = filter_closure(ImagePost, search_by_tags, sort_by)
+            video_media = filter_closure(VideoPost, search_by_tags, sort_by, content_rating)
+            audio_media = filter_closure(AudioPost, search_by_tags, sort_by, content_rating)
+            image_media = filter_closure(ImagePost, search_by_tags, sort_by, content_rating)
 
             messages.success(request, "Search results displayed.")
             return render(

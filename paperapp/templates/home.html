@@ -50,7 +50,7 @@
                          data-bs-parent="#accordionExample">
                         <div class="accordion-body">
                             {% for video in video_media %}
-                            {% include 'extensions/video_card.html' %}
+                                {% include 'extensions/video_card.html' %}
                             {% endfor %}
                         </div>
                     </div>
@@ -74,4 +74,12 @@
             </div>
         </div>
     </div>
+
+    <style>
+        .fixed-size-preview {
+            width: 100%; /* or any other fixed width */
+            height: 200px; /* or any other fixed height */
+            object-fit: cover; /* this will make sure the image covers the whole area without distortion */
+        }
+    </style>
 {% endblock %}
