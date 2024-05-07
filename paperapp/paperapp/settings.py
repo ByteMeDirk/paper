@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     "users",
     "multimedia",
     "api",
+    "taggit",
 ]
 
 MIDDLEWARE = [
@@ -83,6 +84,8 @@ DATABASES = {
         "NAME": BASE_DIR / "db.sqlite3",
     }
 }
+
+TAGGIT_CASE_INSENSITIVE = True
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators

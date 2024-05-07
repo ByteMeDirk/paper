@@ -11,7 +11,7 @@
             </div>
             {# Float Right Navbar Buttons #}
             <div class="navbar-nav ms-auto">
-                <a class="nav-link text-success" href="#">Post</a>
+                <a class="nav-link text-success" href="{% url 'select_post_type' %}">Post</a>
                 {% if request.user.is_authenticated %}
                     <a class="nav-link text-danger" href="{% url 'logout' %}">Logout</a>
                     <a class="nav-link" href="{% url 'profile' %}">{{ request.user }}</a>

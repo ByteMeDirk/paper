@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>Select Post Type</h1>
+
+    <div class="row mt-1">
+
+        <!-- Image Post Card -->
+        <div class="col">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Post Type: Image</h5>
+                    <h6 class="card-subtitle mb-2 text-body-secondary">Supported Formats: JPEG, PNG, GIF</h6>
+                    <p class="card-text">You can post images in JPEG, PNG, and GIF formats. The maximum file size is
+                        5MB. Please make sure your image adheres to our community guidelines.</p>
+                    <a href="{% url 'create_post' 'image' %}" class="btn btn-primary">Post an Image</a>
+                    <a href="#" class="btn btn-secondary">View Image Posts</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Video Post Card -->
+        <div class="col">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Post Type: Video</h5>
+                    <h6 class="card-subtitle mb-2 text-body-secondary">Supported Formats: MP4, AVI, MOV</h6>
+                    <p class="card-text">You can post videos in MP4, AVI, and MOV formats. The maximum file size is
+                        50MB. Please make sure your video adheres to our community guidelines.</p>
+                    <a href="{% url 'create_post' 'video' %}" class="btn btn-primary">Post a Video</a>
+                    <a href="#" class="btn btn-secondary">View Video Posts</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Audio Post Card -->
+        <div class="col">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Post Type: Audio</h5>
+                    <h6 class="card-subtitle mb-2 text-body-secondary">Supported Formats: MP3, WAV, OGG</h6>
+                    <p class="card-text">You can post audios in MP3, WAV, and OGG formats. The maximum file size is
+                        20MB. Please make sure your audio adheres to our community guidelines.</p>
+                    <a href="{% url 'create_post' 'audio' %}" class="btn btn-primary">Post an Audio</a>
+                    <a href="#" class="btn btn-secondary">View Audio Posts</a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+{% endblock %}

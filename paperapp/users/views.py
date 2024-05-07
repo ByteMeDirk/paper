@@ -34,6 +34,8 @@ def user_login(request):
                 login(request, user)
                 messages.success(request, "You are now logged in.")
                 return redirect("home")
+            else:
+                messages.error(request, "Invalid username or password.")
     else:
         form = LoginForm()
     return render(request, "users/login.html", {"form": form})
