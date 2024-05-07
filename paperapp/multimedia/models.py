@@ -14,6 +14,7 @@ class ImagePost(models.Model):
 
     thumbnail = models.ImageField(upload_to="thumbnails/")
     file = models.ImageField(upload_to="images/")
+    content_rating = models.CharField(max_length=10, default="General")
     tags = TaggableManager()
 
     created_at = models.DateTimeField(auto_now_add=True)
@@ -33,6 +34,7 @@ class VideoPost(models.Model):
 
     thumbnail = models.ImageField(upload_to="thumbnails/")
     file = models.FileField(upload_to="videos/")
+    content_rating = models.CharField(max_length=10, default="General")
     tags = TaggableManager()
 
     created_at = models.DateTimeField(auto_now_add=True)
@@ -52,6 +54,7 @@ class AudioPost(models.Model):
 
     thumbnail = models.ImageField(upload_to="thumbnails/")
     file = models.FileField(upload_to="audio/")
+    content_rating = models.CharField(max_length=10, default="General")
     tags = TaggableManager()
 
     created_at = models.DateTimeField(auto_now_add=True)

@@ -7,7 +7,7 @@ from .models import ImagePost, VideoPost, AudioPost
 class ImagePostForm(forms.ModelForm):
     class Meta:
         model = ImagePost
-        fields = ["title", "description", "file", "tags"]
+        fields = ["title", "description", "file", "content_rating", "tags"]
 
     title = forms.CharField(
         widget=forms.TextInput(
@@ -36,6 +36,15 @@ class ImagePostForm(forms.ModelForm):
         )
     )
 
+    content_rating = forms.ChoiceField(
+        choices=[("General", "General"), ("Mature", "Mature"), ("Explicit", "Explicit")],
+        widget=forms.Select(
+            attrs={
+                "class": "form-control",
+            }
+        ),
+    )
+
     tags = TagField(
         widget=TagWidget(
             attrs={
@@ -45,18 +54,11 @@ class ImagePostForm(forms.ModelForm):
         )
     )
 
-    help_text = {
-        "title": "The title of the image post.",
-        "description": "A description of the image post.",
-        "image": "The image file to be uploaded.",
-        "tags": "Tags to categorize the image post.",
-    }
-
 
 class VideoPostForm(forms.ModelForm):
     class Meta:
         model = VideoPost
-        fields = ["title", "description", "file", "tags"]
+        fields = ["title", "description", "file", "content_rating", "tags"]
 
     title = forms.CharField(
         widget=forms.TextInput(
@@ -85,6 +87,15 @@ class VideoPostForm(forms.ModelForm):
         )
     )
 
+    content_rating = forms.ChoiceField(
+        choices=[("General", "General"), ("Mature", "Mature"), ("Explicit", "Explicit")],
+        widget=forms.Select(
+            attrs={
+                "class": "form-control",
+            }
+        ),
+    )
+
     tags = TagField(
         widget=TagWidget(
             attrs={
@@ -98,7 +109,7 @@ class VideoPostForm(forms.ModelForm):
 class AudioPostForm(forms.ModelForm):
     class Meta:
         model = AudioPost
-        fields = ["title", "description", "file", "tags"]
+        fields = ["title", "description", "file", "content_rating", "tags"]
 
     title = forms.CharField(
         widget=forms.TextInput(
@@ -127,6 +138,15 @@ class AudioPostForm(forms.ModelForm):
         )
     )
 
+    content_rating = forms.ChoiceField(
+        choices=[("General", "General"), ("Mature", "Mature"), ("Explicit", "Explicit")],
+        widget=forms.Select(
+            attrs={
+                "class": "form-control",
+            }
+        ),
+    )
+
     tags = TagField(
         widget=TagWidget(
             attrs={
@@ -149,7 +169,17 @@ class SearchMediaForm(forms.Form):
 
     # Sort by most popular, most recent, or standard
     sort_by = forms.ChoiceField(
-        choices=[("popular", "Popular"), ("recent", "Recent"), ("standard", "Hot")],
+        choices=[("recent", "Recent"), ("popular", "Popular"), ("hot", "Hot")],
+        widget=forms.Select(
+            attrs={
+                "class": "form-control",
+            }
+        ),
+    )
+
+    # Filter by content rating
+    content_rating = forms.ChoiceField(
+        choices=[("General", "General"), ("Mature", "Mature"), ("Explicit", "Explicit")],
         widget=forms.Select(
             attrs={
                 "class": "form-control",
