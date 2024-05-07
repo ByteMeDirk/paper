@@ -29,7 +29,7 @@
                 <small class="card-text text-muted">
                     <img src="{{ image.author.profile.avatar.url }}" alt="Author's profile picture"
                          style="width: 20px; height: 20px; object-fit: cover;">
-                    {{ image.author }}
+                    <a href="{% url 'view_user' user_id=image.author.id %}">{{ image.author }}</a>
                 </small>
                 <p>
                     {# Image Tags #}

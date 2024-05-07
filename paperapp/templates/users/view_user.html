@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>User Profile</h1>
+
+    <div class="row">
+
+        <div class="col-4">
+            <div class="card">
+                <img class="card-img-top" src="{{ user_profile.avatar.url }}" alt="Profile Image">
+                <div class="card-body">
+                    <h5 class="card-title">{{ user_profile }}</h5>
+                    <p>
+                        {{ user_profile.bio }}<br>
+                        <strong>Location: </strong>{{ user_profile.location }}<br>
+                        <strong>DOB: </strong>{{ user_profile.birth_date }}<br>
+                        <strong>Joined: </strong>{{ user_profile.user.date_joined }}
+                    </p>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="col-8">
+            {% include 'extensions/multimedia_accordion.html' %}
+        </div>
+
+    </div>
+
+{% endblock %}

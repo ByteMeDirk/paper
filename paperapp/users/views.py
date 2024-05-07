@@ -3,7 +3,9 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 
+from multimedia.models import ImagePost, VideoPost, AudioPost
 from .forms import SignupForm, LoginForm, ProfileForm
+from .models import Profile
 
 
 def user_signup(request):
@@ -74,3 +76,15 @@ def user_profile(request):
         form = ProfileForm(instance=profile)
 
     return render(request, "users/profile.html", {"form": form, "profile": profile})
+
+
+def view_user(request, user_id):
+    """
+    This view displays the profile of a specific user.
+    """
+    user_profile = Profile.objects.get(user_id=user_id)
+    image_media = ImagePost.objects.filter(author_id=user_id)
+    video_media = VideoPost.objects.filter(author_id=user_id)
+    audio_media = AudioPost.objects.filter(author_id=user_id)
+    return render(request, "users/view_user.html",
+                  {"user_profile": user_profile, "image_media": image_media, "video_media": video_media, "audio_media": audio_media})
