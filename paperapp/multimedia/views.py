@@ -3,6 +3,7 @@ import uuid
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.db.models import Q
 from django.shortcuts import render, redirect, get_object_or_404
 
 from .forms import ImagePostForm, VideoPostForm, AudioPostForm
@@ -109,3 +110,35 @@ def delete_post(request, post_type, post_id):
     post.delete()
     messages.success(request, "Post deleted successfully.")
     return redirect("home")
+
+
+def search(request):
+    """
+    This view allows the user to search for posts.
+
+    ToDo: When Moving over to Postgres, use TrigramSimilarity for better search results.
+    """
+    query = request.GET.get("q")
+    if query:
+        image_results = ImagePost.objects.filter(
+            Q(author__username__icontains=query) |
+            Q(tags__name__icontains=query)
+        ).distinct()
+        video_results = VideoPost.objects.filter(
+            Q(author__username__icontains=query) |
+            Q(tags__name__icontains=query)
+        ).distinct()
+        audio_results = AudioPost.objects.filter(
+            Q(author__username__icontains=query) |
+            Q(tags__name__icontains=query)
+        ).distinct()
+    else:
+        image_results = ImagePost.objects.none()
+        video_results = VideoPost.objects.none()
+        audio_results = AudioPost.objects.none()
+
+    return render(request, 'multimedia/search_results.html', {
+        'image_results': image_results,
+        'video_results': video_results,
+        'audio_results': audio_results,
+    })

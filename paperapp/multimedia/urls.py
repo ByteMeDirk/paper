@@ -11,4 +11,5 @@ urlpatterns = [
         views.delete_post,
         name="delete_post",
     ),
+    path('search/', views.search, name='search'),
 ]

@@ -1,9 +1,18 @@
 {% extends "base.html" %}
 
 {% block content %}
+
     <div class="row">
         <div class="col-lg-3 col-md-4 col-sm-12">
-            Search and stuff.
+            <form class="d-flex" action="{% url 'search' %}" method="get">
+                {% csrf_token %}
+                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="q">
+                <button class="btn btn-outline-success" type="submit">Search</button>
+            </form>
+            <small class="small text-muted">
+                You can search by Author & Tags.
+            </small>
+            <hr>
         </div>
         <div class="col-lg-9 col-md-8 col-sm-12">
             <h2>Recent Submissions</h2>

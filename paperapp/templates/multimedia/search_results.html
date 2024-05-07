@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h2>Search Results</h2>
+    <hr>
+    <h5>Images</h5>
+    <div class="row mb-2">  {# Start the row here #}
+        {% for image in image_results %}
+            <div class="col-3">  {# Each card is a column within the row #}
+                {% include 'includes/card.image.html' %}
+            </div>
+            {% empty %}
+            <p>No results found for Images.</p>
+        {% endfor %}
+    </div>
+    <h5>Videos</h5>
+    <div class="row mb-2">  {# Start the row here #}
+        {% for video in video_results %}
+            <div class="col-3">  {# Each card is a column within the row #}
+                {% include 'includes/card.video.html' %}
+            </div>
+            {% empty %}
+            <p>No results found for Video.</p>
+        {% endfor %}
+    </div>
+    <h5>Audio</h5>
+    <div class="row mb-2">  {# Start the row here #}
+        {% for audio in audio_results %}
+            <div class="col-3">  {# Each card is a column within the row #}
+                {% include 'includes/card.audio.html' %}
+            </div>
+            {% empty %}
+            <p>No results found for Audio.</p>
+        {% endfor %}
+    </div>
+{% endblock %}
