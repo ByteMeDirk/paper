@@ -3,7 +3,7 @@ import uuid
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.db.models import Q
+from django.contrib.postgres.search import TrigramSimilarity
 from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 
@@ -40,8 +40,11 @@ def create_post(request, post_type):
             file_name = str(uuid.uuid4())
             file_ext = os.path.splitext(post.file.name)[1]
             post.file.name = file_name + file_ext
-            thumbnail_ext = os.path.splitext(post.thumbnail.name)[1]
-            post.thumbnail.name = file_name + thumbnail_ext
+
+            if post_type == "audio":
+                # Only audio posts have thumbnails
+                thumbnail_ext = os.path.splitext(post.thumbnail.name)[1]
+                post.thumbnail.name = file_name + thumbnail_ext
 
             post.save()
             form.save_m2m()  # Save many-to-many fields
@@ -116,23 +119,23 @@ def delete_post(request, post_type, post_id):
 def search(request):
     """
     This view allows the user to search for posts.
-
-    ToDo: When Moving over to Postgres, use TrigramSimilarity for better search results.
     """
     query = request.GET.get("q")
     if query:
-        image_results = ImagePost.objects.filter(
-            Q(author__username__icontains=query) |
-            Q(tags__name__icontains=query)
-        ).distinct()
-        video_results = VideoPost.objects.filter(
-            Q(author__username__icontains=query) |
-            Q(tags__name__icontains=query)
-        ).distinct()
-        audio_results = AudioPost.objects.filter(
-            Q(author__username__icontains=query) |
-            Q(tags__name__icontains=query)
-        ).distinct()
+        image_results = ImagePost.objects.annotate(
+            similarity=TrigramSimilarity('author__username', query) +
+                       TrigramSimilarity('tags__name', query),
+        ).filter(similarity__gt=0.3).order_by('id', '-similarity').distinct('id')
+
+        video_results = VideoPost.objects.annotate(
+            similarity=TrigramSimilarity('author__username', query) +
+                       TrigramSimilarity('tags__name', query),
+        ).filter(similarity__gt=0.3).order_by('id', '-similarity').distinct('id')
+
+        audio_results = AudioPost.objects.annotate(
+            similarity=TrigramSimilarity('author__username', query) +
+                       TrigramSimilarity('tags__name', query),
+        ).filter(similarity__gt=0.3).order_by('id', '-similarity').distinct('id')
     else:
         image_results = ImagePost.objects.none()
         video_results = VideoPost.objects.none()

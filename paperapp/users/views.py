@@ -83,8 +83,10 @@ def view_user(request, user_id):
     This view displays the profile of a specific user.
     """
     user_profile = Profile.objects.get(user_id=user_id)
-    image_media = ImagePost.objects.filter(author_id=user_id)
-    video_media = VideoPost.objects.filter(author_id=user_id)
-    audio_media = AudioPost.objects.filter(author_id=user_id)
+    image_media = ImagePost.objects.filter(author_id=user_id).order_by("-created_at")
+    video_media = VideoPost.objects.filter(author_id=user_id).order_by("-created_at")
+    audio_media = AudioPost.objects.filter(author_id=user_id).order_by("-created_at")
+
+    total_posts = len(image_media) + len(video_media) + len(audio_media)
     return render(request, "users/view_user.html",
-                  {"user_profile": user_profile, "image_media": image_media, "video_media": video_media, "audio_media": audio_media})
+                  {"user_profile": user_profile, "image_media": image_media, "video_media": video_media, "audio_media": audio_media, "total_posts": total_posts})

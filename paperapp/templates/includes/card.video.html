@@ -23,13 +23,7 @@
                 <div class="modal-body">
                     <video src="{{ video.file.url }}" class="img-fluid" alt="{{ video.description }}" controls></video>
                     <hr>
-                    <p>
-                        <img src="{{ video.author.profile.avatar.url }}" alt="Author's profile picture"
-                             style="width: 3rem; height: 3rem; object-fit: cover;">
-                        <a href="{% url 'view_user' user_id=video.author.id %}">{{ video.author }}</a>
-                    </p>
-                    <h5>{{ video.title }}</h5>
-                    <p>{{ video.description }}</p>
+                    {% include 'includes/card.video_author_details.html' %}
                     {% include 'includes/utils/util.video_vote.html' %}
                     <hr>
                     <p>

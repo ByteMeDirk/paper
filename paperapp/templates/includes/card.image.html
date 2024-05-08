@@ -23,13 +23,7 @@
                 <div class="modal-body">
                     <img src="{{ image.file.url }}" class="img-fluid" alt="{{ image.description }}">
                     <hr>
-                    <p>
-                        <img src="{{ image.author.profile.avatar.url }}" alt="Author's profile picture"
-                             style="width: 3rem; height: 3rem; object-fit: cover;">
-                        <a href="{% url 'view_user' user_id=image.author.id %}">{{ image.author }}</a>
-                    </p>
-                    <h5>{{ image.title }}</h5>
-                    <p>{{ image.description }}</p>
+                    {% include 'includes/card.image_author_details.html' %}
                     {% include 'includes/utils/util.image_vote.html' %}
                     <hr>
                     <p>
