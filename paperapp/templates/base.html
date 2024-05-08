@@ -30,7 +30,7 @@
         $.ajax({
             url: "/vote/" + mediaId + "/" + mediaType + "/" + voteType + "/",
             success: function (data) {
-                console.log("vote count for " + mediaType + " " + mediaId + " updated.");
+                console.log("#vote-count-" + mediaType + "-" + mediaId);
                 if (data.success) {
                     // Update the vote count on the page
                     $("#vote-count-" + mediaType + "-" + mediaId).text(data.total_votes);
