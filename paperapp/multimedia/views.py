@@ -124,6 +124,11 @@ def delete_post(request, post_type, post_id):
     else:
         post = get_object_or_404(ImagePost, pk=post_id)
 
+    # Check if the request.user is the author of the post
+    if post.author.id != request.user.id:
+        messages.error(request, "You are not authorized to delete this post.")
+        return redirect("home")
+
     post.delete()
     messages.success(request, "Post deleted successfully.")
     return redirect("home")
