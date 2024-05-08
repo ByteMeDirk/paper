@@ -1,7 +1,7 @@
 from django import forms
 from taggit.forms import TagField, TagWidget
 
-from .models import ImagePost, VideoPost, AudioPost, MediaRating
+from .models import ImagePost, VideoPost, AudioPost
 
 
 class ImagePostForm(forms.ModelForm):
@@ -62,7 +62,7 @@ class ImagePostForm(forms.ModelForm):
 class VideoPostForm(forms.ModelForm):
     class Meta:
         model = VideoPost
-        fields = ["title", "description", "file", "content_rating", "tags"]
+        fields = ["title", "description", "thumbnail", "file", "content_rating", "tags"]
 
     title = forms.CharField(
         widget=forms.TextInput(
@@ -78,6 +78,15 @@ class VideoPostForm(forms.ModelForm):
             attrs={
                 "class": "form-control",
                 "placeholder": "Description",
+            }
+        )
+    )
+
+    thumbnail = forms.ImageField(
+        widget=forms.FileInput(
+            attrs={
+                "class": "form-control",
+                "placeholder": "Thumbnail",
             }
         )
     )

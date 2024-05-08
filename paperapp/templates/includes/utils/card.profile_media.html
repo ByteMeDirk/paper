@@ -3,14 +3,9 @@
     <div class="row g-0">
         <div class="col-md-4">
             {% if this_media_type == 'image' %}
-                <img src="{{ media.file.url }}" class="img-fluid rounded-start" alt="...">
-            {% elif this_media_type == 'video' %}
-                <video controls>
-                    <source src="{{ media.file.url }}" type="video/mp4">
-                    Your browser does not support the video tag.
-                </video>
-            {% elif this_media_type == 'audio' %}
-                <img src="{{ media.thumbnail.url }}" class="img-fluid rounded-start" alt="...">
+                <img src="{{ media.file.url }}" class="img-fluid" alt="...">
+            {% else %}
+                <img src="{{ media.thumbnail.url }}" class="img-fluid" alt="...">
             {% endif %}
         </div>
         <div class="col-md-8">
