@@ -148,7 +148,7 @@ def search(request):
             .filter(similarity__gt=0.3)
             .order_by("id", "-similarity")
             .distinct("id")
-        )
+        )[:100]
 
         video_results = (
             VideoPost.objects.annotate(
@@ -158,7 +158,7 @@ def search(request):
             .filter(similarity__gt=0.3)
             .order_by("id", "-similarity")
             .distinct("id")
-        )
+        )[:100]
 
         audio_results = (
             AudioPost.objects.annotate(
@@ -168,7 +168,7 @@ def search(request):
             .filter(similarity__gt=0.3)
             .order_by("id", "-similarity")
             .distinct("id")
-        )
+        )[:100]
     else:
         image_results = ImagePost.objects.none()
         video_results = VideoPost.objects.none()
@@ -181,6 +181,7 @@ def search(request):
             "image_results": image_results,
             "video_results": video_results,
             "audio_results": audio_results,
+            "query": query,
         },
     )
 

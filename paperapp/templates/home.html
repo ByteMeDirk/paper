@@ -9,7 +9,7 @@
             <small>
                 <p>Recent Tags</p>
                 {% for tag in recent_20_tags %}
-                    <a href="#" class="badge bg-info">{{ tag.name }}</a>
+                    <a href="{% url 'search' %}?q={{ tag.name }}" class="badge bg-info">{{ tag.name }}</a>
                 {% endfor %}
             </small>
             <hr>

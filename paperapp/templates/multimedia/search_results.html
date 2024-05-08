@@ -1,37 +1,76 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h2>Search Results</h2>
     {% include 'includes/form.search.html' %}
+    <h5 class="mt-4">Showing Results For: {{ query }}</h5>
+    <small class="small text-muted">Only showing top 100 results.</small>
     <hr>
-    <h5>Images</h5>
-    <div class="row mb-2">  {# Start the row here #}
-        {% for image in image_results %}
-            <div class="col-3">  {# Each card is a column within the row #}
-                {% include 'includes/card.image.html' %}
+    <div class="accordion" id="searchAccordion">
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingImages">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#collapseImages" aria-expanded="false" aria-controls="collapseImages">
+                    Images ({{ image_results|length }})
+                </button>
+            </h2>
+            <div id="collapseImages" class="accordion-collapse collapse" aria-labelledby="headingImages"
+                 data-bs-parent="#searchAccordion">
+                <div class="accordion-body">
+                    <div class="row mb-2">
+                        {% for image in image_results %}
+                            <div class="col-3">
+                                {% include 'includes/card.image.html' %}
+                            </div>
+                            {% empty %}
+                            <p>No results found for Images.</p>
+                        {% endfor %}
+                    </div>
+                </div>
             </div>
-            {% empty %}
-            <p>No results found for Images.</p>
-        {% endfor %}
-    </div>
-    <h5>Videos</h5>
-    <div class="row mb-2">  {# Start the row here #}
-        {% for video in video_results %}
-            <div class="col-3">  {# Each card is a column within the row #}
-                {% include 'includes/card.video.html' %}
+        </div>
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingVideos">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#collapseVideos" aria-expanded="false" aria-controls="collapseVideos">
+                    Videos ({{ video_results|length }})
+                </button>
+            </h2>
+            <div id="collapseVideos" class="accordion-collapse collapse" aria-labelledby="headingVideos"
+                 data-bs-parent="#searchAccordion">
+                <div class="accordion-body">
+                    <div class="row mb-2">
+                        {% for video in video_results %}
+                            <div class="col-3">
+                                {% include 'includes/card.video.html' %}
+                            </div>
+                            {% empty %}
+                            <p>No results found for Video.</p>
+                        {% endfor %}
+                    </div>
+                </div>
             </div>
-            {% empty %}
-            <p>No results found for Video.</p>
-        {% endfor %}
-    </div>
-    <h5>Audio</h5>
-    <div class="row mb-2">  {# Start the row here #}
-        {% for audio in audio_results %}
-            <div class="col-3">  {# Each card is a column within the row #}
-                {% include 'includes/card.audio.html' %}
+        </div>
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingAudio">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#collapseAudio" aria-expanded="false" aria-controls="collapseAudio">
+                    Audio ({{ audio_results|length }})
+                </button>
+            </h2>
+            <div id="collapseAudio" class="accordion-collapse collapse" aria-labelledby="headingAudio"
+                 data-bs-parent="#searchAccordion">
+                <div class="accordion-body">
+                    <div class="row mb-2">
+                        {% for audio in audio_results %}
+                            <div class="col-3">
+                                {% include 'includes/card.audio.html' %}
+                            </div>
+                            {% empty %}
+                            <p>No results found for Audio.</p>
+                        {% endfor %}
+                    </div>
+                </div>
             </div>
-            {% empty %}
-            <p>No results found for Audio.</p>
-        {% endfor %}
+        </div>
     </div>
 {% endblock %}
