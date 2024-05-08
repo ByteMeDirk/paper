@@ -110,7 +110,9 @@ def edit_post(request, post_type, post_id):
             return redirect("home")
 
     return render(
-        request, "multimedia/edit_post.html", {"form": form, "post_type": post_type, "post": post}
+        request,
+        "multimedia/edit_post.html",
+        {"form": form, "post_type": post_type, "post": post},
     )
 
 
@@ -143,34 +145,34 @@ def search(request):
     query = request.GET.get("q")
     if query:
         image_results = (
-                            ImagePost.objects.annotate(
-                                similarity=TrigramSimilarity("author__username", query)
-                                           + TrigramSimilarity("tags__name", query),
-                            )
-                            .filter(similarity__gt=0.3)
-                            .order_by("id", "-similarity")
-                            .distinct("id")
-                        )[:100]
+            ImagePost.objects.annotate(
+                similarity=TrigramSimilarity("author__username", query)
+                + TrigramSimilarity("tags__name", query),
+            )
+            .filter(similarity__gt=0.3)
+            .order_by("id", "-similarity")
+            .distinct("id")
+        )[:100]
 
         video_results = (
-                            VideoPost.objects.annotate(
-                                similarity=TrigramSimilarity("author__username", query)
-                                           + TrigramSimilarity("tags__name", query),
-                            )
-                            .filter(similarity__gt=0.3)
-                            .order_by("id", "-similarity")
-                            .distinct("id")
-                        )[:100]
+            VideoPost.objects.annotate(
+                similarity=TrigramSimilarity("author__username", query)
+                + TrigramSimilarity("tags__name", query),
+            )
+            .filter(similarity__gt=0.3)
+            .order_by("id", "-similarity")
+            .distinct("id")
+        )[:100]
 
         audio_results = (
-                            AudioPost.objects.annotate(
-                                similarity=TrigramSimilarity("author__username", query)
-                                           + TrigramSimilarity("tags__name", query),
-                            )
-                            .filter(similarity__gt=0.3)
-                            .order_by("id", "-similarity")
-                            .distinct("id")
-                        )[:100]
+            AudioPost.objects.annotate(
+                similarity=TrigramSimilarity("author__username", query)
+                + TrigramSimilarity("tags__name", query),
+            )
+            .filter(similarity__gt=0.3)
+            .order_by("id", "-similarity")
+            .distinct("id")
+        )[:100]
     else:
         image_results = ImagePost.objects.none()
         video_results = VideoPost.objects.none()
@@ -235,14 +237,20 @@ def view_gallery(request, media_type):
         "audio": AudioPost,
     }
 
-    sort_by = request.GET.get('sort_by', '-created_at')  # Default sorting is by date created
+    sort_by = request.GET.get(
+        "sort_by", "-created_at"
+    )  # Default sorting is by date created
     if media_type in media_models:
         # Get all media of the specified type
         media_model = media_models[media_type]
-        media_objects = media_model.objects.annotate(votes=Sum('mediarating__vote')).order_by(sort_by)
+        media_objects = media_model.objects.annotate(
+            votes=Sum("mediarating__vote")
+        ).order_by(sort_by)
 
         # Define Pagination
-        paginator = Paginator(media_objects, 100)  # Increase the number of objects per page
+        paginator = Paginator(
+            media_objects, 100
+        )  # Increase the number of objects per page
 
         # Get the page number
         page_number = request.GET.get("page")

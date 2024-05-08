@@ -78,7 +78,17 @@ def user_profile(request):
         # Populate the form with the existing profile data
         form = ProfileForm(instance=profile)
 
-    return render(request, "users/profile.html", {"form": form, "profile": profile , "image_media": image_media, "video_media": video_media, "audio_media": audio_media})
+    return render(
+        request,
+        "users/profile.html",
+        {
+            "form": form,
+            "profile": profile,
+            "image_media": image_media,
+            "video_media": video_media,
+            "audio_media": audio_media,
+        },
+    )
 
 
 def view_user(request, user_id):

@@ -1,5 +1,11 @@
 from django.contrib import admin
-from multimedia.models import ImagePost, VideoPost, AudioPost, MediaRating, MediaModeration
+from multimedia.models import (
+    ImagePost,
+    VideoPost,
+    AudioPost,
+    MediaRating,
+    MediaModeration,
+)
 from users.models import Profile
 
 admin.site.register(ImagePost)
