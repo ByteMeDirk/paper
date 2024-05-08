@@ -71,23 +71,36 @@ def edit_post(request, post_type, post_id):
     """
     if post_type == "video":
         post = get_object_or_404(VideoPost, pk=post_id)
-        form = VideoPostForm(request.POST or None, request.FILES or None, instance=post)
     elif post_type == "audio":
         post = get_object_or_404(AudioPost, pk=post_id)
-        form = AudioPostForm(request.POST or None, request.FILES or None, instance=post)
     else:
         post = get_object_or_404(ImagePost, pk=post_id)
-        form = ImagePostForm(request.POST or None, request.FILES or None, instance=post)
+
+    # Check if the request.user is the author of the post
+    if post.author.id != request.user.id:
+        messages.error(request, "You are not authorized to edit this post.")
+        return redirect("home")
+
+    form = (
+        VideoPostForm(request.POST or None, request.FILES or None, instance=post)
+        if post_type == "video"
+        else (
+            AudioPostForm(request.POST or None, request.FILES or None, instance=post)
+            if post_type == "audio"
+            else ImagePostForm(
+                request.POST or None, request.FILES or None, instance=post
+            )
+        )
+    )
 
     if request.method == "POST":
         if form.is_valid():
             post = form.save(commit=False)
             post.author = request.user
 
-            # Change File name to a unique name
-            file_name = str(uuid.uuid4())
-            ext = os.path.splitext(post.file.name)[1]
-            post.file.name = file_name + ext
+            # If a new file is not provided, keep the old file
+            if not request.FILES:
+                post.file = post.file
 
             post.save()
             form.save_m2m()  # Save many-to-many fields
@@ -95,7 +108,7 @@ def edit_post(request, post_type, post_id):
             return redirect("home")
 
     return render(
-        request, "multimedia/edit_post.html", {"form": form, "post_type": post_type}
+        request, "multimedia/edit_post.html", {"form": form, "post_type": post_type, "post": post}
     )
 
 
@@ -122,53 +135,74 @@ def search(request):
     """
     query = request.GET.get("q")
     if query:
-        image_results = ImagePost.objects.annotate(
-            similarity=TrigramSimilarity('author__username', query) +
-                       TrigramSimilarity('tags__name', query),
-        ).filter(similarity__gt=0.3).order_by('id', '-similarity').distinct('id')
+        image_results = (
+            ImagePost.objects.annotate(
+                similarity=TrigramSimilarity("author__username", query)
+                           + TrigramSimilarity("tags__name", query),
+            )
+            .filter(similarity__gt=0.3)
+            .order_by("id", "-similarity")
+            .distinct("id")
+        )
 
-        video_results = VideoPost.objects.annotate(
-            similarity=TrigramSimilarity('author__username', query) +
-                       TrigramSimilarity('tags__name', query),
-        ).filter(similarity__gt=0.3).order_by('id', '-similarity').distinct('id')
+        video_results = (
+            VideoPost.objects.annotate(
+                similarity=TrigramSimilarity("author__username", query)
+                           + TrigramSimilarity("tags__name", query),
+            )
+            .filter(similarity__gt=0.3)
+            .order_by("id", "-similarity")
+            .distinct("id")
+        )
 
-        audio_results = AudioPost.objects.annotate(
-            similarity=TrigramSimilarity('author__username', query) +
-                       TrigramSimilarity('tags__name', query),
-        ).filter(similarity__gt=0.3).order_by('id', '-similarity').distinct('id')
+        audio_results = (
+            AudioPost.objects.annotate(
+                similarity=TrigramSimilarity("author__username", query)
+                           + TrigramSimilarity("tags__name", query),
+            )
+            .filter(similarity__gt=0.3)
+            .order_by("id", "-similarity")
+            .distinct("id")
+        )
     else:
         image_results = ImagePost.objects.none()
         video_results = VideoPost.objects.none()
         audio_results = AudioPost.objects.none()
 
-    return render(request, 'multimedia/search_results.html', {
-        'image_results': image_results,
-        'video_results': video_results,
-        'audio_results': audio_results,
-    })
+    return render(
+        request,
+        "multimedia/search_results.html",
+        {
+            "image_results": image_results,
+            "video_results": video_results,
+            "audio_results": audio_results,
+        },
+    )
 
 
 def vote(request, media_id, media_type, vote_type):
     if request.user.is_authenticated:
         media_kwargs = {
-            'image_id': None,
-            'video_id': None,
-            'audio_id': None,
+            "image_id": None,
+            "video_id": None,
+            "audio_id": None,
         }
 
-        if media_type == 'image':
+        if media_type == "image":
             media = ImagePost.objects.get(id=media_id)
-            media_kwargs['image_id'] = media
-        elif media_type == 'video':
+            media_kwargs["image_id"] = media
+        elif media_type == "video":
             media = VideoPost.objects.get(id=media_id)
-            media_kwargs['video_id'] = media
+            media_kwargs["video_id"] = media
         else:  # audio
             media = AudioPost.objects.get(id=media_id)
-            media_kwargs['audio_id'] = media
+            media_kwargs["audio_id"] = media
 
-        vote, created = MediaRating.objects.get_or_create(user=request.user, **media_kwargs)
+        vote, created = MediaRating.objects.get_or_create(
+            user=request.user, **media_kwargs
+        )
 
-        if vote_type == 'up':
+        if vote_type == "up":
             vote.vote = 1
         else:  # down
             vote.vote = -1

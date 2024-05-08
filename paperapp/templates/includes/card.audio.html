@@ -1,3 +1,4 @@
+{% load humanize %}
 {# Users under 18 can only view general content. #}
 {% if request.user.profile.age >= 18 and audio.media_rating != "general" %}
     <div class="card mt-2 {% include 'includes/utils/util.audio_content_rating.border_color.html' %}"
@@ -25,6 +26,11 @@
                     <hr>
                     {% include 'includes/card.audio_author_details.html' %}
                     {% include 'includes/utils/util.audio_vote.html' %}
+                    {# If this belongs to the user, show the edit button #}
+                    {% if audio.author.id == request.user.profile.id %}
+                        <a href="{% url 'edit_post' post_type='audio' post_id=audio.id %}"
+                           class="btn btn-warning">Edit</a>
+                    {% endif %}
                     <hr>
                     <p>
                         {% for tag in audio.tags.all %}
@@ -36,9 +42,9 @@
                     <small class="text-muted">
                         Size: {{ audio.file.size }} |
                         {% if audio.created_at == audio.updated_at %}
-                            Created: {{ audio.created_at }}
+                            Created: {{ audio.created_at|naturalday }}
                         {% else %}
-                            Edited: {{ audio.updated_at }}
+                            Edited: {{ audio.updated_at|naturalday }}
                         {% endif %}
                     </small>
                 </div>

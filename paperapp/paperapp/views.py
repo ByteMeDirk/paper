@@ -33,17 +33,21 @@ def home(request):
     total_video_posts = VideoPost.objects.count()
     total_audio_posts = AudioPost.objects.count()
 
-    return render(request, "home.html", {
-        "image_page_obj": image_page_obj,
-        "video_page_obj": video_page_obj,
-        "audio_page_obj": audio_page_obj,
-        "recent_20_tags": recent_20_tags,
-        "media_count": {
-            "image": total_image_posts,
-            "video": total_video_posts,
-            "audio": total_audio_posts,
-        }
-    })
+    return render(
+        request,
+        "home.html",
+        {
+            "image_page_obj": image_page_obj,
+            "video_page_obj": video_page_obj,
+            "audio_page_obj": audio_page_obj,
+            "recent_20_tags": recent_20_tags,
+            "media_count": {
+                "image": total_image_posts,
+                "video": total_video_posts,
+                "audio": total_audio_posts,
+            },
+        },
+    )
 
 
 def wiki(request):

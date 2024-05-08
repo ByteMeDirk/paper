@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="card">
+            {% if post_type == "audio" %}
+                <img class="card-img-top" src="{{ post.thumbnail.url }}" alt="Thumbnail Image">
+            {% elif post_type == "image" %}
+                <img class="card-img-top" src="{{ post.file.url }}" alt="Post Image">
+            {% elif post_type == "video" %}
+                <video class="card-img-top" controls>
+                    <source src="{{ post.file.url }}" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            {% endif %}
+            <div class="card-header">
+                Post: {{ post_type }}
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    {{ form.as_p }}
+                </div>
+                <button type="submit" class="btn btn-primary">Post!</button>
+            </div>
+        </div>
+    </form>
+{% endblock %}

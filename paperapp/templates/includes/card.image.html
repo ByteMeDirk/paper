@@ -1,3 +1,4 @@
+{% load humanize %}
 {# Users under 18 can only view general content. #}
 {% if request.user.profile.age >= 18 and image.media_rating != "general" %}
     <div class="card mt-2 {% include 'includes/utils/util.image_content_rating.border_color.html' %}"
@@ -25,6 +26,11 @@
                     <hr>
                     {% include 'includes/card.image_author_details.html' %}
                     {% include 'includes/utils/util.image_vote.html' %}
+                    {# If this belongs to the user, show the edit button #}
+                    {% if image.author.id == request.user.profile.id %}
+                        <a href="{% url 'edit_post' post_type='image' post_id=image.id %}"
+                           class="btn btn-warning">Edit</a>
+                    {% endif %}
                     <hr>
                     <p>
                         {% for tag in image.tags.all %}
@@ -37,9 +43,9 @@
                         Size: {{ image.file.size }} |
                         Dimensions: {{ image.file.width }} x {{ image.file.height }} |
                         {% if image.created_at == image.updated_at %}
-                            Created: {{ image.created_at }}
+                            Created: {{ image.created_at|naturalday }}
                         {% else %}
-                            Edited: {{ image.updated_at }}
+                            Edited: {{ image.updated_at|naturalday }}
                         {% endif %}
                     </small>
                 </div>

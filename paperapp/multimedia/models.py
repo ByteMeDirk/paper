@@ -23,7 +23,12 @@ class ImagePost(models.Model):
     metadata = models.JSONField(null=True, blank=True)
 
     def get_vote_count(self):
-        return MediaRating.objects.filter(image_id=self.id).aggregate(Sum('vote'))['vote__sum'] or 0
+        return (
+            MediaRating.objects.filter(image_id=self.id).aggregate(Sum("vote"))[
+                "vote__sum"
+            ]
+            or 0
+        )
 
 
 class VideoPost(models.Model):
@@ -45,7 +50,12 @@ class VideoPost(models.Model):
     metadata = models.JSONField(null=True, blank=True)
 
     def get_vote_count(self):
-        return MediaRating.objects.filter(image_id=self.id).aggregate(Sum('vote'))['vote__sum'] or 0
+        return (
+            MediaRating.objects.filter(image_id=self.id).aggregate(Sum("vote"))[
+                "vote__sum"
+            ]
+            or 0
+        )
 
 
 class AudioPost(models.Model):
@@ -66,7 +76,12 @@ class AudioPost(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def get_vote_count(self):
-        return MediaRating.objects.filter(image_id=self.id).aggregate(Sum('vote'))['vote__sum'] or 0
+        return (
+            MediaRating.objects.filter(image_id=self.id).aggregate(Sum("vote"))[
+                "vote__sum"
+            ]
+            or 0
+        )
 
 
 class MediaRating(models.Model):
@@ -100,12 +115,27 @@ class MediaRating(models.Model):
 
     @classmethod
     def get_total_votes(cls, media_id, media_type):
-        if media_type == 'image':
-            return cls.objects.filter(image_id=media_id).aggregate(Sum('vote'))['vote__sum'] or 0
-        elif media_type == 'video':
-            return cls.objects.filter(video_id=media_id).aggregate(Sum('vote'))['vote__sum'] or 0
+        if media_type == "image":
+            return (
+                cls.objects.filter(image_id=media_id).aggregate(Sum("vote"))[
+                    "vote__sum"
+                ]
+                or 0
+            )
+        elif media_type == "video":
+            return (
+                cls.objects.filter(video_id=media_id).aggregate(Sum("vote"))[
+                    "vote__sum"
+                ]
+                or 0
+            )
         else:  # audio
-            return cls.objects.filter(audio_id=media_id).aggregate(Sum('vote'))['vote__sum'] or 0
+            return (
+                cls.objects.filter(audio_id=media_id).aggregate(Sum("vote"))[
+                    "vote__sum"
+                ]
+                or 0
+            )
 
 
 class MediaModeration(models.Model):

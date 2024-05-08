@@ -11,6 +11,8 @@ urlpatterns = [
         views.delete_post,
         name="delete_post",
     ),
-    path('search/', views.search, name='search'),
-    path('vote/<int:media_id>/<str:media_type>/<str:vote_type>/', views.vote, name='vote'),
+    path("search/", views.search, name="search"),
+    path(
+        "vote/<int:media_id>/<str:media_type>/<str:vote_type>/", views.vote, name="vote"
+    ),
 ]

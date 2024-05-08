@@ -33,22 +33,27 @@ class Profile(models.Model):
     bio = models.TextField(max_length=500, blank=True)
     location = models.CharField(max_length=30, blank=True)
     birth_date = models.DateField(null=True, blank=True)
-    avatar = models.ImageField(upload_to="avatars/", blank=True, default="avatars/default.png")
+    avatar = models.ImageField(
+        upload_to="avatars/", blank=True, default="avatars/default.png"
+    )
 
     def __str__(self):
         return self.user.username
 
     def age(self):
         today = date.today()
-        return today.year - self.birth_date.year - (
-                    (today.month, today.day) < (self.birth_date.month, self.birth_date.day))
+        return (
+            today.year
+            - self.birth_date.year
+            - ((today.month, today.day) < (self.birth_date.month, self.birth_date.day))
+        )
 
     def save(self, *args, **kwargs):
         """
         Crop the input image to a square and save it.
         """
         super().save(*args, **kwargs)
-        if self.avatar and not self.avatar.name == '':
+        if self.avatar and not self.avatar.name == "":
             image = Image.open(self.avatar)
             width, height = image.size
             if width != height:

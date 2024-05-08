@@ -37,7 +37,11 @@ class ImagePostForm(forms.ModelForm):
     )
 
     content_rating = forms.ChoiceField(
-        choices=[("General", "General"), ("Mature", "Mature"), ("Explicit", "Explicit")],
+        choices=[
+            ("General", "General"),
+            ("Mature", "Mature"),
+            ("Explicit", "Explicit"),
+        ],
         widget=forms.Select(
             attrs={
                 "class": "form-control",
@@ -88,7 +92,11 @@ class VideoPostForm(forms.ModelForm):
     )
 
     content_rating = forms.ChoiceField(
-        choices=[("General", "General"), ("Mature", "Mature"), ("Explicit", "Explicit")],
+        choices=[
+            ("General", "General"),
+            ("Mature", "Mature"),
+            ("Explicit", "Explicit"),
+        ],
         widget=forms.Select(
             attrs={
                 "class": "form-control",
@@ -148,7 +156,11 @@ class AudioPostForm(forms.ModelForm):
     )
 
     content_rating = forms.ChoiceField(
-        choices=[("General", "General"), ("Mature", "Mature"), ("Explicit", "Explicit")],
+        choices=[
+            ("General", "General"),
+            ("Mature", "Mature"),
+            ("Explicit", "Explicit"),
+        ],
         widget=forms.Select(
             attrs={
                 "class": "form-control",
@@ -190,7 +202,11 @@ class SearchMediaForm(forms.Form):
 
     # Filter by content rating
     content_rating = forms.ChoiceField(
-        choices=[("General", "General"), ("Mature", "Mature"), ("Explicit", "Explicit")],
+        choices=[
+            ("General", "General"),
+            ("Mature", "Mature"),
+            ("Explicit", "Explicit"),
+        ],
         widget=forms.Select(
             attrs={
                 "class": "form-control",

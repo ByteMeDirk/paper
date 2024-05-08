@@ -1,3 +1,4 @@
+{% load humanize %}
 {# Users under 18 can only view general content. #}
 {% if request.user.profile.age >= 18 and video.media_rating != "general" %}
     <div class="card mt-2 {% include 'includes/utils/util.video_content_rating.border_color.html' %}"
@@ -25,6 +26,11 @@
                     <hr>
                     {% include 'includes/card.video_author_details.html' %}
                     {% include 'includes/utils/util.video_vote.html' %}
+                    {# If this belongs to the user, show the edit button #}
+                    {% if video.author.id == request.user.profile.id %}
+                        <a href="{% url 'edit_post' post_type='video' post_id=video.id %}"
+                           class="btn btn-warning">Edit</a>
+                    {% endif %}
                     <hr>
                     <p>
                         {% for tag in video.tags.all %}
@@ -36,9 +42,9 @@
                     <small class="text-muted">
                         Size: {{ video.file.size }} |
                         {% if video.created_at == video.updated_at %}
-                            Created: {{ video.created_at }}
+                            Created: {{ video.created_at|naturalday }}
                         {% else %}
-                            Edited: {{ video.updated_at }}
+                            Edited: {{ video.updated_at|naturalday }}
                         {% endif %}
                     </small>
                 </div>
