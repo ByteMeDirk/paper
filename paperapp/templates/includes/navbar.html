@@ -47,16 +47,16 @@
 </nav>
 
 {% if request.user.is_superuser or request.user.is_staff %}
-    <nav class="navbar bg-body-tertiary">
+    <nav class="navbar bg-warning mb-2">
         <form class="container-fluid justify-content-start">
          <span class="navbar-text me-2">
             Warning: You are a superuser or staff member. Please be careful with your actions.
          </span>
             {% if request.user.is_superuser %}
-                <a class="btn btn-sm btn-outline-warning me-2" href="{% url 'admin:index' %}">Admin</a>
+                <a class="btn btn-sm btn-outline-dark me-2" href="{% url 'admin:index' %}">Admin</a>
             {% endif %}
             {% if request.user.is_staff %}
-                <a class="btn btn-sm btn-outline-warning" href="#">Moderation</a>
+                <a class="btn btn-sm btn-outline-dark" href="#">Moderation</a>
             {% endif %}
         </form>
     </nav>
