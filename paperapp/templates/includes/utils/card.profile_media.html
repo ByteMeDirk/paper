@@ -1,0 +1,37 @@
+{% load humanize %}
+<div class="card mb-3">
+    <div class="row g-0">
+        <div class="col-md-4">
+            {% if this_media_type == 'image' %}
+                <img src="{{ media.file.url }}" class="img-fluid rounded-start" alt="...">
+            {% elif this_media_type == 'video' %}
+                <video controls>
+                    <source src="{{ media.file.url }}" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            {% elif this_media_type == 'audio' %}
+                <img src="{{ media.thumbnail.url }}" class="img-fluid rounded-start" alt="...">
+            {% endif %}
+        </div>
+        <div class="col-md-8">
+            <div class="card-body">
+                <h5 class="card-title">{{ media.title }}</h5>
+                <p class="card-text">{{ media.description }}</p>
+                <p class="card-text">
+                    <small class="text-body-secondary">
+                        {% if media.created_at == media.updated_at %}
+                            Created: {{ media.created_at|naturalday }}
+                        {% else %}
+                            Edited: {{ media.updated_at|naturalday }}
+                        {% endif %} <br>
+                        Votes: {{ media.get_vote_count }} <br>
+                    </small>
+                </p>
+                {% if media.author.id == request.user.profile.id %}
+                    <a href="{% url 'edit_post' post_type=this_media_type post_id=media.id %}"
+                       class="btn btn-warning">Edit</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>

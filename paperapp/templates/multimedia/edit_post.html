@@ -6,6 +6,7 @@
         <div class="card">
             {% if post_type == "audio" %}
                 <img class="card-img-top" src="{{ post.thumbnail.url }}" alt="Thumbnail Image">
+                <audio src="{{ post.file.url }}" class="img-fluid" alt="{{ audio.description }}" controls></audio>
             {% elif post_type == "image" %}
                 <img class="card-img-top" src="{{ post.file.url }}" alt="Post Image">
             {% elif post_type == "video" %}

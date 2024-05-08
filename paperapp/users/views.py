@@ -60,6 +60,9 @@ def user_profile(request):
     """
     # Get the current user's profile
     profile = request.user.profile
+    image_media = ImagePost.objects.filter(author=request.user).order_by("-created_at")
+    video_media = VideoPost.objects.filter(author=request.user).order_by("-created_at")
+    audio_media = AudioPost.objects.filter(author=request.user).order_by("-created_at")
 
     if request.method == "POST":
         # Populate the form with the existing profile data and the submitted data
@@ -75,7 +78,7 @@ def user_profile(request):
         # Populate the form with the existing profile data
         form = ProfileForm(instance=profile)
 
-    return render(request, "users/profile.html", {"form": form, "profile": profile})
+    return render(request, "users/profile.html", {"form": form, "profile": profile , "image_media": image_media, "video_media": video_media, "audio_media": audio_media})
 
 
 def view_user(request, user_id):

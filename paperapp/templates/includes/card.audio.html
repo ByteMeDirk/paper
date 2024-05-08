@@ -22,7 +22,9 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <audio src="{{ audio.file.url }}" class="img-fluid" alt="{{ audio.description }}" controls></audio>
+                    <img src="{{ audio.thumbnail.url }}" class="img-fluid" alt="{{ audio.description }}">
+                    <audio src="{{ audio.file.url }}" alt="{{ audio.description }}"
+                           controls></audio>
                     <hr>
                     {% include 'includes/card.audio_author_details.html' %}
                     {% include 'includes/utils/util.audio_vote.html' %}
