@@ -1,6 +1,18 @@
 {% extends 'base.html' %}
 
 {% block content %}
+    <form method="get">
+        <div class="input-group mt-2">
+            <select class="form-select" name="sort_by" id="sort_by">
+                <option value="-created_at">Newest</option>
+                <option value="created_at">Oldest</option>
+                <option value="votes">Most votes</option>
+                <option value="-votes">Least votes</option>
+            </select>
+            <button class="btn btn-outline-secondary" type="submit">Sort</button>
+        </div>
+    </form>
+    <hr>
     {% if media_type == 'image' %}
         <h2>Image Gallery</h2>
         <div class="row mb-2">  {# Start the row here #}

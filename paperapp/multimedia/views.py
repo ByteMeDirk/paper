@@ -5,6 +5,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.postgres.search import TrigramSimilarity
 from django.core.paginator import Paginator
+from django.db.models import Sum
 from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 
@@ -226,71 +227,35 @@ def vote(request, media_id, media_type, vote_type):
 @login_required(login_url="login")
 def view_gallery(request, media_type):
     """
-    This view displays all the image posts using pagination.
+    This view displays all the media posts using pagination.
     """
-    if media_type == "image":
-        # Get all images
-        image_media = ImagePost.objects.all().order_by("-created_at")
+    media_models = {
+        "image": ImagePost,
+        "video": VideoPost,
+        "audio": AudioPost,
+    }
 
-        # Define Image Pagination
-        image_paginator = Paginator(image_media, 50)
+    sort_by = request.GET.get('sort_by', '-created_at')  # Default sorting is by date created
+    if media_type in media_models:
+        # Get all media of the specified type
+        media_model = media_models[media_type]
+        media_objects = media_model.objects.annotate(votes=Sum('mediarating__vote')).order_by(sort_by)
+
+        # Define Pagination
+        paginator = Paginator(media_objects, 100)  # Increase the number of objects per page
 
         # Get the page number
-        image_page_number = request.GET.get("image_page")
+        page_number = request.GET.get("page")
 
         # Get the page
-        image_page_obj = image_paginator.get_page(image_page_number)
+        page_obj = paginator.get_page(page_number)
 
         return render(
             request,
             "multimedia/view_gallery.html",
             {
-                "image_page_obj": image_page_obj,
-                "media_type": "image",
-            },
-        )
-
-    elif media_type == "video":
-        # Get all videos
-        video_media = VideoPost.objects.all().order_by("-created_at")
-
-        # Define Video Pagination
-        video_paginator = Paginator(video_media, 50)
-
-        # Get the page number
-        video_page_number = request.GET.get("video_page")
-
-        # Get the page
-        video_page_obj = video_paginator.get_page(video_page_number)
-
-        return render(
-            request,
-            "multimedia/view_gallery.html",
-            {
-                "video_page_obj": video_page_obj,
-                "media_type": "video",
-            },
-        )
-
-    elif media_type == "audio":
-        # Get all audio
-        audio_media = AudioPost.objects.all().order_by("-created_at")
-
-        # Define Audio Pagination
-        audio_paginator = Paginator(audio_media, 50)
-
-        # Get the page number
-        audio_page_number = request.GET.get("audio_page")
-
-        # Get the page
-        audio_page_obj = audio_paginator.get_page(audio_page_number)
-
-        return render(
-            request,
-            "multimedia/view_gallery.html",
-            {
-                "audio_page_obj": audio_page_obj,
-                "media_type": "audio",
+                f"{media_type}_page_obj": page_obj,
+                "media_type": media_type,
             },
         )
 
