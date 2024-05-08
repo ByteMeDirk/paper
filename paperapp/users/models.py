@@ -38,7 +38,7 @@ class Profile(models.Model):
     )
 
     def __str__(self):
-        return self.user.username
+        return f"{self.user.username}'s Profile"
 
     def age(self):
         today = date.today()

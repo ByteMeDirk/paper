@@ -22,6 +22,9 @@ class ImagePost(models.Model):
 
     metadata = models.JSONField(null=True, blank=True)
 
+    def __str__(self):
+        return f"{self.title} by {self.author.username}"
+
     def get_vote_count(self):
         return (
                 MediaRating.objects.filter(image_id=self.id).aggregate(Sum("vote"))[
@@ -50,6 +53,9 @@ class VideoPost(models.Model):
 
     metadata = models.JSONField(null=True, blank=True)
 
+    def __str__(self):
+        return f"{self.title} by {self.author.username}"
+
     def get_vote_count(self):
         return (
                 MediaRating.objects.filter(image_id=self.id).aggregate(Sum("vote"))[
@@ -75,6 +81,9 @@ class AudioPost(models.Model):
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.title} by {self.author.username}"
 
     def get_vote_count(self):
         return (
@@ -108,6 +117,9 @@ class MediaRating(models.Model):
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.user.username} rated {self.vote} for {self.image_id or self.video_id or self.audio_id}"
 
     class Meta:
         unique_together = ("user", "image_id", "video_id", "audio_id")
@@ -163,6 +175,9 @@ class MediaModeration(models.Model):
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.user.username} moderated {self.image_id or self.video_id or self.audio_id}"
 
     class Meta:
         unique_together = ("user", "image_id", "video_id", "audio_id")

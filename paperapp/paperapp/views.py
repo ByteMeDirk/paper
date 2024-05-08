@@ -1,13 +1,16 @@
-from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
+from django.shortcuts import render
+
 from multimedia.models import ImagePost, VideoPost, AudioPost
 
 
+@login_required(login_url="about")
 def home(request):
     """
     View for the home page.
     """
-    # Get all media content
+    # Get all media static
     image_media = ImagePost.objects.all().order_by("-created_at")
     video_media = VideoPost.objects.all().order_by("-created_at")
     audio_media = AudioPost.objects.all().order_by("-created_at")

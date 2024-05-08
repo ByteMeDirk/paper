@@ -209,7 +209,7 @@ class SearchMediaForm(forms.Form):
         required=False,
     )
 
-    # Filter by content rating
+    # Filter by static rating
     content_rating = forms.ChoiceField(
         choices=[
             ("General", "General"),

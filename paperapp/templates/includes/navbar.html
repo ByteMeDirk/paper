@@ -7,10 +7,13 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
             <div class="navbar-nav">
-                <a class="nav-link {% if request.path == '/' %}active{% endif %}" {% if request.path == '/' %}aria-current="page"{% endif %} href="{% url 'home' %}">Home</a>
+                <a class="nav-link {% if request.path == '/' %}active{% endif %}"
+                   {% if request.path == '/' %}aria-current="page"{% endif %} href="{% url 'home' %}">Home</a>
                 {# Dropdown Gallery #}
                 <div class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle {% if request.path == '/gallery/' %}active{% endif %}" {% if request.path == '/gallery/' %}aria-current="page"{% endif %} href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <a class="nav-link dropdown-toggle {% if request.path == '/gallery/' %}active{% endif %}"
+                       {% if request.path == '/gallery/' %}aria-current="page"{% endif %} href="#"
+                       id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         Gallery
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
@@ -19,15 +22,21 @@
                         <li><a class="dropdown-item" href="#">Audio</a></li>
                     </ul>
                 </div>
-                <a class="nav-link {% if request.path == '/wiki/' %}active{% endif %}" {% if request.path == '/wiki/' %}aria-current="page"{% endif %} href="{% url 'wiki' %}">Wiki</a>
-                <a class="nav-link {% if request.path == '/about/' %}active{% endif %}" {% if request.path == '/about/' %}aria-current="page"{% endif %} href="{% url 'about' %}">About</a>
+                <a class="nav-link {% if request.path == '/wiki/' %}active{% endif %}"
+                   {% if request.path == '/wiki/' %}aria-current="page"{% endif %} href="{% url 'wiki' %}">Wiki</a>
+                <a class="nav-link {% if request.path == '/about/' %}active{% endif %}"
+                   {% if request.path == '/about/' %}aria-current="page"{% endif %} href="{% url 'about' %}">About</a>
             </div>
             {# Float Right Navbar Buttons #}
             <div class="navbar-nav ms-auto">
-                <a class="nav-link text-success {% if request.path == '/select_post_type/' %}active{% endif %}" {% if request.path == '/select_post_type/' %}aria-current="page"{% endif %} href="{% url 'select_post_type' %}">Post</a>
+                <a class="nav-link text-success {% if request.path == '/select_post_type/' %}active{% endif %}"
+                   {% if request.path == '/select_post_type/' %}aria-current="page"{% endif %}
+                   href="{% url 'select_post_type' %}">Post</a>
                 {% if request.user.is_authenticated %}
                     <a class="nav-link text-danger" href="{% url 'logout' %}">Logout</a>
-                    <a class="nav-link {% if request.path == '/profile/' %}active{% endif %}" {% if request.path == '/profile/' %}aria-current="page"{% endif %} href="{% url 'profile' %}">{{ request.user }}</a>
+                    <a class="nav-link {% if request.path == '/profile/' %}active{% endif %}"
+                       {% if request.path == '/profile/' %}aria-current="page"{% endif %}
+                       href="{% url 'profile' %}">{{ request.user }}</a>
                 {% else %}
                     <a class="nav-link text-primary" href="{% url 'login' %}">Login</a>
                     <a class="nav-link" href="{% url 'signup' %}">Signup</a>
@@ -36,3 +45,19 @@
         </div>
     </div>
 </nav>
+
+{% if request.user.is_superuser or request.user.is_staff %}
+    <nav class="navbar bg-body-tertiary">
+        <form class="container-fluid justify-content-start">
+         <span class="navbar-text me-2">
+            Warning: You are a superuser or staff member. Please be careful with your actions.
+         </span>
+            {% if request.user.is_superuser %}
+                <a class="btn btn-sm btn-outline-warning me-2" href="{% url 'admin:index' %}">Admin</a>
+            {% endif %}
+            {% if request.user.is_staff %}
+                <a class="btn btn-sm btn-outline-warning" href="#">Moderation</a>
+            {% endif %}
+        </form>
+    </nav>
+{% endif %}
