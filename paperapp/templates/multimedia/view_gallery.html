@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    {% if media_type == 'image' %}
+        <h2>Image Gallery</h2>
+        <div class="row mb-2">  {# Start the row here #}
+            {% for image in image_page_obj %}
+                <div class="col-lg-3 col-md-6 col-sm-12">  {# Each card is a column within the row #}
+                    {% include 'includes/card.image.html' %}
+                </div>
+            {% endfor %}
+        </div>
+        {# End the row here #}
+        {% include 'includes/pagination.image.html' %}
+    {% endif %}
+
+    {% if media_type == 'video' %}
+        <h2>Video Gallery</h2>
+        <div class="row mb-2">  {# Start the row here #}
+            {% for video in video_page_obj %}
+                <div class="col-lg-3 col-md-6 col-sm-12">  {# Each card is a column within the row #}
+                    {% include 'includes/card.video.html' %}
+                </div>
+            {% endfor %}
+        </div>
+        {# End the row here #}
+        {% include 'includes/pagination.video.html' %}
+    {% endif %}
+
+    {% if media_type == 'audio' %}
+        <h2>Audio Gallery</h2>
+        <div class="row mb-2">  {# Start the row here #}
+            {% for audio in audio_page_obj %}
+                <div class="col-lg-3 col-md-6 col-sm-12">  {# Each card is a column within the row #}
+                    {% include 'includes/card.audio.html' %}
+                </div>
+            {% endfor %}
+        </div>
+        {# End the row here #}
+        {% include 'includes/pagination.audio.html' %}
+    {% endif %}
+{% endblock %}

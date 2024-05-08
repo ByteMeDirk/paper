@@ -15,4 +15,5 @@ urlpatterns = [
     path(
         "vote/<int:media_id>/<str:media_type>/<str:vote_type>/", views.vote, name="vote"
     ),
+    path("view_gallery/<str:media_type>", views.view_gallery, name="view_gallery"),
 ]

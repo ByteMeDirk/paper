@@ -4,6 +4,7 @@ import uuid
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.postgres.search import TrigramSimilarity
+from django.core.paginator import Paginator
 from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 
@@ -141,34 +142,34 @@ def search(request):
     query = request.GET.get("q")
     if query:
         image_results = (
-            ImagePost.objects.annotate(
-                similarity=TrigramSimilarity("author__username", query)
-                           + TrigramSimilarity("tags__name", query),
-            )
-            .filter(similarity__gt=0.3)
-            .order_by("id", "-similarity")
-            .distinct("id")
-        )[:100]
+                            ImagePost.objects.annotate(
+                                similarity=TrigramSimilarity("author__username", query)
+                                           + TrigramSimilarity("tags__name", query),
+                            )
+                            .filter(similarity__gt=0.3)
+                            .order_by("id", "-similarity")
+                            .distinct("id")
+                        )[:100]
 
         video_results = (
-            VideoPost.objects.annotate(
-                similarity=TrigramSimilarity("author__username", query)
-                           + TrigramSimilarity("tags__name", query),
-            )
-            .filter(similarity__gt=0.3)
-            .order_by("id", "-similarity")
-            .distinct("id")
-        )[:100]
+                            VideoPost.objects.annotate(
+                                similarity=TrigramSimilarity("author__username", query)
+                                           + TrigramSimilarity("tags__name", query),
+                            )
+                            .filter(similarity__gt=0.3)
+                            .order_by("id", "-similarity")
+                            .distinct("id")
+                        )[:100]
 
         audio_results = (
-            AudioPost.objects.annotate(
-                similarity=TrigramSimilarity("author__username", query)
-                           + TrigramSimilarity("tags__name", query),
-            )
-            .filter(similarity__gt=0.3)
-            .order_by("id", "-similarity")
-            .distinct("id")
-        )[:100]
+                            AudioPost.objects.annotate(
+                                similarity=TrigramSimilarity("author__username", query)
+                                           + TrigramSimilarity("tags__name", query),
+                            )
+                            .filter(similarity__gt=0.3)
+                            .order_by("id", "-similarity")
+                            .distinct("id")
+                        )[:100]
     else:
         image_results = ImagePost.objects.none()
         video_results = VideoPost.objects.none()
@@ -220,3 +221,78 @@ def vote(request, media_id, media_type, vote_type):
         return JsonResponse({"success": True, "total_votes": total_votes})
     else:
         return JsonResponse({"success": False, "message": "User not authenticated"})
+
+
+@login_required(login_url="login")
+def view_gallery(request, media_type):
+    """
+    This view displays all the image posts using pagination.
+    """
+    if media_type == "image":
+        # Get all images
+        image_media = ImagePost.objects.all().order_by("-created_at")
+
+        # Define Image Pagination
+        image_paginator = Paginator(image_media, 50)
+
+        # Get the page number
+        image_page_number = request.GET.get("image_page")
+
+        # Get the page
+        image_page_obj = image_paginator.get_page(image_page_number)
+
+        return render(
+            request,
+            "multimedia/view_gallery.html",
+            {
+                "image_page_obj": image_page_obj,
+                "media_type": "image",
+            },
+        )
+
+    elif media_type == "video":
+        # Get all videos
+        video_media = VideoPost.objects.all().order_by("-created_at")
+
+        # Define Video Pagination
+        video_paginator = Paginator(video_media, 50)
+
+        # Get the page number
+        video_page_number = request.GET.get("video_page")
+
+        # Get the page
+        video_page_obj = video_paginator.get_page(video_page_number)
+
+        return render(
+            request,
+            "multimedia/view_gallery.html",
+            {
+                "video_page_obj": video_page_obj,
+                "media_type": "video",
+            },
+        )
+
+    elif media_type == "audio":
+        # Get all audio
+        audio_media = AudioPost.objects.all().order_by("-created_at")
+
+        # Define Audio Pagination
+        audio_paginator = Paginator(audio_media, 50)
+
+        # Get the page number
+        audio_page_number = request.GET.get("audio_page")
+
+        # Get the page
+        audio_page_obj = audio_paginator.get_page(audio_page_number)
+
+        return render(
+            request,
+            "multimedia/view_gallery.html",
+            {
+                "audio_page_obj": audio_page_obj,
+                "media_type": "audio",
+            },
+        )
+
+    else:
+        return redirect("home")
