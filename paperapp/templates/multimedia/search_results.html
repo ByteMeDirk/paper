@@ -18,7 +18,7 @@
                 <div class="accordion-body">
                     <div class="row mb-2">
                         {% for image in image_results %}
-                            <div class="col-3">
+                            <div class="col-lg-3 col-md-6 col-sm-12">
                                 {% include 'includes/card.image.html' %}
                             </div>
                             {% empty %}
@@ -40,7 +40,7 @@
                 <div class="accordion-body">
                     <div class="row mb-2">
                         {% for video in video_results %}
-                            <div class="col-3">
+                            <div class="col-lg-3 col-md-6 col-sm-12">
                                 {% include 'includes/card.video.html' %}
                             </div>
                             {% empty %}
@@ -62,7 +62,7 @@
                 <div class="accordion-body">
                     <div class="row mb-2">
                         {% for audio in audio_results %}
-                            <div class="col-3">
+                            <div class="col-lg-3 col-md-6 col-sm-12">
                                 {% include 'includes/card.audio.html' %}
                             </div>
                             {% empty %}

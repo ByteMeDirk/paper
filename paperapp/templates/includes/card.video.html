@@ -4,10 +4,10 @@
     <div class="card mt-2 {% include 'includes/utils/util.video_content_rating.border_color.html' %}"
          data-bs-toggle="modal" data-bs-target="#videoModal{{ video.id }}" style="min-height: 20rem">
         <video src="{{ video.file.url }}" class="card-img-top" alt="{{ video.title }}"
-               style="width: 100%; height: 10rem; object-fit: cover;"></video>
+               style="width: 100%; height: 10rem; object-fit: contain;"></video>
         <div class="card-body">
             <h5 class="card-title">{{ video.title|truncatechars:35 }}</h5>
-            <p class="card-text">{{ video.description|truncatechars:65 }}</p>
+            <p class="card-text small text-muted">{{ video.description|truncatechars:65 }}</p>
         </div>
     </div>
 
