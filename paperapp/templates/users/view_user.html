@@ -3,15 +3,15 @@
 
 {% block content %}
 
-    <div class="card-header d-flex align-items-center">
+    <div class="card-header d-flex align-items-start">
         <img src="{{ user_profile.avatar.url }}" alt="{{ user_profile.user.username }}'s avatar"
              width="200"
-             height="200" style="margin-right: 1rem">
-        <div class="ml-3">
+             height="200" class="mr-3" style="margin-right: 1rem">
+        <div>
             <h1>
                 {{ user_profile.user.username }}
             </h1>
-            <p>{{ user_profile.bio }}</p>
+            <p>{{ user_profile.bio|safe }}</p>
         </div>
     </div>
     <div class="container d-flex justify-content-center mb-2">

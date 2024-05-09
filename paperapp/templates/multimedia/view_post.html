@@ -104,6 +104,10 @@
                     </div>
                     <hr>
                     <a class="btn btn-sm btn-info" href="#">Report</a>
+                    {# Show Edit and Delete if ti belongs to current user #}
+                    {% if post.author.id == request.user.id %}
+                        <a class="btn btn-sm btn-warning" href="{% url 'edit_post' post_type=post_type post_id=post.id %}">Edit/Delete</a>
+                    {% endif %}
                 </div>
             </div>
         </div>

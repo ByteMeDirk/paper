@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 
 from multimedia.models import ImagePost, VideoPost, AudioPost
+from paperapp import settings
 from paperapp.utils import get_media_pagination
 from .forms import SignupForm, LoginForm, ProfileForm
 from .models import Profile
@@ -88,6 +89,7 @@ def user_profile(request):
             "image_media": image_media,
             "video_media": video_media,
             "audio_media": audio_media,
+            'ckeditor_config': settings.CKEDITOR_5_CONFIGS['default'],
         },
     )
 

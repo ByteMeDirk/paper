@@ -3,17 +3,18 @@
 {% block content %}
     <h1>Profile</h1>
 
-    <div class="row">
-
-        <div class="col-4">
-            <form method="POST" enctype="multipart/form-data">
-                {% csrf_token %}
-                <div class="card">
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="card">
+            <div class="row">
+                <div class="col-lg-4 col-md-6 col-sm-12">
                     {% if profile.avatar %}
                         <img class="card-img-top" src="{{ profile.avatar.url }}" alt="Profile Image">
                     {% else %}
                         <img class="card-img-top" src="/media/avatars/default.png" , alt="Default Profile Image">
                     {% endif %}
+                </div>
+                <div class="col-lg-8 col-md-6 col-sm-12">
                     <div class="card-body">
                         <h5 class="card-title">{{ profile }}</h5>
                         {% for field in form %}
@@ -29,98 +30,112 @@
                             identity on
                             the
                             site, if it needs to be fixed, contact and administrator. </small>
-                        <hr>
                     </div>
                 </div>
-            </form>
+            </div>
         </div>
+    </form>
 
-        <div class="col-8">
-            <div class="mt-2">
-                <div class="accordion accordion-flush" id="accordionFlushViewUser">
-                    <div class="accordion-item">
-                        <h2 class="accordion-header">
-                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                    data-bs-target="#flush-collapseOne" aria-expanded="false"
-                                    aria-controls="flush-collapseOne">
-                                Images
-                            </button>
-                        </h2>
-                        <div id="flush-collapseOne" class="accordion-collapse collapse"
-                             data-bs-parent="#accordionFlushViewUser">
-                            <div class="accordion-body">
-                                <div class="row">
-                                    {% if image_media %}
-                                        {% with this_media_type='image' %}
-                                            {% for media in image_media %}
-                                                {% include 'includes/utils/card.profile_media.html' %}
-                                            {% endfor %}
-                                        {% endwith %}
-                                    {% else %}
-                                        <div class="col-12">
-                                            <p class="text-center">No images uploaded yet</p>
-                                        </div>
-                                    {% endif %}
+    <div class="mt-2">
+        <div class="accordion accordion-flush" id="accordionFlushViewUser">
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#flush-collapseOne" aria-expanded="false"
+                            aria-controls="flush-collapseOne">
+                        Images
+                    </button>
+                </h2>
+                <div id="flush-collapseOne" class="accordion-collapse collapse"
+                     data-bs-parent="#accordionFlushViewUser">
+                    <div class="accordion-body">
+                        <div class="row">
+                            {% if image_media %}
+                                {% with this_media_type='image' %}
+                                    {% for media in image_media %}
+
+                                    {% endfor %}
+                                {% endwith %}
+                            {% else %}
+                                <div class="col-12">
+                                    <p class="text-center">No images uploaded yet</p>
                                 </div>
-                            </div>
+                            {% endif %}
                         </div>
                     </div>
-                    <div class="accordion-item">
-                        <h2 class="accordion-header">
-                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                    data-bs-target="#flush-collapseTwo" aria-expanded="false"
-                                    aria-controls="flush-collapseTwo">
-                                Videos
-                            </button>
-                        </h2>
-                        <div id="flush-collapseTwo" class="accordion-collapse collapse"
-                             data-bs-parent="#accordionFlushViewUser">
-                            <div class="accordion-body">
-                                <div class="row">
-                                    {% if video_media %}
-                                        {% with this_media_type='video' %}
-                                            {% for media in video_media %}
-                                                {% include 'includes/utils/card.profile_media.html' %}
-                                            {% endfor %}
-                                        {% endwith %}
-                                    {% else %}
-                                        <div class="col-12">
-                                            <p class="text-center">No videos uploaded yet</p>
-                                        </div>
-                                    {% endif %}
+                </div>
+            </div>
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#flush-collapseTwo" aria-expanded="false"
+                            aria-controls="flush-collapseTwo">
+                        Videos
+                    </button>
+                </h2>
+                <div id="flush-collapseTwo" class="accordion-collapse collapse"
+                     data-bs-parent="#accordionFlushViewUser">
+                    <div class="accordion-body">
+                        <div class="row">
+                            {% if video_media %}
+                                {% with this_media_type='video' %}
+                                    {% for media in video_media %}
+
+                                    {% endfor %}
+                                {% endwith %}
+                            {% else %}
+                                <div class="col-12">
+                                    <p class="text-center">No videos uploaded yet</p>
                                 </div>
-                            </div>
+                            {% endif %}
                         </div>
                     </div>
-                    <div class="accordion-item">
-                        <h2 class="accordion-header">
-                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                    data-bs-target="#flush-collapseThree" aria-expanded="false"
-                                    aria-controls="flush-collapseThree">
-                                Audio
-                            </button>
-                        </h2>
-                        <div id="flush-collapseThree" class="accordion-collapse collapse"
-                             data-bs-parent="#accordionFlushViewUser">
-                            <div class="accordion-body">
-                                <div class="row">
-                                    {% if audio_media %}
-                                        {% with this_media_type='audio' %}
-                                            {% for media in audio_media %}
-                                                {% include 'includes/utils/card.profile_media.html' %}
-                                            {% endfor %}
-                                        {% endwith %}
-                                    {% else %}
-                                        <div class="col-12">
-                                            <p class="text-center">No audio uploaded yet</p>
-                                        </div>
-                                    {% endif %}
+                </div>
+            </div>
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#flush-collapseThree" aria-expanded="false"
+                            aria-controls="flush-collapseThree">
+                        Audio
+                    </button>
+                </h2>
+                <div id="flush-collapseThree" class="accordion-collapse collapse"
+                     data-bs-parent="#accordionFlushViewUser">
+                    <div class="accordion-body">
+                        <div class="row">
+                            {% if audio_media %}
+                                {% with this_media_type='audio' %}
+                                    {% for media in audio_media %}
+
+                                    {% endfor %}
+                                {% endwith %}
+                            {% else %}
+                                <div class="col-12">
+                                    <p class="text-center">No audio uploaded yet</p>
                                 </div>
-                            </div>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    <script>
+        ClassicEditor
+            .create(document.querySelector('#id_bio'), {{ ckeditor_config|safe }})
+            .then(editor => {
+                // Add bootstrap classes to the textarea
+                const viewElement = editor.editing.view.getDomRoot();
+                viewElement.classList.add('form-control');
+            })
+            .catch(error => {
+                console.error(error);
+            });
+    </script>
+    <style>
+        .ck.ck-content {
+            color: black;
+        }
+    </style>
 {% endblock %}
