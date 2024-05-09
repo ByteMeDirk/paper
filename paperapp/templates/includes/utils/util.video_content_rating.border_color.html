@@ -1,0 +1,7 @@
+{% if video.content_rating == "Explicit" %}
+    border border-danger
+{% elif video.content_rating == "Mature" %}
+    border border-warning
+{% else %}
+    border border-primary
+{% endif %}

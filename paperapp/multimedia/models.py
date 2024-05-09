@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
 from django.db import models
+from django.db.models import Sum
 from taggit.managers import TaggableManager
 
 
@@ -12,7 +13,6 @@ class ImagePost(models.Model):
     description = models.TextField()
     author = models.ForeignKey(User, on_delete=models.CASCADE)
 
-    thumbnail = models.ImageField(upload_to="thumbnails/")
     file = models.ImageField(upload_to="images/")
     content_rating = models.CharField(max_length=10, default="General")
     tags = TaggableManager()
@@ -21,6 +21,17 @@ class ImagePost(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     metadata = models.JSONField(null=True, blank=True)
+
+    def __str__(self):
+        return f"{self.title} by {self.author.username}"
+
+    def get_vote_count(self):
+        return (
+            MediaRating.objects.filter(image_id=self.id).aggregate(Sum("vote"))[
+                "vote__sum"
+            ]
+            or 0
+        )
 
 
 class VideoPost(models.Model):
@@ -32,7 +43,7 @@ class VideoPost(models.Model):
     description = models.TextField()
     author = models.ForeignKey(User, on_delete=models.CASCADE)
 
-    thumbnail = models.ImageField(upload_to="thumbnails/")
+    thumbnail = models.ImageField(upload_to="thumbnails/", blank=True)
     file = models.FileField(upload_to="videos/")
     content_rating = models.CharField(max_length=10, default="General")
     tags = TaggableManager()
@@ -41,6 +52,17 @@ class VideoPost(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     metadata = models.JSONField(null=True, blank=True)
+
+    def __str__(self):
+        return f"{self.title} by {self.author.username}"
+
+    def get_vote_count(self):
+        return (
+            MediaRating.objects.filter(image_id=self.id).aggregate(Sum("vote"))[
+                "vote__sum"
+            ]
+            or 0
+        )
 
 
 class AudioPost(models.Model):
@@ -59,6 +81,17 @@ class AudioPost(models.Model):
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.title} by {self.author.username}"
+
+    def get_vote_count(self):
+        return (
+            MediaRating.objects.filter(image_id=self.id).aggregate(Sum("vote"))[
+                "vote__sum"
+            ]
+            or 0
+        )
 
 
 class MediaRating(models.Model):
@@ -80,16 +113,42 @@ class MediaRating(models.Model):
         AudioPost, on_delete=models.CASCADE, null=True, blank=True
     )
 
-    up_vote = models.BooleanField(default=False)
-    down_vote = models.BooleanField(default=False)
+    vote = models.IntegerField(default=0)  # 1 for up_vote, -1 for down_vote
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.user.username} rated {self.vote} for {self.image_id or self.video_id or self.audio_id}"
 
     class Meta:
         unique_together = ("user", "image_id", "video_id", "audio_id")
         verbose_name = "Media Rating"
         verbose_name_plural = "Media Ratings"
+
+    @classmethod
+    def get_total_votes(cls, media_id, media_type):
+        if media_type == "image":
+            return (
+                cls.objects.filter(image_id=media_id).aggregate(Sum("vote"))[
+                    "vote__sum"
+                ]
+                or 0
+            )
+        elif media_type == "video":
+            return (
+                cls.objects.filter(video_id=media_id).aggregate(Sum("vote"))[
+                    "vote__sum"
+                ]
+                or 0
+            )
+        else:  # audio
+            return (
+                cls.objects.filter(audio_id=media_id).aggregate(Sum("vote"))[
+                    "vote__sum"
+                ]
+                or 0
+            )
 
 
 class MediaModeration(models.Model):
@@ -116,6 +175,9 @@ class MediaModeration(models.Model):
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.user.username} moderated {self.image_id or self.video_id or self.audio_id}"
 
     class Meta:
         unique_together = ("user", "image_id", "video_id", "audio_id")

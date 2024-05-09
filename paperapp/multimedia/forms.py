@@ -37,7 +37,11 @@ class ImagePostForm(forms.ModelForm):
     )
 
     content_rating = forms.ChoiceField(
-        choices=[("General", "General"), ("Mature", "Mature"), ("Explicit", "Explicit")],
+        choices=[
+            ("General", "General"),
+            ("Mature", "Mature"),
+            ("Explicit", "Explicit"),
+        ],
         widget=forms.Select(
             attrs={
                 "class": "form-control",
@@ -58,7 +62,7 @@ class ImagePostForm(forms.ModelForm):
 class VideoPostForm(forms.ModelForm):
     class Meta:
         model = VideoPost
-        fields = ["title", "description", "file", "content_rating", "tags"]
+        fields = ["title", "description", "thumbnail", "file", "content_rating", "tags"]
 
     title = forms.CharField(
         widget=forms.TextInput(
@@ -78,6 +82,15 @@ class VideoPostForm(forms.ModelForm):
         )
     )
 
+    thumbnail = forms.ImageField(
+        widget=forms.FileInput(
+            attrs={
+                "class": "form-control",
+                "placeholder": "Thumbnail",
+            }
+        )
+    )
+
     file = forms.FileField(
         widget=forms.FileInput(
             attrs={
@@ -88,7 +101,11 @@ class VideoPostForm(forms.ModelForm):
     )
 
     content_rating = forms.ChoiceField(
-        choices=[("General", "General"), ("Mature", "Mature"), ("Explicit", "Explicit")],
+        choices=[
+            ("General", "General"),
+            ("Mature", "Mature"),
+            ("Explicit", "Explicit"),
+        ],
         widget=forms.Select(
             attrs={
                 "class": "form-control",
@@ -109,7 +126,7 @@ class VideoPostForm(forms.ModelForm):
 class AudioPostForm(forms.ModelForm):
     class Meta:
         model = AudioPost
-        fields = ["title", "description", "file", "content_rating", "tags"]
+        fields = ["title", "description", "thumbnail", "file", "content_rating", "tags"]
 
     title = forms.CharField(
         widget=forms.TextInput(
@@ -129,6 +146,15 @@ class AudioPostForm(forms.ModelForm):
         )
     )
 
+    thumbnail = forms.ImageField(
+        widget=forms.FileInput(
+            attrs={
+                "class": "form-control",
+                "placeholder": "Thumbnail",
+            }
+        )
+    )
+
     file = forms.FileField(
         widget=forms.FileInput(
             attrs={
@@ -139,7 +165,11 @@ class AudioPostForm(forms.ModelForm):
     )
 
     content_rating = forms.ChoiceField(
-        choices=[("General", "General"), ("Mature", "Mature"), ("Explicit", "Explicit")],
+        choices=[
+            ("General", "General"),
+            ("Mature", "Mature"),
+            ("Explicit", "Explicit"),
+        ],
         widget=forms.Select(
             attrs={
                 "class": "form-control",
@@ -179,9 +209,13 @@ class SearchMediaForm(forms.Form):
         required=False,
     )
 
-    # Filter by content rating
+    # Filter by static rating
     content_rating = forms.ChoiceField(
-        choices=[("General", "General"), ("Mature", "Mature"), ("Explicit", "Explicit")],
+        choices=[
+            ("General", "General"),
+            ("Mature", "Mature"),
+            ("Explicit", "Explicit"),
+        ],
         widget=forms.Select(
             attrs={
                 "class": "form-control",
