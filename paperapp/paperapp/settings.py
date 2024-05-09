@@ -135,15 +135,7 @@ MEDIA_URL = "/media/"
 
 CKEDITOR_5_CONFIGS = {
     'default': {
-        'toolbar': [
-            'heading', '|',
-            'bold', 'italic', 'strikethrough', 'underline', 'subscript', 'superscript', '|',
-            'link', 'blockquote', 'codeBlock', '|',
-            'bulletedList', 'numberedList', '|',
-            'fontBackgroundColor', 'fontColor', 'fontSize', 'fontFamily', '|',
-            'highlight', 'horizontalLine', 'specialCharacters', '|',
-            'undo', 'redo'
-        ],
+        'toolbar': ['heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote'],
         'language': 'en',
     },
 }

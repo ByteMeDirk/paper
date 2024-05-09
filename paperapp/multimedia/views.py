@@ -9,6 +9,7 @@ from django.db.models import Sum
 from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 
+from paperapp import settings
 from .forms import ImagePostForm, VideoPostForm, AudioPostForm
 from .models import VideoPost, AudioPost, ImagePost, MediaRating
 
@@ -62,7 +63,7 @@ def create_post(request, post_type):
             form = ImagePostForm()
 
     return render(
-        request, "multimedia/create_post.html", {"form": form, "post_type": post_type}
+        request, "multimedia/create_post.html", {"form": form, "post_type": post_type, 'ckeditor_config': settings.CKEDITOR_5_CONFIGS['default'],}
     )
 
 
@@ -112,7 +113,7 @@ def edit_post(request, post_type, post_id):
     return render(
         request,
         "multimedia/edit_post.html",
-        {"form": form, "post_type": post_type, "post": post},
+        {"form": form, "post_type": post_type, "post": post, 'ckeditor_config': settings.CKEDITOR_5_CONFIGS['default'],},
     )
 
 

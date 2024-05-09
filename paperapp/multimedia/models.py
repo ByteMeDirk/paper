@@ -10,7 +10,7 @@ class ImagePost(models.Model):
     """
 
     title = models.CharField(max_length=100)
-    description = models.TextField()
+    description = models.TextField(max_length=500)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
 
     file = models.ImageField(upload_to="images/")
@@ -41,7 +41,7 @@ class VideoPost(models.Model):
     """
 
     title = models.CharField(max_length=100)
-    description = models.TextField()
+    description = models.TextField(max_length=500)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
 
     thumbnail = models.ImageField(upload_to="thumbnails/", blank=True)
@@ -73,7 +73,7 @@ class AudioPost(models.Model):
     """
 
     title = models.CharField(max_length=100)
-    description = models.TextField()
+    description = models.TextField(max_length=500)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
 
     thumbnail = models.ImageField(upload_to="thumbnails/")
@@ -165,6 +165,8 @@ class MediaModeration(models.Model):
     audio_id = models.ForeignKey(
         AudioPost, on_delete=models.CASCADE, null=True, blank=True
     )
+
+    message = models.TextField(max_length=500, null=True, blank=True)
 
     approved = models.BooleanField(default=False)
     rejected = models.BooleanField(default=False)

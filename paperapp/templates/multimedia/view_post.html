@@ -13,7 +13,7 @@
                             Your browser does not support the video tag.
                         </video>
                     {% elif post_type == "audio" %}
-                        <img src="{{ post.thumbnail.url }}" class="img-fluid" alt="{{ post.description }}">
+                        <img src="{{ post.thumbnail.url }}" class="img-fluid" alt="{{ post.title }}">
                         <audio controls class="img-fluid">
                             <source src="{{ post.file.url }}" type="audio/mpeg">
                             Your browser does not support the audio tag.
@@ -62,7 +62,7 @@
                         </div>
                         <div class="card-body">
                             <h4 class="card-title">{{ post.title }}</h4>
-                            <p class="card-text">{{ post.description }}</p>
+                            <p class="card-text">{{ post.description|safe }}</p>
                         </div>
                     </div>
                 </div>

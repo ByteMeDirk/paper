@@ -4,6 +4,7 @@ from taggit.forms import TagField, TagWidget
 from .models import ImagePost, VideoPost, AudioPost
 
 
+
 class ImagePostForm(forms.ModelForm):
     class Meta:
         model = ImagePost

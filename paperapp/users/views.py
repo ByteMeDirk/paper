@@ -62,9 +62,9 @@ def user_profile(request):
     """
     # Get the current user's profile
     profile = request.user.profile
-    image_media = ImagePost.objects.filter(author=request.user).order_by("-created_at")
-    video_media = VideoPost.objects.filter(author=request.user).order_by("-created_at")
-    audio_media = AudioPost.objects.filter(author=request.user).order_by("-created_at")
+    image_page_obj, video_page_obj, audio_page_obj = get_media_pagination(
+        request, 8, "-created_at", request.user.id
+    )
 
     if request.method == "POST":
         # Populate the form with the existing profile data and the submitted data
@@ -86,9 +86,9 @@ def user_profile(request):
         {
             "form": form,
             "profile": profile,
-            "image_media": image_media,
-            "video_media": video_media,
-            "audio_media": audio_media,
+            "image_page_obj": image_page_obj,
+            "video_page_obj": video_page_obj,
+            "audio_page_obj": audio_page_obj,
             'ckeditor_config': settings.CKEDITOR_5_CONFIGS['default'],
         },
     )
