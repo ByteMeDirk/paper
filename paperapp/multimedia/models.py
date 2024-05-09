@@ -144,7 +144,7 @@ class MediaRating(models.Model):
         # Calculate the total votes as the sum of the vote values
         total_votes = votes.aggregate(total_votes=Sum("vote"))["total_votes"]
 
-        return total_votes
+        return total_votes if total_votes is not None else 0
 
 
 class MediaModeration(models.Model):

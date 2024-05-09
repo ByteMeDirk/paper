@@ -158,40 +158,49 @@ def view_post(request, post_type, post_id):
     if post_type == "video":
         post = get_object_or_404(VideoPost, pk=post_id)
         artists_posts = VideoPost.objects.filter(author=post.author)[:5]
-        similar_posts = (
-            VideoPost.objects.annotate(
-                similarity=TrigramSimilarity("tags__name", post.tags.first().name)
+        if post.tags.first() is not None:
+            similar_posts = (
+                VideoPost.objects.annotate(
+                    similarity=TrigramSimilarity("tags__name", post.tags.first().name)
+                )
+                .filter(similarity__gt=0.3)
+                .exclude(id=post_id)
+                .order_by("id", "-similarity")
+                .distinct("id")[:5]
             )
-            .filter(similarity__gt=0.3)
-            .exclude(id=post_id)
-            .order_by("id", "-similarity")
-            .distinct("id")[:5]
-        )
+        else:
+            similar_posts = VideoPost.objects.none()
 
     elif post_type == "audio":
         post = get_object_or_404(AudioPost, pk=post_id)
         artists_posts = AudioPost.objects.filter(author=post.author)[:5]
-        similar_posts = (
-            AudioPost.objects.annotate(
-                similarity=TrigramSimilarity("tags__name", post.tags.first().name)
+        if post.tags.first() is not None:
+            similar_posts = (
+                AudioPost.objects.annotate(
+                    similarity=TrigramSimilarity("tags__name", post.tags.first().name)
+                )
+                .filter(similarity__gt=0.3)
+                .exclude(id=post_id)
+                .order_by("id", "-similarity")
+                .distinct("id")[:5]
             )
-            .filter(similarity__gt=0.3)
-            .exclude(id=post_id)
-            .order_by("id", "-similarity")
-            .distinct("id")[:5]
-        )
+        else:
+            similar_posts = AudioPost.objects.none()
     else:
         post = get_object_or_404(ImagePost, pk=post_id)
         artists_posts = ImagePost.objects.filter(author=post.author)[:5]
-        similar_posts = (
-            ImagePost.objects.annotate(
-                similarity=TrigramSimilarity("tags__name", post.tags.first().name)
+        if post.tags.first() is not None:
+            similar_posts = (
+                ImagePost.objects.annotate(
+                    similarity=TrigramSimilarity("tags__name", post.tags.first().name)
+                )
+                .filter(similarity__gt=0.3)
+                .exclude(id=post_id)
+                .order_by("id", "-similarity")
+                .distinct("id")[:5]
             )
-            .filter(similarity__gt=0.3)
-            .exclude(id=post_id)
-            .order_by("id", "-similarity")
-            .distinct("id")[:5]
-        )
+        else:
+            similar_posts = ImagePost.objects.none()
 
     # Increment the view count
     post.views += 1
@@ -216,34 +225,34 @@ def search(request):
     query = request.GET.get("q")
     if query:
         image_results = (
-            ImagePost.objects.annotate(
-                similarity=TrigramSimilarity("author__username", query)
-                + TrigramSimilarity("tags__name", query),
-            )
-            .filter(similarity__gt=0.3)
-            .order_by("id", "-created_at", "-similarity")
-            .distinct("id")
-        )[:100]
+                            ImagePost.objects.annotate(
+                                similarity=TrigramSimilarity("author__username", query)
+                                           + TrigramSimilarity("tags__name", query),
+                            )
+                            .filter(similarity__gt=0.3)
+                            .order_by("id", "-created_at", "-similarity")
+                            .distinct("id")
+                        )[:100]
 
         video_results = (
-            VideoPost.objects.annotate(
-                similarity=TrigramSimilarity("author__username", query)
-                + TrigramSimilarity("tags__name", query),
-            )
-            .filter(similarity__gt=0.3)
-            .order_by("id", "-created_at", "-similarity")
-            .distinct("id")
-        )[:100]
+                            VideoPost.objects.annotate(
+                                similarity=TrigramSimilarity("author__username", query)
+                                           + TrigramSimilarity("tags__name", query),
+                            )
+                            .filter(similarity__gt=0.3)
+                            .order_by("id", "-created_at", "-similarity")
+                            .distinct("id")
+                        )[:100]
 
         audio_results = (
-            AudioPost.objects.annotate(
-                similarity=TrigramSimilarity("author__username", query)
-                + TrigramSimilarity("tags__name", query),
-            )
-            .filter(similarity__gt=0.3)
-            .order_by("id", "-created_at", "-similarity")
-            .distinct("id")
-        )[:100]
+                            AudioPost.objects.annotate(
+                                similarity=TrigramSimilarity("author__username", query)
+                                           + TrigramSimilarity("tags__name", query),
+                            )
+                            .filter(similarity__gt=0.3)
+                            .order_by("id", "-created_at", "-similarity")
+                            .distinct("id")
+                        )[:100]
     else:
         image_results = ImagePost.objects.none()
         video_results = VideoPost.objects.none()
