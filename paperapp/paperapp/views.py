@@ -13,7 +13,7 @@ def home(request):
     """
     # Get the pages
     image_page_obj, video_page_obj, audio_page_obj = get_media_pagination(
-        request, 4, "-created_at"
+        request, 8, "-created_at"
     )
 
     # Other Stats to be added

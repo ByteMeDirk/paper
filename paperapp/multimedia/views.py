@@ -249,7 +249,7 @@ def view_gallery(request, media_type):
 
         # Define Pagination
         paginator = Paginator(
-            media_objects, 100
+            media_objects, 12
         )  # Increase the number of objects per page
 
         # Get the page number

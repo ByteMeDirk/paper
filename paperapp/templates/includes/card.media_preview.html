@@ -1,0 +1,33 @@
+<div class="media- mb-2">
+    <div class="media-image-container {% include 'includes/utils/util.media_content_rating.border_color.html' %}">
+        <a href="{% url 'home' %}">
+            {% if media_type == "image" %}
+                <img src="{{ media.file.url }}" class="img-fluid" alt="{{ media.title }}">
+            {% else %}
+                <img src="{{ media.thumbnail.url }}" class="img-fluid" alt="{{ media.title }}">
+            {% endif %}
+        </a>
+
+    </div>
+    <div class="text-center" style="font-size: .8rem">
+        {{ media.title|truncatechars:35 }}<br>
+        by <a href="{% url 'view_user' user_id=media.author.id %}">{{ media.author }}</a>
+    </div>
+</div>
+
+<style>
+    .media-image-container {
+        width: 100%;
+        height: 0;
+        padding-bottom: 100%;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .media-image-container img {
+        position: absolute;
+        object-fit: contain;
+        width: 100%;
+        height: 100%;
+    }
+</style>

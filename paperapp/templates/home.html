@@ -16,37 +16,47 @@
             <h2>Recent Submissions</h2>
             <hr>
             <h5>Images</h5>
-            <div class="row mb-2">  {# Start the row here #}
-                {% for image in image_page_obj %}
-                    <div class="col-lg-3 col-md-6 col-sm-12">  {# Each card is a column within the row #}
-                        {% include 'includes/card.image.html' %}
-                    </div>
-                {% endfor %}
-            </div>
-            {# End the row here #}
-            {% include 'includes/pagination.image.html' %}
+            {% with media_type="image" %}
+                <div class="row mb-2">
+                    {% for media in image_page_obj %}
+                        <div class="col-lg-3 col-md-6 col-sm-12">
+                            {% include 'includes/card.media_preview.html' %}
+                        </div>
+                    {% endfor %}
+                </div>
+                {% with page_obj=image_page_obj %}
+                    {% include 'includes/pagination.media_preview.html' %}
+                {% endwith %}
+            {% endwith %}
             <hr>
             <h5>Videos</h5>
-            <div class="row mb-2">  {# Start the row here #}
-                {% for video in video_page_obj %}
-                    <div class="col-lg-3 col-md-6 col-sm-12">  {# Each card is a column within the row #}
-                        {% include 'includes/card.video.html' %}
-                    </div>
-                {% endfor %}
-            </div>
-            {# End the row here #}
-            {% include 'includes/pagination.video.html' %}
+            {% with media_type="video" %}
+                <div class="row mb-2">
+                    {% for media in video_page_obj %}
+                        <div class="col-lg-3 col-md-6 col-sm-12">
+                            {% include 'includes/card.media_preview.html' %}
+                        </div>
+                    {% endfor %}
+                </div>
+                {% with page_obj=image_page_obj %}
+                    {% include 'includes/pagination.media_preview.html' %}
+                {% endwith %}
+            {% endwith %}
             <hr>
             <h5>Audio</h5>
-            <div class="row mb-2">  {# Start the row here #}
-                {% for audio in audio_page_obj %}
-                    <div class="col-lg-3 col-md-6 col-sm-12">  {# Each card is a column within the row #}
-                        {% include 'includes/card.audio.html' %}
-                    </div>
-                {% endfor %}
-            </div>
-            {# End the row here #}
-            {% include 'includes/pagination.audio.html' %}
+            {% with media_type="video" %}
+                <div class="row mb-2">
+                    {% for media in audio_page_obj %}
+                        <div class="col-lg-3 col-md-6 col-sm-12">
+                            {% include 'includes/card.media_preview.html' %}
+                        </div>
+                    {% endfor %}
+
+                </div>
+                {% with page_obj=image_page_obj %}
+                    {% include 'includes/pagination.media_preview.html' %}
+                {% endwith %}
+            {% endwith %}
         </div>
     </div>
 {% endblock %}
