@@ -51,7 +51,7 @@
                                  width="50"
                                  height="50" style="margin-right: .5rem">
                             <div class="ml-3">
-                                By: <a href="#">{{ post.author }}</a>
+                                By: <a href="{% url 'view_user' user_id=post.author.id %}">{{ post.author }}</a>
                                 <br>
                                 {% if media.created_at == media.updated_at %}
                                     Created: {{ post.created_at|naturalday }}
@@ -94,7 +94,7 @@
                     <div class="row">
                         {% with media_type=post_type %}
                             {% for media in similar_posts %}
-                                {% if media.id != post.id %}
+                                {% if media.id != post.id and media.author.user.id != post.author.user.id %}
                                     <div class="col-lg-6 col-sm-12">
                                         {% include 'includes/card.media_preview.html' %}
                                     </div>

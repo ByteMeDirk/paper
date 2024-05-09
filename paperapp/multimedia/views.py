@@ -148,20 +148,20 @@ def view_post(request, post_type, post_id):
         artists_posts = VideoPost.objects.filter(author=post.author)[:5]
         similar_posts = VideoPost.objects.annotate(
             similarity=TrigramSimilarity("tags__name", post.tags.first().name)
-        ).filter(similarity__gt=0.3).exclude(id=post_id).order_by("-similarity")[:5]
+        ).filter(similarity__gt=0.3).exclude(id=post_id).order_by("id", "-similarity").distinct("id")[:5]
 
     elif post_type == "audio":
         post = get_object_or_404(AudioPost, pk=post_id)
         artists_posts = AudioPost.objects.filter(author=post.author)[:5]
         similar_posts = AudioPost.objects.annotate(
             similarity=TrigramSimilarity("tags__name", post.tags.first().name)
-        ).filter(similarity__gt=0.3).exclude(id=post_id).order_by("-similarity")[:5]
+        ).filter(similarity__gt=0.3).exclude(id=post_id).order_by("id", "-similarity").distinct("id")[:5]
     else:
         post = get_object_or_404(ImagePost, pk=post_id)
         artists_posts = ImagePost.objects.filter(author=post.author)[:5]
         similar_posts = ImagePost.objects.annotate(
             similarity=TrigramSimilarity("tags__name", post.tags.first().name)
-        ).filter(similarity__gt=0.3).exclude(id=post_id).order_by("-similarity")[:5]
+        ).filter(similarity__gt=0.3).exclude(id=post_id).order_by("id", "-similarity").distinct("id")[:5]
 
     # Increment the view count
     post.views += 1

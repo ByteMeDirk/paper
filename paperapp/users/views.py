@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 
 from multimedia.models import ImagePost, VideoPost, AudioPost
+from paperapp.utils import get_media_pagination
 from .forms import SignupForm, LoginForm, ProfileForm
 from .models import Profile
 
@@ -95,20 +96,24 @@ def view_user(request, user_id):
     """
     This view displays the profile of a specific user.
     """
-    user_profile = Profile.objects.get(user_id=user_id)
-    image_media = ImagePost.objects.filter(author_id=user_id).order_by("-created_at")
-    video_media = VideoPost.objects.filter(author_id=user_id).order_by("-created_at")
-    audio_media = AudioPost.objects.filter(author_id=user_id).order_by("-created_at")
+    profile = Profile.objects.get(user_id=user_id)
+    image_page_obj, video_page_obj, audio_page_obj = get_media_pagination(
+        request, 8, "-created_at", user_id
+    )
 
-    total_posts = len(image_media) + len(video_media) + len(audio_media)
+    total_posts = (
+        ImagePost.objects.filter(author=profile.user).count()
+        + VideoPost.objects.filter(author=profile.user).count()
+        + AudioPost.objects.filter(author=profile.user).count()
+    )
     return render(
         request,
         "users/view_user.html",
         {
-            "user_profile": user_profile,
-            "image_media": image_media,
-            "video_media": video_media,
-            "audio_media": audio_media,
+            "user_profile": profile,
+            "image_page_obj": image_page_obj,
+            "video_page_obj": video_page_obj,
+            "audio_page_obj": audio_page_obj,
             "total_posts": total_posts,
         },
     )
