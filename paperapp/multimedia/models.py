@@ -21,16 +21,17 @@ class ImagePost(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     metadata = models.JSONField(null=True, blank=True)
+    views = models.IntegerField(default=0)
 
     def __str__(self):
         return f"{self.title} by {self.author.username}"
 
     def get_vote_count(self):
         return (
-            MediaRating.objects.filter(image_id=self.id).aggregate(Sum("vote"))[
-                "vote__sum"
-            ]
-            or 0
+                MediaRating.objects.filter(image_id=self.id).aggregate(Sum("vote"))[
+                    "vote__sum"
+                ]
+                or 0
         )
 
 
@@ -52,16 +53,17 @@ class VideoPost(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     metadata = models.JSONField(null=True, blank=True)
+    views = models.IntegerField(default=0)
 
     def __str__(self):
         return f"{self.title} by {self.author.username}"
 
     def get_vote_count(self):
         return (
-            MediaRating.objects.filter(image_id=self.id).aggregate(Sum("vote"))[
-                "vote__sum"
-            ]
-            or 0
+                MediaRating.objects.filter(image_id=self.id).aggregate(Sum("vote"))[
+                    "vote__sum"
+                ]
+                or 0
         )
 
 
@@ -82,15 +84,18 @@ class AudioPost(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    metadata = models.JSONField(null=True, blank=True)
+    views = models.IntegerField(default=0)
+
     def __str__(self):
         return f"{self.title} by {self.author.username}"
 
     def get_vote_count(self):
         return (
-            MediaRating.objects.filter(image_id=self.id).aggregate(Sum("vote"))[
-                "vote__sum"
-            ]
-            or 0
+                MediaRating.objects.filter(image_id=self.id).aggregate(Sum("vote"))[
+                    "vote__sum"
+                ]
+                or 0
         )
 
 
@@ -126,29 +131,20 @@ class MediaRating(models.Model):
         verbose_name = "Media Rating"
         verbose_name_plural = "Media Ratings"
 
-    @classmethod
-    def get_total_votes(cls, media_id, media_type):
+    @staticmethod
+    def get_total_votes(media_id, media_type):
+        # Get all votes for the specified media
         if media_type == "image":
-            return (
-                cls.objects.filter(image_id=media_id).aggregate(Sum("vote"))[
-                    "vote__sum"
-                ]
-                or 0
-            )
+            votes = MediaRating.objects.filter(image_id=media_id)
         elif media_type == "video":
-            return (
-                cls.objects.filter(video_id=media_id).aggregate(Sum("vote"))[
-                    "vote__sum"
-                ]
-                or 0
-            )
+            votes = MediaRating.objects.filter(video_id=media_id)
         else:  # audio
-            return (
-                cls.objects.filter(audio_id=media_id).aggregate(Sum("vote"))[
-                    "vote__sum"
-                ]
-                or 0
-            )
+            votes = MediaRating.objects.filter(audio_id=media_id)
+
+        # Calculate the total votes as the sum of the vote values
+        total_votes = votes.aggregate(total_votes=Sum('vote'))['total_votes']
+
+        return total_votes
 
 
 class MediaModeration(models.Model):

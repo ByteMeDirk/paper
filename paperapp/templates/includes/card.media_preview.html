@@ -1,6 +1,6 @@
 <div class="media- mb-2">
     <div class="media-image-container {% include 'includes/utils/util.media_content_rating.border_color.html' %}">
-        <a href="{% url 'home' %}">
+        <a href="{% url 'view_post' post_type=media_type post_id=media.id %}">
             {% if media_type == "image" %}
                 <img src="{{ media.file.url }}" class="img-fluid" alt="{{ media.title }}">
             {% else %}

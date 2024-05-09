@@ -138,6 +138,42 @@ def delete_post(request, post_type, post_id):
     return redirect("home")
 
 
+@login_required(login_url="login")
+def view_post(request, post_type, post_id):
+    """
+    This view allows the user to view a post of the specified type.
+    """
+    if post_type == "video":
+        post = get_object_or_404(VideoPost, pk=post_id)
+        artists_posts = VideoPost.objects.filter(author=post.author)[:5]
+        similar_posts = VideoPost.objects.annotate(
+            similarity=TrigramSimilarity("tags__name", post.tags.first().name)
+        ).filter(similarity__gt=0.3).exclude(id=post_id).order_by("-similarity")[:5]
+
+    elif post_type == "audio":
+        post = get_object_or_404(AudioPost, pk=post_id)
+        artists_posts = AudioPost.objects.filter(author=post.author)[:5]
+        similar_posts = AudioPost.objects.annotate(
+            similarity=TrigramSimilarity("tags__name", post.tags.first().name)
+        ).filter(similarity__gt=0.3).exclude(id=post_id).order_by("-similarity")[:5]
+    else:
+        post = get_object_or_404(ImagePost, pk=post_id)
+        artists_posts = ImagePost.objects.filter(author=post.author)[:5]
+        similar_posts = ImagePost.objects.annotate(
+            similarity=TrigramSimilarity("tags__name", post.tags.first().name)
+        ).filter(similarity__gt=0.3).exclude(id=post_id).order_by("-similarity")[:5]
+
+    # Increment the view count
+    post.views += 1
+    post.save()
+
+    return render(
+        request,
+        "multimedia/view_post.html",
+        {"post": post, "post_type": post_type, "artists_posts": artists_posts, "similar_posts": similar_posts},
+    )
+
+
 def search(request):
     """
     This view allows the user to search for posts.
@@ -145,34 +181,34 @@ def search(request):
     query = request.GET.get("q")
     if query:
         image_results = (
-            ImagePost.objects.annotate(
-                similarity=TrigramSimilarity("author__username", query)
-                + TrigramSimilarity("tags__name", query),
-            )
-            .filter(similarity__gt=0.3)
-            .order_by("id", "-similarity")
-            .distinct("id")
-        )[:100]
+                            ImagePost.objects.annotate(
+                                similarity=TrigramSimilarity("author__username", query)
+                                           + TrigramSimilarity("tags__name", query),
+                            )
+                            .filter(similarity__gt=0.3)
+                            .order_by("id", "-created_at", "-similarity")
+                            .distinct("id")
+                        )[:100]
 
         video_results = (
-            VideoPost.objects.annotate(
-                similarity=TrigramSimilarity("author__username", query)
-                + TrigramSimilarity("tags__name", query),
-            )
-            .filter(similarity__gt=0.3)
-            .order_by("id", "-similarity")
-            .distinct("id")
-        )[:100]
+                            VideoPost.objects.annotate(
+                                similarity=TrigramSimilarity("author__username", query)
+                                           + TrigramSimilarity("tags__name", query),
+                            )
+                            .filter(similarity__gt=0.3)
+                            .order_by("id", "-created_at", "-similarity")
+                            .distinct("id")
+                        )[:100]
 
         audio_results = (
-            AudioPost.objects.annotate(
-                similarity=TrigramSimilarity("author__username", query)
-                + TrigramSimilarity("tags__name", query),
-            )
-            .filter(similarity__gt=0.3)
-            .order_by("id", "-similarity")
-            .distinct("id")
-        )[:100]
+                            AudioPost.objects.annotate(
+                                similarity=TrigramSimilarity("author__username", query)
+                                           + TrigramSimilarity("tags__name", query),
+                            )
+                            .filter(similarity__gt=0.3)
+                            .order_by("id", "-created_at", "-similarity")
+                            .distinct("id")
+                        )[:100]
     else:
         image_results = ImagePost.objects.none()
         video_results = VideoPost.objects.none()
@@ -215,12 +251,11 @@ def vote(request, media_id, media_type, vote_type):
         if vote_type == "up":
             vote.vote = 1
         else:  # down
-            vote.vote = -1
+            vote.vote = 0
 
         vote.save()
 
         total_votes = MediaRating.get_total_votes(media_id, media_type)
-
         return JsonResponse({"success": True, "total_votes": total_votes})
     else:
         return JsonResponse({"success": False, "message": "User not authenticated"})

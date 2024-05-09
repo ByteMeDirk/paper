@@ -1,4 +1,5 @@
-$(".vote").click(function () {
+console.log("multimedia.voting.js loaded");
+$(document).on('click', '.vote', function () {
     var button = $(this);
     var mediaId = button.data("media-id");
     var mediaType = button.data("media-type");
@@ -10,7 +11,7 @@ $(".vote").click(function () {
             console.log("#vote-count-" + mediaType + "-" + mediaId);
             if (data.success) {
                 // Update the vote count on the page
-                $("#vote-count-" + mediaType + "-" + mediaId).text(data.total_votes);
+                $("#vote-count-" + mediaType + "-" + mediaId).text("Votes: " + data.total_votes);
             }
         }
     });

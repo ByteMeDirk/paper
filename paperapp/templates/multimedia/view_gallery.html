@@ -8,51 +8,56 @@
                 <option value="created_at">Oldest</option>
                 <option value="votes">Most votes</option>
                 <option value="-votes">Least votes</option>
+                <option value="-views">Most views</option>
+                <option value="views">Least views</option>
             </select>
             <button class="btn btn-outline-info" type="submit">Sort</button>
         </div>
     </form>
     <hr>
-    <h5>Images</h5>
-    {% with media_type="image" %}
-        <div class="row mb-2">
-            {% for media in image_page_obj %}
-                <div class="col-lg-3 col-md-6 col-sm-12">
-                    {% include 'includes/card.media_preview.html' %}
-                </div>
-            {% endfor %}
-        </div>
-        {% with page_obj=image_page_obj %}
-            {% include 'includes/pagination.media_preview.html' %}
+    {% if media_type == 'image' %}
+        <h5>Images</h5>
+        {% with media_type="image" %}
+            <div class="row mb-2">
+                {% for media in image_page_obj %}
+                    <div class="col-lg-3 col-md-6 col-sm-12">
+                        {% include 'includes/card.media_preview.html' %}
+                    </div>
+                {% endfor %}
+            </div>
+            {% with page_obj=image_page_obj %}
+                {% include 'includes/pagination.media_preview.html' %}
+            {% endwith %}
         {% endwith %}
-    {% endwith %}
-    <hr>
-    <h5>Videos</h5>
-    {% with media_type="video" %}
-        <div class="row mb-2">
-            {% for media in video_page_obj %}
-                <div class="col-lg-3 col-md-6 col-sm-12">
-                    {% include 'includes/card.media_preview.html' %}
-                </div>
-            {% endfor %}
-        </div>
-        {% with page_obj=image_page_obj %}
-            {% include 'includes/pagination.media_preview.html' %}
+    {% elif media_type == 'video' %}
+        <h5>Videos</h5>
+        {% with media_type="video" %}
+            <div class="row mb-2">
+                {% for media in video_page_obj %}
+                    <div class="col-lg-3 col-md-6 col-sm-12">
+                        {% include 'includes/card.media_preview.html' %}
+                    </div>
+                {% endfor %}
+            </div>
+            {% with page_obj=image_page_obj %}
+                {% include 'includes/pagination.media_preview.html' %}
+            {% endwith %}
         {% endwith %}
-    {% endwith %}
-    <hr>
-    <h5>Audio</h5>
-    {% with media_type="video" %}
-        <div class="row mb-2">
-            {% for media in audio_page_obj %}
-                <div class="col-lg-3 col-md-6 col-sm-12">
-                    {% include 'includes/card.media_preview.html' %}
-                </div>
-            {% endfor %}
-
-        </div>
-        {% with page_obj=image_page_obj %}
-            {% include 'includes/pagination.media_preview.html' %}
+    {% elif media_type == 'audio' %}
+        <h5>Audio</h5>
+        {% with media_type="audio" %}
+            <div class="row mb-2">
+                {% for media in audio_page_obj %}
+                    <div class="col-lg-3 col-md-6 col-sm-12">
+                        {% include 'includes/card.media_preview.html' %}
+                    </div>
+                {% endfor %}
+            </div>
+            {% with page_obj=image_page_obj %}
+                {% include 'includes/pagination.media_preview.html' %}
+            {% endwith %}
         {% endwith %}
-    {% endwith %}
+    {% else %}
+        <p>No media content found...</p>
+    {% endif %}
 {% endblock %}
