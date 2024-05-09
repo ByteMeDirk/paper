@@ -3,9 +3,7 @@
 {% block content %}
 
     <div class="row">
-        <div class="col-lg-3 col-md-4 col-sm-12">
-            {% include 'includes/form.search.html' %}
-            <hr>
+        <div class="col-lg-2 col-md-3 col-sm-12">
             <small>
                 <p>Recent Tags</p>
                 {% for tag in recent_20_tags %}
@@ -13,14 +11,8 @@
                 {% endfor %}
             </small>
             <hr>
-            <small>
-                <p>Media Count</p>
-                Total Images Posted: {{ media_count.image }}<br>
-                Total Videos Posted: {{ media_count.video }}<br>
-                Total Audio Posted: {{ media_count.audio }}<br>
-            </small>
         </div>
-        <div class="col-lg-9 col-md-8 col-sm-12">
+        <div class="col-lg-10 col-md-9 col-sm-12">
             <h2>Recent Submissions</h2>
             <hr>
             <h5>Images</h5>
