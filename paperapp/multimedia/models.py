@@ -28,10 +28,10 @@ class ImagePost(models.Model):
 
     def get_vote_count(self):
         return (
-                MediaRating.objects.filter(image_id=self.id).aggregate(Sum("vote"))[
-                    "vote__sum"
-                ]
-                or 0
+            MediaRating.objects.filter(image_id=self.id).aggregate(Sum("vote"))[
+                "vote__sum"
+            ]
+            or 0
         )
 
 
@@ -60,10 +60,10 @@ class VideoPost(models.Model):
 
     def get_vote_count(self):
         return (
-                MediaRating.objects.filter(image_id=self.id).aggregate(Sum("vote"))[
-                    "vote__sum"
-                ]
-                or 0
+            MediaRating.objects.filter(image_id=self.id).aggregate(Sum("vote"))[
+                "vote__sum"
+            ]
+            or 0
         )
 
 
@@ -92,10 +92,10 @@ class AudioPost(models.Model):
 
     def get_vote_count(self):
         return (
-                MediaRating.objects.filter(image_id=self.id).aggregate(Sum("vote"))[
-                    "vote__sum"
-                ]
-                or 0
+            MediaRating.objects.filter(image_id=self.id).aggregate(Sum("vote"))[
+                "vote__sum"
+            ]
+            or 0
         )
 
 
@@ -142,7 +142,7 @@ class MediaRating(models.Model):
             votes = MediaRating.objects.filter(audio_id=media_id)
 
         # Calculate the total votes as the sum of the vote values
-        total_votes = votes.aggregate(total_votes=Sum('vote'))['total_votes']
+        total_votes = votes.aggregate(total_votes=Sum("vote"))["total_votes"]
 
         return total_votes
 

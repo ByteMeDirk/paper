@@ -198,6 +198,7 @@ class TestMediaRating(unittest.TestCase):
     def test_media_rating_str(self):
         self.assertEqual(str(self.media_rating), "testuser rated 1 for None")
 
+
 # ToDo: After Moderation Feature is implemented
 # class TestMediaModeration(unittest.TestCase):
 #     def setUp(self):

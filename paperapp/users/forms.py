@@ -6,6 +6,7 @@ from django.contrib.auth.models import User
 from users.models import Profile
 from django_ckeditor_5.fields import CKEditor5Field
 
+
 class SignupForm(UserCreationForm):
     """
     Custom Signup Form that extends the UserCreationForm.

@@ -89,7 +89,7 @@ def user_profile(request):
             "image_page_obj": image_page_obj,
             "video_page_obj": video_page_obj,
             "audio_page_obj": audio_page_obj,
-            'ckeditor_config': settings.CKEDITOR_5_CONFIGS['default'],
+            "ckeditor_config": settings.CKEDITOR_5_CONFIGS["default"],
         },
     )
 
