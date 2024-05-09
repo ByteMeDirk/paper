@@ -10,12 +10,17 @@ from .models import ImagePost, VideoPost, AudioPost, MediaRating
 class TestImagePost(unittest.TestCase):
 
     def setUp(self):
-        self.user = User.objects.create_user(
-            "testuser", "testuser@example.com", "testpassword"
-        )
+        try:
+            self.user = User.objects.get(username="testuser")
+        except User.DoesNotExist:
+            self.user = User.objects.create_user(
+                "testuser", "testuser@example.com", "testpassword"
+            )
+
+        # Get or create Profile
+        self.profile, created = Profile.objects.get_or_create(user=self.user)
 
         # Update Profile
-        self.profile = Profile.objects.get(user=self.user)
         self.profile.bio = "This is a test bio"
         self.profile.location = "Test Location"
         self.profile.birth_date = date(1990, 1, 1)
@@ -53,12 +58,17 @@ class TestImagePost(unittest.TestCase):
 
 class TestVideoPost(unittest.TestCase):
     def setUp(self):
-        self.user = User.objects.create_user(
-            "testuser", "testuser@example.com", "testpassword"
-        )
+        try:
+            self.user = User.objects.get(username="testuser")
+        except User.DoesNotExist:
+            self.user = User.objects.create_user(
+                "testuser", "testuser@example.com", "testpassword"
+            )
+
+        # Get or create Profile
+        self.profile, created = Profile.objects.get_or_create(user=self.user)
 
         # Update Profile
-        self.profile = Profile.objects.get(user=self.user)
         self.profile.bio = "This is a test bio"
         self.profile.location = "Test Location"
         self.profile.birth_date = date(1990, 1, 1)
@@ -99,12 +109,17 @@ class TestVideoPost(unittest.TestCase):
 
 class TestAudioPost(unittest.TestCase):
     def setUp(self):
-        self.user = User.objects.create_user(
-            "testuser", "testuser@example.com", "testpassword"
-        )
+        try:
+            self.user = User.objects.get(username="testuser")
+        except User.DoesNotExist:
+            self.user = User.objects.create_user(
+                "testuser", "testuser@example.com", "testpassword"
+            )
+
+        # Get or create Profile
+        self.profile, created = Profile.objects.get_or_create(user=self.user)
 
         # Update Profile
-        self.profile = Profile.objects.get(user=self.user)
         self.profile.bio = "This is a test bio"
         self.profile.location = "Test Location"
         self.profile.birth_date = date(1990, 1, 1)
@@ -153,12 +168,17 @@ class TestAudioPost(unittest.TestCase):
 
 class TestMediaRating(unittest.TestCase):
     def setUp(self):
-        self.user = User.objects.create_user(
-            "testuser", "testuser@example.com", "testpassword"
-        )
+        try:
+            self.user = User.objects.get(username="testuser")
+        except User.DoesNotExist:
+            self.user = User.objects.create_user(
+                "testuser", "testuser@example.com", "testpassword"
+            )
+
+        # Get or create Profile
+        self.profile, created = Profile.objects.get_or_create(user=self.user)
 
         # Update Profile
-        self.profile = Profile.objects.get(user=self.user)
         self.profile.bio = "This is a test bio"
         self.profile.location = "Test Location"
         self.profile.birth_date = date(1990, 1, 1)
