@@ -4,7 +4,7 @@ from multimedia.models import ImagePost, VideoPost, AudioPost
 
 
 def get_media_pagination(
-        request, page_limit: int, order_by: str = "-created_at", user_id: int = None
+    request, page_limit: int, order_by: str = "-created_at", user_id: int = None
 ):
     """
     This function returns the paginated media objects.

@@ -10,16 +10,14 @@ class ReportUserForm(forms.ModelForm):
 
     class Meta:
         model = ReportUser
-        fields = ['reason']
-        labels = {
-            'reason': 'Reason for report'
-        }
+        fields = ["reason"]
+        labels = {"reason": "Reason for report"}
 
     reason = forms.CharField(
         widget=forms.Textarea(
             attrs={
-                'class': 'form-control',
-                'placeholder': 'Reason for report',
+                "class": "form-control",
+                "placeholder": "Reason for report",
             }
         )
     )
@@ -32,16 +30,14 @@ class ReportPostForm(forms.ModelForm):
 
     class Meta:
         model = ReportPost
-        fields = ['reason']
-        labels = {
-            'reason': 'Reason for report'
-        }
+        fields = ["reason"]
+        labels = {"reason": "Reason for report"}
 
     reason = forms.CharField(
         widget=forms.Textarea(
             attrs={
-                'class': 'form-control',
-                'placeholder': 'Reason for report',
+                "class": "form-control",
+                "placeholder": "Reason for report",
             }
         )
     )
@@ -54,16 +50,13 @@ class ModerateUserForm(forms.ModelForm):
 
     class Meta:
         model = ReportUser
-        fields = ['resolved', 'resolved_message']
-        labels = {
-            'resolved': 'Resolved',
-            'resolved_message': 'Message to user'
-        }
+        fields = ["resolved", "resolved_message"]
+        labels = {"resolved": "Resolved", "resolved_message": "Message to user"}
 
     resolved = forms.BooleanField(
         widget=forms.CheckboxInput(
             attrs={
-                'class': 'form-check-input',
+                "class": "form-check-input",
             }
         )
     )
@@ -71,8 +64,8 @@ class ModerateUserForm(forms.ModelForm):
     resolved_message = forms.CharField(
         widget=forms.Textarea(
             attrs={
-                'class': 'form-control',
-                'placeholder': 'Message to user',
+                "class": "form-control",
+                "placeholder": "Message to user",
             }
         )
     )
@@ -85,16 +78,13 @@ class ModeratePostForm(forms.ModelForm):
 
     class Meta:
         model = ReportPost
-        fields = ['resolved', 'resolved_message']
-        labels = {
-            'resolved': 'Resolved',
-            'resolved_message': 'Message to user'
-        }
+        fields = ["resolved", "resolved_message"]
+        labels = {"resolved": "Resolved", "resolved_message": "Message to user"}
 
     resolved = forms.BooleanField(
         widget=forms.CheckboxInput(
             attrs={
-                'class': 'form-check-input',
+                "class": "form-check-input",
             }
         )
     )
@@ -102,8 +92,8 @@ class ModeratePostForm(forms.ModelForm):
     resolved_message = forms.CharField(
         widget=forms.Textarea(
             attrs={
-                'class': 'form-control',
-                'placeholder': 'Message to user',
+                "class": "form-control",
+                "placeholder": "Message to user",
             }
         )
     )

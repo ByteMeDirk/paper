@@ -2,6 +2,8 @@ from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
+from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
 
 from multimedia.models import ImagePost, VideoPost, AudioPost
@@ -110,7 +112,7 @@ def view_user(request, user_id):
             + AudioPost.objects.filter(author=profile.user).count()
     )
 
-    if profile.hidden:
+    if not profile.user.is_active:
         messages.error(request, "This user's profile is hidden.")
         return redirect("home")
 
@@ -139,3 +141,25 @@ def hide_user(request, user_id):
     user.save()
     messages.success(request, "User hidden successfully.")
     return redirect("moderator_dashboard")
+
+
+@login_required
+@staff_member_required
+def deactivate_user(request, user_id):
+    previous_page = request.META.get("HTTP_REFERER")
+    user = User.objects.get(id=user_id)
+    user.is_active = False
+    user.save()
+    messages.success(request, f"User {user.username} has been deactivated.")
+    return HttpResponseRedirect(previous_page)
+
+
+@login_required
+@staff_member_required
+def activate_user(request, user_id):
+    previous_page = request.META.get("HTTP_REFERER")
+    user = User.objects.get(id=user_id)
+    user.is_active = True
+    user.save()
+    messages.success(request, f"User {user.username} has been activated.")
+    return HttpResponseRedirect(previous_page)

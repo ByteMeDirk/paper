@@ -39,7 +39,18 @@ class ImagePost(models.Model):
     def save(self, *args, **kwargs):
         if self.pk is not None:
             orig = ImagePost.objects.get(pk=self.pk)
-            if orig.views != self.views and all(getattr(orig, field) == getattr(self, field) for field in ['title', 'description', 'author', 'file', 'content_rating', 'tags', 'metadata']):
+            if orig.views != self.views and all(
+                getattr(orig, field) == getattr(self, field)
+                for field in [
+                    "title",
+                    "description",
+                    "author",
+                    "file",
+                    "content_rating",
+                    "tags",
+                    "metadata",
+                ]
+            ):
                 # Only 'views' field has changed, so prevent 'updated_at' from being updated
                 self.updated_at = orig.updated_at
         super().save(*args, **kwargs)
@@ -81,7 +92,19 @@ class VideoPost(models.Model):
     def save(self, *args, **kwargs):
         if self.pk is not None:
             orig = VideoPost.objects.get(pk=self.pk)
-            if orig.views != self.views and all(getattr(orig, field) == getattr(self, field) for field in ['title', 'description', 'author', 'thumbnail', 'file', 'content_rating', 'tags', 'metadata']):
+            if orig.views != self.views and all(
+                getattr(orig, field) == getattr(self, field)
+                for field in [
+                    "title",
+                    "description",
+                    "author",
+                    "thumbnail",
+                    "file",
+                    "content_rating",
+                    "tags",
+                    "metadata",
+                ]
+            ):
                 # Only 'views' field has changed, so prevent 'updated_at' from being updated
                 self.updated_at = orig.updated_at
         super().save(*args, **kwargs)
@@ -123,7 +146,19 @@ class AudioPost(models.Model):
     def save(self, *args, **kwargs):
         if self.pk is not None:
             orig = AudioPost.objects.get(pk=self.pk)
-            if orig.views != self.views and all(getattr(orig, field) == getattr(self, field) for field in ['title', 'description', 'author', 'thumbnail', 'file', 'content_rating', 'tags', 'metadata']):
+            if orig.views != self.views and all(
+                getattr(orig, field) == getattr(self, field)
+                for field in [
+                    "title",
+                    "description",
+                    "author",
+                    "thumbnail",
+                    "file",
+                    "content_rating",
+                    "tags",
+                    "metadata",
+                ]
+            ):
                 # Only 'views' field has changed, so prevent 'updated_at' from being updated
                 self.updated_at = orig.updated_at
         super().save(*args, **kwargs)
