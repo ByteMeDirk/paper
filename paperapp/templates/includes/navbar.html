@@ -1,63 +1,85 @@
-<nav class="navbar navbar-expand-lg bg-body-tertiary mb-2">
+<nav class="navbar navbar-expand-lg bg-primary {% if not request.user.is_superuser or not request.user.is_staff %}mb-2{% endif %}"
+     data-bs-theme="dark">
     <div class="container-fluid">
-        <a class="navbar-brand" href="#">Paper.App</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
-                aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+        <a class="navbar-brand" href="{% url 'home' %}">Paper.App</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01"
+                aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-            <div class="navbar-nav">
-                <a class="nav-link {% if request.path == '/' %}active{% endif %}"
-                   {% if request.path == '/' %}aria-current="page"{% endif %} href="{% url 'home' %}">Home</a>
-                {# Dropdown Gallery #}
-                <div class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle {% if request.path == '/gallery/' %}active{% endif %}"
-                       {% if request.path == '/gallery/' %}aria-current="page"{% endif %} href="#"
-                       id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        Gallery
+        <div class="collapse navbar-collapse" id="navbarColor01">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                    <a class="nav-link {% if request.path == '/' %}active{% endif %}" href="{% url 'home' %}">
+                        Home
                     </a>
-                    <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                        <li><a class="dropdown-item" href="{% url 'view_gallery' media_type='image' %}">Images</a></li>
-                        <li><a class="dropdown-item" href="{% url 'view_gallery' media_type='video' %}">Video</a></li>
-                        <li><a class="dropdown-item" href="{% url 'view_gallery' media_type='audio' %}">Audio</a></li>
-                    </ul>
-                </div>
-                <a class="nav-link {% if request.path == '/wiki/' %}active{% endif %}"
-                   {% if request.path == '/wiki/' %}aria-current="page"{% endif %} href="{% url 'wiki' %}">Wiki</a>
-                <a class="nav-link {% if request.path == '/about/' %}active{% endif %}"
-                   {% if request.path == '/about/' %}aria-current="page"{% endif %} href="{% url 'about' %}">About</a>
-            </div>
-            {# Float Right Navbar Buttons #}
-            <div class="navbar-nav ms-auto">
-                <a class="nav-link text-success {% if request.path == '/select_post_type/' %}active{% endif %}"
-                   {% if request.path == '/select_post_type/' %}aria-current="page"{% endif %}
-                   href="{% url 'select_post_type' %}">Post</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle {% if request.path == '/view_gallery/image' or request.path == '/view_gallery/video' or request.path == '/view_gallery/audio' %}active{% endif %}"
+                       data-bs-toggle="dropdown" href="#" role="button"
+                       aria-haspopup="true" aria-expanded="false">Gallery</a>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" href="{% url 'view_gallery' media_type='image' %}">Images</a>
+                        <a class="dropdown-item" href="{% url 'view_gallery' media_type='video' %}">Videos</a>
+                        <a class="dropdown-item" href="{% url 'view_gallery' media_type='audio' %}">Audio</a>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if request.path == '/wiki/' %}active{% endif %}" href="{% url 'wiki' %}">
+                        Wiki
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if request.path == '/about/' %}active{% endif %}" href="{% url 'about' %}">
+                        About
+                    </a>
+                </li>
+                <li class="nav-item ml-2">
+                    {% include 'includes/form.search.html' %}
+                </li>
+            </ul>
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link text-success {% if request.path == '/select_post_type/' %}active{% endif %}"
+                       href="{% url 'select_post_type' %}">Post +</a>
+                </li>
                 {% if request.user.is_authenticated %}
-                    <a class="nav-link text-danger" href="{% url 'logout' %}">Logout</a>
-                    <a class="nav-link {% if request.path == '/profile/' %}active{% endif %}"
-                       {% if request.path == '/profile/' %}aria-current="page"{% endif %}
-                       href="{% url 'profile' %}">{{ request.user }}</a>
+                    <li class="nav-item">
+                        <a class="nav-link text-danger" href="{% url 'logout' %}">Logout</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.path == '/profile/' %}active{% endif %}"
+                           href="{% url 'profile' %}">{{ request.user }}</a>
+                    </li>
                 {% else %}
-                    <a class="nav-link text-primary" href="{% url 'login' %}">Login</a>
-                    <a class="nav-link" href="{% url 'signup' %}">Signup</a>
+                    <li class="nav-item">
+                        <a class="nav-link " href="{% url 'login' %}">Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'signup' %}">Signup</a>
+                    </li>
                 {% endif %}
-            </div>
+            </ul>
         </div>
     </div>
 </nav>
-
 {% if request.user.is_superuser or request.user.is_staff %}
-    <nav class="navbar bg-warning mb-2">
-        <form class="container-fluid justify-content-start">
-         <span class="navbar-text me-2">
-            Warning: You are a superuser or staff member. Please be careful with your actions.
-         </span>
+<nav class="navbar navbar-expand bg-light mb-2" data-bs-theme="light">
+    <div class="container-fluid">
+        <div class="collapse navbar-collapse" id="navbarColor03">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                    <a class="nav-link text-warning-emphasis">
+                        Warning: You are a superuser or staff member. Please be careful with your actions.
+                    </a>
+                </li>
+            </ul>
             {% if request.user.is_superuser %}
                 <a class="btn btn-sm btn-outline-dark me-2" href="{% url 'admin:index' %}">Admin</a>
             {% endif %}
             {% if request.user.is_staff %}
                 <a class="btn btn-sm btn-outline-dark" href="#">Moderation</a>
             {% endif %}
-        </form>
-    </nav>
+        </div>
+    </div>
+</nav>
 {% endif %}

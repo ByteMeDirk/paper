@@ -1,7 +1,6 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    {% include 'includes/form.search.html' %}
     <h5 class="mt-4">Showing Results For: {{ query }}</h5>
     <small class="small text-muted">Only showing top 100 results.</small>
     <hr>
@@ -16,15 +15,15 @@
             <div id="collapseImages" class="accordion-collapse collapse" aria-labelledby="headingImages"
                  data-bs-parent="#searchAccordion">
                 <div class="accordion-body">
-                    <div class="row mb-2">
-                        {% for image in image_results %}
-                            <div class="col-lg-3 col-md-6 col-sm-12">
-                                {% include 'includes/card.image.html' %}
-                            </div>
-                            {% empty %}
-                            <p>No results found for Images.</p>
-                        {% endfor %}
-                    </div>
+                    {% with media_type="image" %}
+                        <div class="row mb-2">
+                            {% for media in image_results %}
+                                <div class="col-lg-3 col-md-6 col-sm-12">
+                                    {% include 'includes/card.media_preview.html' %}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% endwith %}
                 </div>
             </div>
         </div>
@@ -38,15 +37,15 @@
             <div id="collapseVideos" class="accordion-collapse collapse" aria-labelledby="headingVideos"
                  data-bs-parent="#searchAccordion">
                 <div class="accordion-body">
-                    <div class="row mb-2">
-                        {% for video in video_results %}
-                            <div class="col-lg-3 col-md-6 col-sm-12">
-                                {% include 'includes/card.video.html' %}
-                            </div>
-                            {% empty %}
-                            <p>No results found for Video.</p>
-                        {% endfor %}
-                    </div>
+                    {% with media_type="video" %}
+                        <div class="row mb-2">
+                            {% for media in video_results %}
+                                <div class="col-lg-3 col-md-6 col-sm-12">
+                                    {% include 'includes/card.media_preview.html' %}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% endwith %}
                 </div>
             </div>
         </div>
@@ -60,15 +59,15 @@
             <div id="collapseAudio" class="accordion-collapse collapse" aria-labelledby="headingAudio"
                  data-bs-parent="#searchAccordion">
                 <div class="accordion-body">
-                    <div class="row mb-2">
-                        {% for audio in audio_results %}
-                            <div class="col-lg-3 col-md-6 col-sm-12">
-                                {% include 'includes/card.audio.html' %}
-                            </div>
-                            {% empty %}
-                            <p>No results found for Audio.</p>
-                        {% endfor %}
-                    </div>
+                    {% with media_type="audio" %}
+                        <div class="row mb-2">
+                            {% for media in audio_results %}
+                                <div class="col-lg-3 col-md-6 col-sm-12">
+                                    {% include 'includes/card.media_preview.html' %}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% endwith %}
                 </div>
             </div>
         </div>

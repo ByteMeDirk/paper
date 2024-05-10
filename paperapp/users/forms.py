@@ -3,8 +3,8 @@ import datetime
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-
 from users.models import Profile
+from django_ckeditor_5.fields import CKEditor5Field
 
 
 class SignupForm(UserCreationForm):
@@ -85,13 +85,8 @@ class ProfileForm(forms.ModelForm):
         model = Profile
         fields = ["bio", "location", "birth_date", "avatar"]
 
-    bio = forms.CharField(
-        widget=forms.Textarea(
-            attrs={
-                "class": "form-control",
-                "placeholder": "Bio",
-            }
-        )
+    bio = CKEditor5Field(
+        config_name="default",
     )
 
     location = forms.CharField(

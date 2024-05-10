@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+{% load humanize %}
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-9 col-sm-12">
+                <div class="container d-flex justify-content-center mb-2">
+                    {% if post_type == "image" %}
+                        <img src="{{ post.file.url }}" class="img-fluid" alt="{{ post.title }}">
+                    {% elif post_type == "video" %}
+                        <video controls class="img-fluid">
+                            <source src="{{ post.file.url }}" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    {% elif post_type == "audio" %}
+                        <img src="{{ post.thumbnail.url }}" class="img-fluid" alt="{{ post.title }}">
+                        <audio controls class="img-fluid">
+                            <source src="{{ post.file.url }}" type="audio/mpeg">
+                            Your browser does not support the audio tag.
+                        </audio>
+                    {% endif %}
+                </div>
+                <div class="container d-flex justify-content-center mb-2">
+                    <div class="btn-group" role="group">
+                        <button type="button" class="btn btn-light" disabled>
+                            Rating:
+                            {% if post.content_rating == "General" %}
+                                <span class="text-success-emphasis">{{ post.content_rating }}</span>
+                            {% elif post.content_rating == "Mature" %}
+                                <span class="text-warning-emphasis">{{ post.content_rating }}</span>
+                            {% elif post.content_rating == "Explicit" %}
+                                <span class="text-danger-emphasis">{{ post.content_rating }}</span>
+                            {% endif %}
+                        </button>
+                        <button type="button" class="btn btn-light" disabled>Views: {{ post.views }}</button>
+                        <button id="vote-count-{{ post_type }}-{{ post.id }}" type="button" class="btn btn-light"
+                                disabled>
+                            Votes: {{ post.get_vote_count }}</button>
+                        <button type="button" class="btn btn-secondary vote" data-media-id="{{ post.id }}"
+                                data-media-type="{{ post_type }}" data-vote-type="up">Upvote
+                        </button>
+                        <button type="button" class="btn btn-secondary vote" data-media-id="{{ post.id }}"
+                                data-media-type="{{ post_type }}" data-vote-type="down">Downvote
+                        </button>
+                    </div>
+                </div>
+                <div class="container mb-2">
+                    <div class="card text-white bg-secondary">
+                        <div class="card-header d-flex align-items-center">
+                            <img src="{{ post.author.profile.avatar.url }}" alt="{{ post.author.username }}'s avatar"
+                                 width="50"
+                                 height="50" style="margin-right: .5rem">
+                            <div class="ml-3">
+                                By: <a href="{% url 'view_user' user_id=post.author.id %}">{{ post.author }}</a>
+                                <br>
+                                {% if media.created_at == media.updated_at %}
+                                    Created: {{ post.created_at|naturalday }}
+                                {% else %}
+                                    Edited: {{ post.updated_at|naturalday }}
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <h4 class="card-title">{{ post.title }}</h4>
+                            <p class="card-text">{{ post.description|safe }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-sm-12 bg-dark">
+            {% include 'includes/sidebar.advert.html' %}
+                <div class="container mb-2 mt-2">
+                    <h6>Tags</h6>
+                    <div class="container">
+                        {% for tag in post.tags.all %}
+                            <a href="{% url 'search' %}?q={{ tag.name }}" class="badge bg-info">{{ tag.name }}</a>
+                        {% endfor %}
+                    </div>
+                    <hr>
+                    <h6>{{ post.author }}'s Recent Posts</h6>
+                    <div class="row">
+                        {% with media_type=post_type %}
+                            {% for media in artists_posts %}
+                                {% if media.id != post.id %}
+                                    <div class="col-lg-6 col-sm-12">
+                                        {% include 'includes/card.media_preview.html' %}
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                        {% endwith %}
+                    </div>
+                    <hr>
+                    <h6>Similar Posts</h6>
+                    <div class="row">
+                        {% with media_type=post_type %}
+                            {% for media in similar_posts %}
+                                {% if media.id != post.id and media.author.user.id != post.author.user.id %}
+                                    <div class="col-lg-6 col-sm-12">
+                                        {% include 'includes/card.media_preview.html' %}
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                        {% endwith %}
+                    </div>
+                    <hr>
+                    <a class="btn btn-sm btn-info" href="#">Report</a>
+                    {# Show Edit and Delete if ti belongs to current user #}
+                    {% if post.author.id == request.user.id %}
+                        <a class="btn btn-sm btn-warning" href="{% url 'edit_post' post_type=post_type post_id=post.id %}">Edit/Delete</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

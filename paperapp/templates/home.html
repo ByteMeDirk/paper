@@ -1,11 +1,8 @@
 {% extends "base.html" %}
 
 {% block content %}
-
     <div class="row">
-        <div class="col-lg-3 col-md-4 col-sm-12">
-            {% include 'includes/form.search.html' %}
-            <hr>
+        <div class="col-lg-2 col-md-3 col-sm-12">
             <small>
                 <p>Recent Tags</p>
                 {% for tag in recent_20_tags %}
@@ -13,48 +10,51 @@
                 {% endfor %}
             </small>
             <hr>
-            <small>
-                <p>Media Count</p>
-                Total Images Posted: {{ media_count.image }}<br>
-                Total Videos Posted: {{ media_count.video }}<br>
-                Total Audio Posted: {{ media_count.audio }}<br>
-            </small>
         </div>
-        <div class="col-lg-9 col-md-8 col-sm-12">
+        <div class="col-lg-10 col-md-9 col-sm-12">
             <h2>Recent Submissions</h2>
             <hr>
             <h5>Images</h5>
-            <div class="row mb-2">  {# Start the row here #}
-                {% for image in image_page_obj %}
-                    <div class="col-lg-3 col-md-6 col-sm-12">  {# Each card is a column within the row #}
-                        {% include 'includes/card.image.html' %}
-                    </div>
-                {% endfor %}
-            </div>
-            {# End the row here #}
-            {% include 'includes/pagination.image.html' %}
+            {% with media_type="image" %}
+                <div class="row mb-2">
+                    {% for media in image_page_obj %}
+                        <div class="col-lg-3 col-md-6 col-sm-12">
+                            {% include 'includes/card.media_preview.html' %}
+                        </div>
+                    {% endfor %}
+                </div>
+                {% with page_obj=image_page_obj %}
+                    {% include 'includes/pagination.media_preview.html' %}
+                {% endwith %}
+            {% endwith %}
             <hr>
             <h5>Videos</h5>
-            <div class="row mb-2">  {# Start the row here #}
-                {% for video in video_page_obj %}
-                    <div class="col-lg-3 col-md-6 col-sm-12">  {# Each card is a column within the row #}
-                        {% include 'includes/card.video.html' %}
-                    </div>
-                {% endfor %}
-            </div>
-            {# End the row here #}
-            {% include 'includes/pagination.video.html' %}
+            {% with media_type="video" %}
+                <div class="row mb-2">
+                    {% for media in video_page_obj %}
+                        <div class="col-lg-3 col-md-6 col-sm-12">
+                            {% include 'includes/card.media_preview.html' %}
+                        </div>
+                    {% endfor %}
+                </div>
+                {% with page_obj=image_page_obj %}
+                    {% include 'includes/pagination.media_preview.html' %}
+                {% endwith %}
+            {% endwith %}
             <hr>
             <h5>Audio</h5>
-            <div class="row mb-2">  {# Start the row here #}
-                {% for audio in audio_page_obj %}
-                    <div class="col-lg-3 col-md-6 col-sm-12">  {# Each card is a column within the row #}
-                        {% include 'includes/card.audio.html' %}
-                    </div>
-                {% endfor %}
-            </div>
-            {# End the row here #}
-            {% include 'includes/pagination.audio.html' %}
+            {% with media_type="audio" %}
+                <div class="row mb-2">
+                    {% for media in audio_page_obj %}
+                        <div class="col-lg-3 col-md-6 col-sm-12">
+                            {% include 'includes/card.media_preview.html' %}
+                        </div>
+                    {% endfor %}
+                </div>
+                {% with page_obj=image_page_obj %}
+                    {% include 'includes/pagination.media_preview.html' %}
+                {% endwith %}
+            {% endwith %}
         </div>
     </div>
 {% endblock %}

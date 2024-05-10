@@ -10,7 +10,7 @@ class ImagePost(models.Model):
     """
 
     title = models.CharField(max_length=100)
-    description = models.TextField()
+    description = models.TextField(max_length=500)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
 
     file = models.ImageField(upload_to="images/")
@@ -21,6 +21,7 @@ class ImagePost(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     metadata = models.JSONField(null=True, blank=True)
+    views = models.IntegerField(default=0)
 
     def __str__(self):
         return f"{self.title} by {self.author.username}"
@@ -40,7 +41,7 @@ class VideoPost(models.Model):
     """
 
     title = models.CharField(max_length=100)
-    description = models.TextField()
+    description = models.TextField(max_length=500)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
 
     thumbnail = models.ImageField(upload_to="thumbnails/", blank=True)
@@ -52,6 +53,7 @@ class VideoPost(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     metadata = models.JSONField(null=True, blank=True)
+    views = models.IntegerField(default=0)
 
     def __str__(self):
         return f"{self.title} by {self.author.username}"
@@ -71,7 +73,7 @@ class AudioPost(models.Model):
     """
 
     title = models.CharField(max_length=100)
-    description = models.TextField()
+    description = models.TextField(max_length=500)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
 
     thumbnail = models.ImageField(upload_to="thumbnails/")
@@ -81,6 +83,9 @@ class AudioPost(models.Model):
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    metadata = models.JSONField(null=True, blank=True)
+    views = models.IntegerField(default=0)
 
     def __str__(self):
         return f"{self.title} by {self.author.username}"
@@ -126,29 +131,20 @@ class MediaRating(models.Model):
         verbose_name = "Media Rating"
         verbose_name_plural = "Media Ratings"
 
-    @classmethod
-    def get_total_votes(cls, media_id, media_type):
+    @staticmethod
+    def get_total_votes(media_id, media_type):
+        # Get all votes for the specified media
         if media_type == "image":
-            return (
-                cls.objects.filter(image_id=media_id).aggregate(Sum("vote"))[
-                    "vote__sum"
-                ]
-                or 0
-            )
+            votes = MediaRating.objects.filter(image_id=media_id)
         elif media_type == "video":
-            return (
-                cls.objects.filter(video_id=media_id).aggregate(Sum("vote"))[
-                    "vote__sum"
-                ]
-                or 0
-            )
+            votes = MediaRating.objects.filter(video_id=media_id)
         else:  # audio
-            return (
-                cls.objects.filter(audio_id=media_id).aggregate(Sum("vote"))[
-                    "vote__sum"
-                ]
-                or 0
-            )
+            votes = MediaRating.objects.filter(audio_id=media_id)
+
+        # Calculate the total votes as the sum of the vote values
+        total_votes = votes.aggregate(total_votes=Sum("vote"))["total_votes"]
+
+        return total_votes if total_votes is not None else 0
 
 
 class MediaModeration(models.Model):
@@ -169,6 +165,8 @@ class MediaModeration(models.Model):
     audio_id = models.ForeignKey(
         AudioPost, on_delete=models.CASCADE, null=True, blank=True
     )
+
+    message = models.TextField(max_length=500, null=True, blank=True)
 
     approved = models.BooleanField(default=False)
     rejected = models.BooleanField(default=False)

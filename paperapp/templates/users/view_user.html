@@ -2,125 +2,77 @@
 {% load humanize %}
 
 {% block content %}
-    <h1>User Profile</h1>
-    <div class="row">
-        <div class="card">
-            <div class="card-body p-4">
-                <div class="d-flex text-black">
-                    <div class="flex-shrink-0">
-                        <img src="{{ user_profile.avatar.url }}"
-                             alt="Users Avatar" class="img-fluid"
-                             style="width: 10rem;">
-                    </div>
-                    <div class="flex-grow-1 ms-3">
-                        <h5 class="mb-1">{{ user_profile.user.username }}</h5>
-                        <p class="mb-2 pb-1">{{ user_profile.bio }}</p>
-                        <div class="d-flex justify-content-start p-2 mb-2">
-                            <div>
-                                <p class="small text-muted mb-1">Posts</p>
-                                <p class="mb-0">{{ total_posts }}</p>
-                            </div>
-                            <div class="px-3">
-                                <p class="small text-muted mb-1">DOB</p>
-                                <p class="mb-0">{{ user_profile.birth_date }}</p>
-                            </div>
-                            <div class="px-3">
-                                <p class="small text-muted mb-1">Location</p>
-                                <p class="mb-0">{{ user_profile.location }}</p>
-                            </div>
-                            <div>
-                                <p class="small text-muted mb-1">Date Joined</p>
-                                <p class="mb-0">{{ user_profile.user.date_joined|naturalday }}</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="mt-2">
-            <div class="accordion accordion-flush" id="accordionFlushViewUser">
-                <div class="accordion-item">
-                    <h2 class="accordion-header">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                data-bs-target="#flush-collapseOne" aria-expanded="false"
-                                aria-controls="flush-collapseOne">
-                            Images
-                        </button>
-                    </h2>
-                    <div id="flush-collapseOne" class="accordion-collapse collapse"
-                         data-bs-parent="#accordionFlushViewUser">
-                        <div class="accordion-body">
-                            <div class="row">
-                                {% if image_media %}
-                                    {% for image in image_media %}
-                                        <div class="col-lg-3 col-md-6 col-sm-12">
-                                            {% include 'includes/card.image.html' %}
-                                        </div>
-                                    {% endfor %}
-                                {% else %}
-                                    <div class="col-12">
-                                        <p class="text-center">No images uploaded yet</p>
-                                    </div>
-                                {% endif %}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="accordion-item">
-                    <h2 class="accordion-header">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                data-bs-target="#flush-collapseTwo" aria-expanded="false"
-                                aria-controls="flush-collapseTwo">
-                            Videos
-                        </button>
-                    </h2>
-                    <div id="flush-collapseTwo" class="accordion-collapse collapse"
-                         data-bs-parent="#accordionFlushViewUser">
-                        <div class="accordion-body">
-                            <div class="row">
-                                {% if video_media %}
-                                    {% for video in video_media %}
-                                        <div class="col-lg-3 col-md-6 col-sm-12">
-                                            {% include 'includes/card.video.html' %}
-                                        </div>
-                                    {% endfor %}
-                                {% else %}
-                                    <div class="col-12">
-                                        <p class="text-center">No videos uploaded yet</p>
-                                    </div>
-                                {% endif %}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="accordion-item">
-                    <h2 class="accordion-header">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                data-bs-target="#flush-collapseThree" aria-expanded="false"
-                                aria-controls="flush-collapseThree">
-                            Audio
-                        </button>
-                    </h2>
-                    <div id="flush-collapseThree" class="accordion-collapse collapse"
-                         data-bs-parent="#accordionFlushViewUser">
-                        <div class="accordion-body">
-                            <div class="row">
-                                {% if audio_media %}
-                                    {% for audio in audio_media %}
-                                        <div class="col-lg-3 col-md-6 col-sm-12">
-                                            {% include 'includes/card.audio.html' %}
-                                        </div>
-                                    {% endfor %}
-                                {% else %}
-                                    <div class="col-12">
-                                        <p class="text-center">No audio uploaded yet</p>
-                                    </div>
-                                {% endif %}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+
+    <div class="card-header d-flex align-items-start">
+        <img src="{{ user_profile.avatar.url }}" alt="{{ user_profile.user.username }}'s avatar"
+             width="200"
+             height="200" class="mr-3" style="margin-right: 1rem">
+        <div>
+            <h1>
+                {{ user_profile.user.username }}
+            </h1>
+            <p>{{ user_profile.bio|safe }}</p>
         </div>
     </div>
+    <div class="container d-flex justify-content-center mb-2">
+        <div class="btn-group" role="group">
+            <button type="button" class="btn btn-outline-light" disabled>
+                Joined: {{ user_profile.user.date_joined|naturalday }}
+            </button>
+            <button type="button" class="btn btn-outline-light" disabled>
+                Last Login: {{ user_profile.user.last_login|naturalday }}
+            </button>
+            <button type="button" class="btn btn-outline-light" disabled>
+                Posts: {{ total_posts }}
+            </button>
+            <button type="button" class="btn btn-outline-light" disabled>
+                DOB: {{ user_profile.birth_date|date:"F j, Y" }}
+            </button>
+            <button type="button" class="btn btn-outline-light" disabled>
+                Location: {{ user_profile.location }}
+            </button>
+        </div>
+    </div>
+    <hr>
+    <h5>Images</h5>
+    {% with media_type="image" %}
+        <div class="row mb-2">
+            {% for media in image_page_obj %}
+                <div class="col-lg-3 col-md-6 col-sm-12">
+                    {% include 'includes/card.media_preview.html' %}
+                </div>
+            {% endfor %}
+        </div>
+        {% with page_obj=image_page_obj %}
+            {% include 'includes/pagination.media_preview.html' %}
+        {% endwith %}
+    {% endwith %}
+    <hr>
+    <h5>Videos</h5>
+    {% with media_type="video" %}
+        <div class="row mb-2">
+            {% for media in video_page_obj %}
+                <div class="col-lg-3 col-md-6 col-sm-12">
+                    {% include 'includes/card.media_preview.html' %}
+                </div>
+            {% endfor %}
+        </div>
+        {% with page_obj=image_page_obj %}
+            {% include 'includes/pagination.media_preview.html' %}
+        {% endwith %}
+    {% endwith %}
+    <hr>
+    <h5>Audio</h5>
+    {% with media_type="audio" %}
+        <div class="row mb-2">
+            {% for media in audio_page_obj %}
+                <div class="col-lg-3 col-md-6 col-sm-12">
+                    {% include 'includes/card.media_preview.html' %}
+                </div>
+            {% endfor %}
+        </div>
+        {% with page_obj=image_page_obj %}
+            {% include 'includes/pagination.media_preview.html' %}
+        {% endwith %}
+    {% endwith %}
 {% endblock %}

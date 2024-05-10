@@ -4,6 +4,8 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 
 from multimedia.models import ImagePost, VideoPost, AudioPost
+from paperapp import settings
+from paperapp.utils import get_media_pagination
 from .forms import SignupForm, LoginForm, ProfileForm
 from .models import Profile
 
@@ -60,9 +62,9 @@ def user_profile(request):
     """
     # Get the current user's profile
     profile = request.user.profile
-    image_media = ImagePost.objects.filter(author=request.user).order_by("-created_at")
-    video_media = VideoPost.objects.filter(author=request.user).order_by("-created_at")
-    audio_media = AudioPost.objects.filter(author=request.user).order_by("-created_at")
+    image_page_obj, video_page_obj, audio_page_obj = get_media_pagination(
+        request, 8, "-created_at", request.user.id
+    )
 
     if request.method == "POST":
         # Populate the form with the existing profile data and the submitted data
@@ -84,9 +86,10 @@ def user_profile(request):
         {
             "form": form,
             "profile": profile,
-            "image_media": image_media,
-            "video_media": video_media,
-            "audio_media": audio_media,
+            "image_page_obj": image_page_obj,
+            "video_page_obj": video_page_obj,
+            "audio_page_obj": audio_page_obj,
+            "ckeditor_config": settings.CKEDITOR_5_CONFIGS["default"],
         },
     )
 
@@ -95,20 +98,24 @@ def view_user(request, user_id):
     """
     This view displays the profile of a specific user.
     """
-    user_profile = Profile.objects.get(user_id=user_id)
-    image_media = ImagePost.objects.filter(author_id=user_id).order_by("-created_at")
-    video_media = VideoPost.objects.filter(author_id=user_id).order_by("-created_at")
-    audio_media = AudioPost.objects.filter(author_id=user_id).order_by("-created_at")
+    profile = Profile.objects.get(user_id=user_id)
+    image_page_obj, video_page_obj, audio_page_obj = get_media_pagination(
+        request, 8, "-created_at", user_id
+    )
 
-    total_posts = len(image_media) + len(video_media) + len(audio_media)
+    total_posts = (
+        ImagePost.objects.filter(author=profile.user).count()
+        + VideoPost.objects.filter(author=profile.user).count()
+        + AudioPost.objects.filter(author=profile.user).count()
+    )
     return render(
         request,
         "users/view_user.html",
         {
-            "user_profile": user_profile,
-            "image_media": image_media,
-            "video_media": video_media,
-            "audio_media": audio_media,
+            "user_profile": profile,
+            "image_page_obj": image_page_obj,
+            "video_page_obj": video_page_obj,
+            "audio_page_obj": audio_page_obj,
             "total_posts": total_posts,
         },
     )
