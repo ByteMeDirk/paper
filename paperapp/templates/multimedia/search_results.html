@@ -1,75 +1,48 @@
 {% extends 'base.html' %}
 
 {% block content %}
+        {% include 'includes/banner.advert.html' %}
     <h5 class="mt-4">Showing Results For: {{ query }}</h5>
-    <small class="small text-muted">Only showing top 100 results.</small>
     <hr>
-    <div class="accordion" id="searchAccordion">
-        <div class="accordion-item">
-            <h2 class="accordion-header" id="headingImages">
-                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                        data-bs-target="#collapseImages" aria-expanded="false" aria-controls="collapseImages">
-                    Images ({{ image_results|length }})
-                </button>
-            </h2>
-            <div id="collapseImages" class="accordion-collapse collapse" aria-labelledby="headingImages"
-                 data-bs-parent="#searchAccordion">
-                <div class="accordion-body">
-                    {% with media_type="image" %}
-                        <div class="row mb-2">
-                            {% for media in image_results %}
-                                <div class="col-lg-3 col-md-6 col-sm-12">
-                                    {% include 'includes/card.media_preview.html' %}
-                                </div>
-                            {% endfor %}
-                        </div>
-                    {% endwith %}
+    <h2>Images</h2>
+    {% with media_type="image" %}
+        <div class="row mb-2">
+            {% for media in image_page_obj %}
+                <div class="col-lg-3 col-md-6 col-sm-12">
+                    {% include 'includes/card.media_preview.html' %}
                 </div>
-            </div>
+            {% endfor %}
         </div>
-        <div class="accordion-item">
-            <h2 class="accordion-header" id="headingVideos">
-                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                        data-bs-target="#collapseVideos" aria-expanded="false" aria-controls="collapseVideos">
-                    Videos ({{ video_results|length }})
-                </button>
-            </h2>
-            <div id="collapseVideos" class="accordion-collapse collapse" aria-labelledby="headingVideos"
-                 data-bs-parent="#searchAccordion">
-                <div class="accordion-body">
-                    {% with media_type="video" %}
-                        <div class="row mb-2">
-                            {% for media in video_results %}
-                                <div class="col-lg-3 col-md-6 col-sm-12">
-                                    {% include 'includes/card.media_preview.html' %}
-                                </div>
-                            {% endfor %}
-                        </div>
-                    {% endwith %}
+        {% with page_obj=image_page_obj %}
+            {% include 'includes/pagination.media_preview.html' %}
+        {% endwith %}
+    {% endwith %}
+
+    <h2>Videos</h2>
+    {% with media_type="video" %}
+        <div class="row mb-2">
+            {% for media in video_page_obj %}
+                <div class="col-lg-3 col-md-6 col-sm-12">
+                    {% include 'includes/card.media_preview.html' %}
                 </div>
-            </div>
+            {% endfor %}
         </div>
-        <div class="accordion-item">
-            <h2 class="accordion-header" id="headingAudio">
-                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                        data-bs-target="#collapseAudio" aria-expanded="false" aria-controls="collapseAudio">
-                    Audio ({{ audio_results|length }})
-                </button>
-            </h2>
-            <div id="collapseAudio" class="accordion-collapse collapse" aria-labelledby="headingAudio"
-                 data-bs-parent="#searchAccordion">
-                <div class="accordion-body">
-                    {% with media_type="audio" %}
-                        <div class="row mb-2">
-                            {% for media in audio_results %}
-                                <div class="col-lg-3 col-md-6 col-sm-12">
-                                    {% include 'includes/card.media_preview.html' %}
-                                </div>
-                            {% endfor %}
-                        </div>
-                    {% endwith %}
+        {% with page_obj=video_page_obj %}
+            {% include 'includes/pagination.media_preview.html' %}
+        {% endwith %}
+    {% endwith %}
+
+    <h2>Audio</h2>
+    {% with media_type="audio" %}
+        <div class="row mb-2">
+            {% for media in audio_page_obj %}
+                <div class="col-lg-3 col-md-6 col-sm-12">
+                    {% include 'includes/card.media_preview.html' %}
                 </div>
-            </div>
+            {% endfor %}
         </div>
-    </div>
+        {% with page_obj=video_page_obj %}
+            {% include 'includes/pagination.media_preview.html' %}
+        {% endwith %}
+    {% endwith %}
 {% endblock %}

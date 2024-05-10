@@ -5,7 +5,6 @@ from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
 from django.contrib.postgres.search import TrigramSimilarity
-from django.core.paginator import Paginator
 from django.db.models import Sum
 from django.http import JsonResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
@@ -223,56 +222,74 @@ def view_post(request, post_type, post_id):
     )
 
 
+from django.core.paginator import Paginator
+
+
 def search(request):
     """
     This view allows the user to search for posts.
     """
     query = request.GET.get("q")
+    items_per_page = 10  # Change this to the number of items you want per page
+
     if query:
         image_results = (
-                            ImagePost.objects.filter(hidden=False)
-                            .annotate(
-                                similarity=TrigramSimilarity("author__username", query)
-                                           + TrigramSimilarity("tags__name", query),
-                            )
-                            .filter(similarity__gt=0.3)
-                            .order_by("id", "-created_at", "-similarity")
-                            .distinct("id")
-                        )[:100]
+            ImagePost.objects.filter(hidden=False)
+            .annotate(
+                similarity=TrigramSimilarity("author__username", query)
+                           + TrigramSimilarity("tags__name", query),
+            )
+            .filter(similarity__gt=0.3)
+            .order_by("id", "-created_at", "-similarity")
+            .distinct("id")
+        )
 
         video_results = (
-                            VideoPost.objects.filter(hidden=False)
-                            .annotate(
-                                similarity=TrigramSimilarity("author__username", query)
-                                           + TrigramSimilarity("tags__name", query),
-                            )
-                            .filter(similarity__gt=0.3)
-                            .order_by("id", "-created_at", "-similarity")
-                            .distinct("id")
-                        )[:100]
+            VideoPost.objects.filter(hidden=False)
+            .annotate(
+                similarity=TrigramSimilarity("author__username", query)
+                           + TrigramSimilarity("tags__name", query),
+            )
+            .filter(similarity__gt=0.3)
+            .order_by("id", "-created_at", "-similarity")
+            .distinct("id")
+        )
 
         audio_results = (
-                            AudioPost.objects.filter(hidden=False)
-                            .annotate(
-                                similarity=TrigramSimilarity("author__username", query)
-                                           + TrigramSimilarity("tags__name", query),
-                            )
-                            .filter(similarity__gt=0.3)
-                            .order_by("id", "-created_at", "-similarity")
-                            .distinct("id")
-                        )[:100]
+            AudioPost.objects.filter(hidden=False)
+            .annotate(
+                similarity=TrigramSimilarity("author__username", query)
+                           + TrigramSimilarity("tags__name", query),
+            )
+            .filter(similarity__gt=0.3)
+            .order_by("id", "-created_at", "-similarity")
+            .distinct("id")
+        )
     else:
         image_results = ImagePost.objects.none()
         video_results = VideoPost.objects.none()
         audio_results = AudioPost.objects.none()
 
+    # Create Paginator objects for each type of result
+    image_paginator = Paginator(image_results, items_per_page)
+    video_paginator = Paginator(video_results, items_per_page)
+    audio_paginator = Paginator(audio_results, items_per_page)
+
+    # Get the page number from the GET parameters
+    page_number = request.GET.get("page")
+
+    # Get the Page objects for the current page
+    image_page_obj = image_paginator.get_page(page_number)
+    video_page_obj = video_paginator.get_page(page_number)
+    audio_page_obj = audio_paginator.get_page(page_number)
+
     return render(
         request,
         "multimedia/search_results.html",
         {
-            "image_results": image_results,
-            "video_results": video_results,
-            "audio_results": audio_results,
+            "image_page_obj": image_page_obj,
+            "video_page_obj": video_page_obj,
+            "audio_page_obj": audio_page_obj,
             "query": query,
         },
     )
