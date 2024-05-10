@@ -230,7 +230,7 @@ def search(request):
     This view allows the user to search for posts.
     """
     query = request.GET.get("q")
-    items_per_page = 10  # Change this to the number of items you want per page
+    items_per_page = 16  # Change this to the number of items you want per page
 
     if query:
         image_results = (
