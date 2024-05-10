@@ -12,6 +12,8 @@ class ReportUser(models.Model):
     reported = models.ForeignKey(User, on_delete=models.CASCADE, related_name="reported")
     reason = models.TextField(max_length=500)
     resolved = models.BooleanField(default=False)
+    resolved_message = models.TextField(max_length=500, null=True, blank=True)
+    resolved_by = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True, related_name="user_resolved_by")
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -26,9 +28,10 @@ class ReportPost(models.Model):
     image = models.ForeignKey(ImagePost, on_delete=models.CASCADE, null=True, blank=True)
     video = models.ForeignKey(VideoPost, on_delete=models.CASCADE, null=True, blank=True)
     audio = models.ForeignKey(AudioPost, on_delete=models.CASCADE, null=True, blank=True)
-
     reason = models.TextField(max_length=500)
     resolved = models.BooleanField(default=False)
+    resolved_message = models.TextField(max_length=500, null=True, blank=True)
+    resolved_by = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True, related_name="post_resolved_by")
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

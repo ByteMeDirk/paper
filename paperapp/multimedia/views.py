@@ -2,6 +2,7 @@ import os
 import uuid
 
 from django.contrib import messages
+from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
 from django.contrib.postgres.search import TrigramSimilarity
 from django.core.paginator import Paginator
@@ -140,13 +141,17 @@ def delete_post(request, post_type, post_id):
     else:
         post = get_object_or_404(ImagePost, pk=post_id)
 
-    # Check if the request.user is the author of the post
-    if post.author.id != request.user.id:
+    # Check if the request.user is the author of the post or a moderator
+    if post.author.id != request.user.id or request.user.is_staff:
         messages.error(request, "You are not authorized to delete this post.")
         return redirect("home")
 
     post.delete()
     messages.success(request, "Post deleted successfully.")
+
+    if request.user.is_staff:
+        return redirect("moderator_dashboard")
+
     return redirect("home")
 
 
@@ -156,11 +161,11 @@ def view_post(request, post_type, post_id):
     This view allows the user to view a post of the specified type.
     """
     if post_type == "video":
-        post = get_object_or_404(VideoPost, pk=post_id)
-        artists_posts = VideoPost.objects.filter(author=post.author)[:5]
+        post = get_object_or_404(VideoPost, pk=post_id, hidden=False)
+        artists_posts = VideoPost.objects.filter(author=post.author, hidden=False)[:5]
         if post.tags.first() is not None:
             similar_posts = (
-                VideoPost.objects.annotate(
+                VideoPost.objects.filter(hidden=False).annotate(
                     similarity=TrigramSimilarity("tags__name", post.tags.first().name)
                 )
                 .filter(similarity__gt=0.3)
@@ -172,11 +177,11 @@ def view_post(request, post_type, post_id):
             similar_posts = VideoPost.objects.none()
 
     elif post_type == "audio":
-        post = get_object_or_404(AudioPost, pk=post_id)
-        artists_posts = AudioPost.objects.filter(author=post.author)[:5]
+        post = get_object_or_404(AudioPost, pk=post_id, hidden=False)
+        artists_posts = AudioPost.objects.filter(author=post.author, hidden=False)[:5]
         if post.tags.first() is not None:
             similar_posts = (
-                AudioPost.objects.annotate(
+                AudioPost.objects.filter(hidden=False).annotate(
                     similarity=TrigramSimilarity("tags__name", post.tags.first().name)
                 )
                 .filter(similarity__gt=0.3)
@@ -187,11 +192,11 @@ def view_post(request, post_type, post_id):
         else:
             similar_posts = AudioPost.objects.none()
     else:
-        post = get_object_or_404(ImagePost, pk=post_id)
-        artists_posts = ImagePost.objects.filter(author=post.author)[:5]
+        post = get_object_or_404(ImagePost, pk=post_id, hidden=False)
+        artists_posts = ImagePost.objects.filter(author=post.author, hidden=False)[:5]
         if post.tags.first() is not None:
             similar_posts = (
-                ImagePost.objects.annotate(
+                ImagePost.objects.filter(hidden=False).annotate(
                     similarity=TrigramSimilarity("tags__name", post.tags.first().name)
                 )
                 .filter(similarity__gt=0.3)
@@ -225,7 +230,7 @@ def search(request):
     query = request.GET.get("q")
     if query:
         image_results = (
-                            ImagePost.objects.annotate(
+                            ImagePost.objects.filter(hidden=False).annotate(
                                 similarity=TrigramSimilarity("author__username", query)
                                            + TrigramSimilarity("tags__name", query),
                             )
@@ -235,7 +240,7 @@ def search(request):
                         )[:100]
 
         video_results = (
-                            VideoPost.objects.annotate(
+                            VideoPost.objects.filter(hidden=False).annotate(
                                 similarity=TrigramSimilarity("author__username", query)
                                            + TrigramSimilarity("tags__name", query),
                             )
@@ -245,7 +250,7 @@ def search(request):
                         )[:100]
 
         audio_results = (
-                            AudioPost.objects.annotate(
+                            AudioPost.objects.filter(hidden=False).annotate(
                                 similarity=TrigramSimilarity("author__username", query)
                                            + TrigramSimilarity("tags__name", query),
                             )
@@ -322,7 +327,7 @@ def view_gallery(request, media_type):
     if media_type in media_models:
         # Get all media of the specified type
         media_model = media_models[media_type]
-        media_objects = media_model.objects.annotate(
+        media_objects = media_model.objects.filter(hidden=False).annotate(
             votes=Sum("mediarating__vote")
         ).order_by(sort_by)
 
@@ -348,3 +353,23 @@ def view_gallery(request, media_type):
 
     else:
         return redirect("home")
+
+
+@login_required(login_url="login")
+@staff_member_required
+def hide_post(request, post_type, post_id):
+    """
+    This view hides a post from the public view.
+    It is only accessible to staff members.
+    """
+    if post_type == "video":
+        post = VideoPost.objects.get(id=post_id)
+    elif post_type == "audio":
+        post = AudioPost.objects.get(id=post_id)
+    else:
+        post = ImagePost.objects.get(id=post_id)
+
+    post.hidden = True
+    post.save()
+    messages.success(request, "Post hidden successfully.")
+    return redirect("moderator_dashboard")

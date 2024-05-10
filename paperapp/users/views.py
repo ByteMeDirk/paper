@@ -1,4 +1,5 @@
 from django.contrib import messages
+from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
@@ -104,10 +105,15 @@ def view_user(request, user_id):
     )
 
     total_posts = (
-        ImagePost.objects.filter(author=profile.user).count()
-        + VideoPost.objects.filter(author=profile.user).count()
-        + AudioPost.objects.filter(author=profile.user).count()
+            ImagePost.objects.filter(author=profile.user).count()
+            + VideoPost.objects.filter(author=profile.user).count()
+            + AudioPost.objects.filter(author=profile.user).count()
     )
+
+    if profile.hidden:
+        messages.error(request, "This user's profile is hidden.")
+        return redirect("home")
+
     return render(
         request,
         "users/view_user.html",
@@ -119,3 +125,17 @@ def view_user(request, user_id):
             "total_posts": total_posts,
         },
     )
+
+
+@login_required(login_url="login")
+@staff_member_required
+def hide_user(request, user_id):
+    """
+    This view hides a user's profile from the public view.
+    It is only accessible to staff members.
+    """
+    user = Profile.objects.get(user_id=user_id)
+    user.hidden = True
+    user.save()
+    messages.success(request, "User hidden successfully.")
+    return redirect("moderator_dashboard")

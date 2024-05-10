@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+{% load humanize %}
+
+{% block content %}
+    <h3>Moderator Dashboard</h3>
+    <hr>
+    <h5>User Reports</h5>
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th scope="col">Reporter</th>
+            <th scope="col">Reported</th>
+            <th scope="col">Reason</th>
+            <th scope="col">Resolved</th>
+            <th scope="col">Created At</th>
+            <th scope="col">Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for user_report in user_reports %}
+            <tr class="table-active">
+                <td>
+                    <a href="{% url 'view_user' user_id=user_report.reporter.id %}">{{ user_report.reporter }}</a>
+                </td>
+                <td>
+                    <a href="{% url 'view_user' user_id=user_report.reported.id %}">{{ user_report.reported }}</a>
+                </td>
+                <td>{{ user_report.reason }}</td>
+                <td>{{ user_report.resolved }}</td>
+                <td>{{ user_report.created_at|naturalday }}</td>
+                <td>
+                    <a href="{% url 'resolve_user_report' report_id=user_report.id %}" class="btn btn-sm btn-success">Resolve</a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <hr>
+    <h5>Post Reports</h5>
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th scope="col">Reporter</th>
+            <th scope="col">Post</th>
+            <th scope="col">Reason</th>
+            <th scope="col">Resolved</th>
+            <th scope="col">Created At</th>
+            <th scope="col">Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for post_report in post_reports %}
+            <tr class="table-active">
+                <td>
+                    <a href="{% url 'view_user' user_id=post_report.reporter.id %}">{{ post_report.reporter }}</a>
+                </td>
+                <td>
+                    {% if post_report.image %}
+                        <a href="{% url 'view_post' post_type='image' post_id=post_report.image.id %}">Image: {{ post_report.image.title }}</a>
+                    {% elif post_report.video %}
+                        <a href="{% url 'view_post' post_type='video' post_id=post_report.video.id %}">Video: {{ post_report.video.title }}</a>
+                    {% elif post_report.audio %}
+                        <a href="{% url 'view_post' post_type='audio' post_id=post_report.audio.id %}">Audio: {{ post_report.audio.title }}</a>
+                    {% endif %}
+                </td>
+                <td>{{ post_report.reason }}</td>
+                <td>{{ post_report.resolved }}</td>
+                <td>{{ post_report.created_at|naturalday }}</td>
+                <td>
+                    <a href="{% url 'resolve_post_report' report_id=post_report.id %}"
+                           class="btn btn-sm btn-success">Resolve</a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

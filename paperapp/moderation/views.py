@@ -1,4 +1,5 @@
 from django.contrib import messages
+from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
@@ -7,7 +8,7 @@ from django.shortcuts import render
 from multimedia.models import ImagePost, VideoPost, AudioPost
 from multimedia.views import view_post
 from users.views import view_user
-from .forms import ReportUserForm, ReportPostForm
+from .forms import ReportUserForm, ReportPostForm, ModerateUserForm, ModeratePostForm
 from .models import ReportPost, ReportUser
 
 
@@ -88,3 +89,61 @@ def report_post(request, post_id, post_type):
         form = ReportPostForm()
 
     return render(request, "moderation/report_post.html", {"form": form, "post": post, "post_type": post_type})
+
+
+@login_required(login_url="login")
+@staff_member_required
+def moderator_dashboard(request):
+    """
+    View for the moderator dashboard.
+    """
+
+    # Get all unresolved reports
+    user_reports = ReportUser.objects.filter(resolved=False)
+    post_reports = ReportPost.objects.filter(resolved=False)
+
+    return render(request, "moderation/moderator_dashboard.html",
+                  {"user_reports": user_reports, "post_reports": post_reports})
+
+
+
+@login_required(login_url="login")
+@staff_member_required
+def resolve_user_report(request, report_id):
+    """
+    View for resolving a user report.
+    """
+    report = ReportUser.objects.get(id=report_id)
+
+    if request.method == "POST":
+        form = ModerateUserForm(request.POST, instance=report)
+
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Report resolved successfully.")
+            return moderator_dashboard(request)
+    else:
+        form = ModerateUserForm(instance=report)
+
+    return render(request, "moderation/resolve_user_report.html", {"form": form, "report": report})
+
+
+@login_required(login_url="login")
+@staff_member_required
+def resolve_post_report(request, report_id):
+    """
+    View for resolving a post report.
+    """
+    report = ReportPost.objects.get(id=report_id)
+
+    if request.method == "POST":
+        form = ModeratePostForm(request.POST, instance=report)
+
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Report resolved successfully.")
+            return moderator_dashboard(request)
+    else:
+        form = ModeratePostForm(instance=report)
+
+    return render(request, "moderation/resolve_post_report.html", {"form": form, "report": report})

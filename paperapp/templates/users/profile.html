@@ -35,7 +35,14 @@
             </div>
         </div>
     </form>
-
+    <div class="mt-2">
+        <p>
+            Posts labeled as <strong class="text-warning">Hidden</strong> are not visible to the public. You can still view them by clicking
+            the edit button. Posts are hidden when they are reported and will be reviewed by an administrator.<br>
+            You will be notified if your post is hidden, along with the reason why it was reported, and the reason why
+            it was hidden.
+        </p>
+    </div>
     <div class="mt-2">
         <h5>Images</h5>
         {% with media_type="image" %}
@@ -49,11 +56,12 @@
                     <th scope="col">Views</th>
                     <th scope="col">Votes</th>
                     <th scope="col">Edit</th>
+                    <th scope="col">Hidden</th>
                 </tr>
                 </thead>
                 <tbody>
                 {% for media in image_page_obj %}
-                    <tr>
+                    <tr {% if media.hidden %}class="table-warning"{% endif %}>
                         <td><img src="{{ media.file.url }}" alt="{{ media.title }}" style="width: 100px;"></td>
                         <td>{{ media.title }}</td>
                         <td>{{ media.description|safe }}</td>
@@ -69,6 +77,7 @@
                         <td>
                             <a href="{% url 'edit_post' post_type='image' post_id=media.id %}" class="btn btn-warning">Edit</a>
                         </td>
+                        <td>{{ media.hidden }}</td>
                     </tr>
                     </tbody>
                 {% endfor %}
@@ -91,11 +100,12 @@
                     <th scope="col">Views</th>
                     <th scope="col">Votes</th>
                     <th scope="col">Edit</th>
+                    <th scope="col">Hidden</th>
                 </tr>
                 </thead>
                 <tbody>
                 {% for media in video_page_obj %}
-                    <tr>
+                    <tr {% if media.hidden %}class="table-warning"{% endif %}>
                         <td><img src="{{ media.thumbnail.url }}" alt="{{ media.title }}" style="width: 100px;"></td>
                         <td>{{ media.title }}</td>
                         <td>{{ media.description|safe }}</td>
@@ -111,6 +121,7 @@
                         <td>
                             <a href="{% url 'edit_post' post_type='video' post_id=media.id %}" class="btn btn-warning">Edit</a>
                         </td>
+                        <th scope="col">Hidden</th>
                     </tr>
                     </tbody>
                 {% endfor %}
@@ -132,11 +143,12 @@
                     <th scope="col">Views</th>
                     <th scope="col">Votes</th>
                     <th scope="col">Edit</th>
+                    <th scope="col">Hidden</th>
                 </tr>
                 </thead>
                 <tbody>
                 {% for media in audio_page_obj %}
-                    <tr>
+                    <tr {% if media.hidden %}class="table-warning"{% endif %}>
                         <td><img src="{{ media.thumbnail.url }}" alt="{{ media.title }}" style="width: 100px;"></td>
                         <td>{{ media.title }}</td>
                         <td>{{ media.description|safe }}</td>
@@ -152,6 +164,7 @@
                         <td>
                             <a href="{% url 'edit_post' post_type='audio' post_id=media.id %}" class="btn btn-warning">Edit</a>
                         </td>
+                        <th scope="col">Hidden</th>
                     </tr>
                     </tbody>
                 {% endfor %}

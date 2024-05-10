@@ -23,6 +23,8 @@ class ImagePost(models.Model):
     metadata = models.JSONField(null=True, blank=True)
     views = models.IntegerField(default=0)
 
+    hidden = models.BooleanField(default=False)
+
     def __str__(self):
         return f"{self.title} by {self.author.username}"
 
@@ -63,6 +65,8 @@ class VideoPost(models.Model):
     metadata = models.JSONField(null=True, blank=True)
     views = models.IntegerField(default=0)
 
+    hidden = models.BooleanField(default=False)
+
     def __str__(self):
         return f"{self.title} by {self.author.username}"
 
@@ -102,6 +106,8 @@ class AudioPost(models.Model):
 
     metadata = models.JSONField(null=True, blank=True)
     views = models.IntegerField(default=0)
+
+    hidden = models.BooleanField(default=False)
 
     def __str__(self):
         return f"{self.title} by {self.author.username}"
