@@ -34,6 +34,14 @@ class ImagePost(models.Model):
             or 0
         )
 
+    def save(self, *args, **kwargs):
+        if self.pk is not None:
+            orig = ImagePost.objects.get(pk=self.pk)
+            if orig.views != self.views and all(getattr(orig, field) == getattr(self, field) for field in ['title', 'description', 'author', 'file', 'content_rating', 'tags', 'metadata']):
+                # Only 'views' field has changed, so prevent 'updated_at' from being updated
+                self.updated_at = orig.updated_at
+        super().save(*args, **kwargs)
+
 
 class VideoPost(models.Model):
     """
@@ -66,6 +74,14 @@ class VideoPost(models.Model):
             or 0
         )
 
+    def save(self, *args, **kwargs):
+        if self.pk is not None:
+            orig = VideoPost.objects.get(pk=self.pk)
+            if orig.views != self.views and all(getattr(orig, field) == getattr(self, field) for field in ['title', 'description', 'author', 'thumbnail', 'file', 'content_rating', 'tags', 'metadata']):
+                # Only 'views' field has changed, so prevent 'updated_at' from being updated
+                self.updated_at = orig.updated_at
+        super().save(*args, **kwargs)
+
 
 class AudioPost(models.Model):
     """
@@ -97,6 +113,14 @@ class AudioPost(models.Model):
             ]
             or 0
         )
+
+    def save(self, *args, **kwargs):
+        if self.pk is not None:
+            orig = AudioPost.objects.get(pk=self.pk)
+            if orig.views != self.views and all(getattr(orig, field) == getattr(self, field) for field in ['title', 'description', 'author', 'thumbnail', 'file', 'content_rating', 'tags', 'metadata']):
+                # Only 'views' field has changed, so prevent 'updated_at' from being updated
+                self.updated_at = orig.updated_at
+        super().save(*args, **kwargs)
 
 
 class MediaRating(models.Model):
@@ -145,39 +169,3 @@ class MediaRating(models.Model):
         total_votes = votes.aggregate(total_votes=Sum("vote"))["total_votes"]
 
         return total_votes if total_votes is not None else 0
-
-
-class MediaModeration(models.Model):
-    """
-    This represents the moderation of the media.
-    """
-
-    user = models.ForeignKey(
-        User, on_delete=models.CASCADE
-    )  # User can only moderate once
-
-    image_id = models.ForeignKey(
-        ImagePost, on_delete=models.CASCADE, null=True, blank=True
-    )
-    video_id = models.ForeignKey(
-        VideoPost, on_delete=models.CASCADE, null=True, blank=True
-    )
-    audio_id = models.ForeignKey(
-        AudioPost, on_delete=models.CASCADE, null=True, blank=True
-    )
-
-    message = models.TextField(max_length=500, null=True, blank=True)
-
-    approved = models.BooleanField(default=False)
-    rejected = models.BooleanField(default=False)
-
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
-    def __str__(self):
-        return f"{self.user.username} moderated {self.image_id or self.video_id or self.audio_id}"
-
-    class Meta:
-        unique_together = ("user", "image_id", "video_id", "audio_id")
-        verbose_name = "Media Moderation"
-        verbose_name_plural = "Media Moderations"

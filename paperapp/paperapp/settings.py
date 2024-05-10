@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     "paperapp",
     "users",
     "multimedia",
+    "moderation",
     "api",
     "taggit",
     "django_ckeditor_5",

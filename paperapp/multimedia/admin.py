@@ -4,7 +4,6 @@ from multimedia.models import (
     VideoPost,
     AudioPost,
     MediaRating,
-    MediaModeration,
 )
 from users.models import Profile
 
@@ -12,5 +11,4 @@ admin.site.register(ImagePost)
 admin.site.register(VideoPost)
 admin.site.register(AudioPost)
 admin.site.register(MediaRating)
-admin.site.register(MediaModeration)
 admin.site.register(Profile)
