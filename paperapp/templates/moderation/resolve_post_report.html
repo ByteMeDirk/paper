@@ -26,8 +26,8 @@
         {% endif %}
     </div>
 
-    <div class="card text-white bg-dark mb-2">
-        <form method="POST">
+    <form method="POST">
+        <div class="card text-white bg-dark mb-2">
             <div class="card-header">Reason: {{ report.reason }} {% if report.image.hidden %}
                 <span class="badge bg-warning">Currently Hidden</span>{% endif %}</div>
             <div class="card-body">
@@ -75,11 +75,11 @@
                     {% endif %}
                 {% endif %}
             </div>
-        </form>
-        <div class="card-footer">
-            <button type="submit" class="btn btn-warning">Resolve</button>
-            <a href="{% url 'moderator_dashboard' %}" class="btn btn-primary">Cancel</a>
+            <div class="card-footer">
+                <button type="submit" class="btn btn-warning">Resolve</button>
+                <a href="{% url 'moderator_dashboard' %}" class="btn btn-primary">Cancel</a>
+            </div>
         </div>
-    </div>
+    </form>
 
 {% endblock %}

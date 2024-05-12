@@ -1,7 +1,8 @@
 {% extends 'base.html' %}
+{% load mathfilters %}
 
 {% block content %}
-        {% include 'includes/banner.advert.html' %}
+    {% include 'includes/banner.advert.html' %}
     <h5 class="mt-4">Showing Results For: {{ query }}</h5>
     <hr>
     <h2>Images</h2>
@@ -14,7 +15,45 @@
             {% endfor %}
         </div>
         {% with page_obj=image_page_obj %}
-            {% include 'includes/pagination.media_preview.html' %}
+            <nav aria-label="Page navigation example">
+                <ul class="pagination">
+                    {% if page_obj.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link"
+                               href="?q={{ query }}&{{ media_type }}_page={{ page_obj.previous_page_number }}">Previous</a>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled">
+                            <a class="page-link" href="#">Previous</a>
+                        </li>
+                    {% endif %}
+
+                    {% for i in page_obj.paginator.page_range %}
+                        {% if i >= page_obj.number|sub:"2" and i <= page_obj.number|add:"2" %}
+                            {% if page_obj.number == i %}
+                                <li class="page-item active"><a class="page-link"
+                                                                href="?q={{ query }}&{{ media_type }}_page={{ i }}">{{ i }}</a>
+                                </li>
+                            {% else %}
+                                <li class="page-item"><a class="page-link"
+                                                         href="?q={{ query }}&{{ media_type }}_page={{ i }}">{{ i }}</a>
+                                </li>
+                            {% endif %}
+                        {% endif %}
+                    {% endfor %}
+
+                    {% if page_obj.has_next %}
+                        <li class="page-item">
+                            <a class="page-link"
+                               href="?q={{ query }}&{{ media_type }}_page={{ page_obj.next_page_number }}">Next</a>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled">
+                            <a class="page-link" href="#">Next</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </nav>
         {% endwith %}
     {% endwith %}
 
@@ -28,7 +67,45 @@
             {% endfor %}
         </div>
         {% with page_obj=video_page_obj %}
-            {% include 'includes/pagination.media_preview.html' %}
+            <nav aria-label="Page navigation example">
+                <ul class="pagination">
+                    {% if page_obj.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link"
+                               href="?q={{ query }}&{{ media_type }}_page={{ page_obj.previous_page_number }}">Previous</a>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled">
+                            <a class="page-link" href="#">Previous</a>
+                        </li>
+                    {% endif %}
+
+                    {% for i in page_obj.paginator.page_range %}
+                        {% if i >= page_obj.number|sub:"2" and i <= page_obj.number|add:"2" %}
+                            {% if page_obj.number == i %}
+                                <li class="page-item active"><a class="page-link"
+                                                                href="?q={{ query }}&{{ media_type }}_page={{ i }}">{{ i }}</a>
+                                </li>
+                            {% else %}
+                                <li class="page-item"><a class="page-link"
+                                                         href="?q={{ query }}&{{ media_type }}_page={{ i }}">{{ i }}</a>
+                                </li>
+                            {% endif %}
+                        {% endif %}
+                    {% endfor %}
+
+                    {% if page_obj.has_next %}
+                        <li class="page-item">
+                            <a class="page-link"
+                               href="?q={{ query }}&{{ media_type }}_page={{ page_obj.next_page_number }}">Next</a>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled">
+                            <a class="page-link" href="#">Next</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </nav>
         {% endwith %}
     {% endwith %}
 
@@ -42,7 +119,45 @@
             {% endfor %}
         </div>
         {% with page_obj=video_page_obj %}
-            {% include 'includes/pagination.media_preview.html' %}
+            <nav aria-label="Page navigation example">
+                <ul class="pagination">
+                    {% if page_obj.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link"
+                               href="?q={{ query }}&{{ media_type }}_page={{ page_obj.previous_page_number }}">Previous</a>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled">
+                            <a class="page-link" href="#">Previous</a>
+                        </li>
+                    {% endif %}
+
+                    {% for i in page_obj.paginator.page_range %}
+                        {% if i >= page_obj.number|sub:"2" and i <= page_obj.number|add:"2" %}
+                            {% if page_obj.number == i %}
+                                <li class="page-item active"><a class="page-link"
+                                                                href="?q={{ query }}&{{ media_type }}_page={{ i }}">{{ i }}</a>
+                                </li>
+                            {% else %}
+                                <li class="page-item"><a class="page-link"
+                                                         href="?q={{ query }}&{{ media_type }}_page={{ i }}">{{ i }}</a>
+                                </li>
+                            {% endif %}
+                        {% endif %}
+                    {% endfor %}
+
+                    {% if page_obj.has_next %}
+                        <li class="page-item">
+                            <a class="page-link"
+                               href="?q={{ query }}&{{ media_type }}_page={{ page_obj.next_page_number }}">Next</a>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled">
+                            <a class="page-link" href="#">Next</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </nav>
         {% endwith %}
     {% endwith %}
 {% endblock %}

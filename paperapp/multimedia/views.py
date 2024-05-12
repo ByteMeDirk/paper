@@ -1,10 +1,13 @@
 import os
 import uuid
 
+import requests
 from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 from django.contrib.postgres.search import TrigramSimilarity
+from django.core.paginator import Paginator
 from django.db.models import Sum
 from django.http import JsonResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
@@ -222,9 +225,6 @@ def view_post(request, post_type, post_id):
     )
 
 
-from django.core.paginator import Paginator
-
-
 def search(request):
     """
     This view allows the user to search for posts.
@@ -275,13 +275,15 @@ def search(request):
     video_paginator = Paginator(video_results, items_per_page)
     audio_paginator = Paginator(audio_results, items_per_page)
 
-    # Get the page number from the GET parameters
-    page_number = request.GET.get("page")
+    # Get the page number from the GET parameters for each type of result
+    image_page_number = request.GET.get("image_page")
+    video_page_number = request.GET.get("video_page")
+    audio_page_number = request.GET.get("audio_page")
 
-    # Get the Page objects for the current page
-    image_page_obj = image_paginator.get_page(page_number)
-    video_page_obj = video_paginator.get_page(page_number)
-    audio_page_obj = audio_paginator.get_page(page_number)
+    # Get the Page objects for the current page for each type of result
+    image_page_obj = image_paginator.get_page(image_page_number)
+    video_page_obj = video_paginator.get_page(video_page_number)
+    audio_page_obj = audio_paginator.get_page(audio_page_number)
 
     return render(
         request,
@@ -417,3 +419,19 @@ def unhide_post(request, post_type, post_id):
     post.save()
     messages.success(request, "Post unhidden successfully.")
     return HttpResponseRedirect(previous_page)
+
+
+def download_image(url, file_path):
+    """
+    Download an image from a URL and save it to a file.
+
+    Args:
+    url (str): The URL of the image to download.
+    file_path (str): The path to the file where the image will be saved.
+    """
+    response = requests.get(url)
+
+    with open(file_path, 'wb') as file:
+        file.write(response.content)
+
+    return file_path

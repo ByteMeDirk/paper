@@ -408,3 +408,4 @@ poetry.toml
 pyrightconfig.json
 
 # End of https://www.toptal.com/developers/gitignore/api/python,django,pycharm,angular
+/paperapp/management/commands/data_gen.py

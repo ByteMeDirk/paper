@@ -95,7 +95,7 @@
                     <div class="row">
                         {% with media_type=post_type %}
                             {% for media in similar_posts %}
-                                {% if media.id != post.id and media.author.user.id != post.author.user.id %}
+                                {% if media.id != post.id or media.author.user.id != post.author.user.id %}
                                     <div class="col-lg-6 col-sm-12">
                                         {% include 'includes/card.media_preview.html' %}
                                     </div>

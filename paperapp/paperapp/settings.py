@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     "api",
     "taggit",
     "django_ckeditor_5",
+    "mathfilters",
 ]
 
 MIDDLEWARE = [

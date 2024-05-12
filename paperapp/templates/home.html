@@ -6,7 +6,7 @@
         <div class="col-lg-2 col-md-3 col-sm-12">
             <small>
                 <p>Common Tags</p>
-                {% for tag in recent_20_tags %}
+                {% for tag in recent_tags %}
                     <a href="{% url 'search' %}?q={{ tag.name }}" class="badge bg-info">{{ tag.name }}</a>
                 {% endfor %}
             </small>

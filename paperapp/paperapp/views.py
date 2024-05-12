@@ -17,7 +17,7 @@ def home(request):
     )
 
     # Other Stats to be added
-    recent_20_tags = ImagePost.tags.most_common()[:20]
+    recent_tags = ImagePost.tags.most_common()[:50]
 
     return render(
         request,
@@ -26,7 +26,7 @@ def home(request):
             "image_page_obj": image_page_obj,
             "video_page_obj": video_page_obj,
             "audio_page_obj": audio_page_obj,
-            "recent_20_tags": recent_20_tags,
+            "recent_tags": recent_tags,
         },
     )
 
