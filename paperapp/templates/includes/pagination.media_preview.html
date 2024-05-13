@@ -1,3 +1,4 @@
+{% load mathfilters %}
 <nav aria-label="Page navigation example">
     <ul class="pagination">
         {% if page_obj.has_previous %}
@@ -11,10 +12,13 @@
         {% endif %}
 
         {% for i in page_obj.paginator.page_range %}
-            {% if page_obj.number == i %}
-                <li class="page-item"><a class="page-link" href="?{{ media_type }}_page={{ i }}">{{ i }}</a></li>
-            {% else %}
-                <li class="page-item"><a class="page-link" href="?{{ media_type }}_page={{ i }}">{{ i }}</a></li>
+            {% if i >= page_obj.number|sub:"2" and i <= page_obj.number|add:"2" %}
+                {% if page_obj.number == i %}
+                    <li class="page-item active"><a class="page-link" href="?{{ media_type }}_page={{ i }}">{{ i }}</a>
+                    </li>
+                {% else %}
+                    <li class="page-item"><a class="page-link" href="?{{ media_type }}_page={{ i }}">{{ i }}</a></li>
+                {% endif %}
             {% endif %}
         {% endfor %}
 

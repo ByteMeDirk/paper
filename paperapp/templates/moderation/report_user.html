@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <form method="POST">
+        {% csrf_token %}
+        <div class="card">
+            <div class="card-header">
+                You are about to report <b>{{ user.username }}</b>.
+            </div>
+            <div class="card-body">
+                <p>
+                    Please provide a reason for reporting this user. This will help us review the user and take
+                    appropriate action.<br>
+                    Reporting a user is valid only if the user violates our community guidelines. A report is not a
+                    guarantee that the user will be removed, and is an irreversible action.
+                </p>
+                <div class="mb-3">
+                    {{ form.as_p }}
+                </div>
+                <button type="submit" class="btn btn-warning">Report</button>
+                <a class="btn btn-primary" href="{% url 'view_user' user_id=user.id %}">Cancel</a>
+            </div>
+        </div>
+    </form>
+{% endblock %}

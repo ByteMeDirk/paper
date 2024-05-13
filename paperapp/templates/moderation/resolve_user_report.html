@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+{% load humanize %}
+{% block content %}
+    <h3>{{ report }}</h3>
+    <p>You are about to resolve the following User report:</p>
+    <div class="mb-2">
+        <div class="card-header d-flex align-items-start">
+            <img src="{{ report.reported.profile.avatar.url }}"
+                 alt="{{ report.reported.profile.user.username }}'s avatar"
+                 width="200"
+                 height="200" class="mr-3" style="margin-right: 1rem">
+            <div>
+                <h1>
+                    <a href="{% url 'view_user' user_id=report.reported.id %}">{{ report.reported.username }}</a>
+                </h1>
+                <p>{{ report.reported.profile.bio|safe }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="card text-white bg-dark mb-2">
+        <form method="POST">
+            <div class="card-header">Reason: {{ report.reason }}</div>
+            <div class="card-body">
+                <h4 class="card-title">Reported by: <a
+                        href="{% url 'view_user' user_id=report.reporter.id %}">{{ report.reporter }}</a></h4>
+                <p class="card-text">Reported at: {{ report.created_at|naturalday }}</p>
+                <hr>
+                <p>
+                    In order for the moderator to resolve this report, the Reporters reasoning needs to be evaluated
+                    against
+                    community guidelines and the actions of the user.<br>
+                    The Moderator can then Deactivate the user. Once they have
+                    done so, they can set the report as resolved and provide the rationale for their decision.<br>
+                    <strong class="text-danger">Remember, deletion is irreversible.</strong><br>
+                    Once resolved, the reporter and user will be notified of the action taken.
+                </p>
+                <hr>
+                {% csrf_token %}
+                {{ form.as_p }}
+            </div>
+
+            <div class="card-footer">
+                <button type="submit" class="btn btn-warning">Resolve</button>
+                <a href="{% url 'moderator_dashboard' %}" class="btn btn-primary">Cancel</a>
+            </div>
+        </form>
+        <div class="card-footer">
+            {% if report.reported.is_active %}
+                <form method="POST" action="{% url 'deactivate_user' report.reported.id %}">
+                    {% csrf_token %}
+                    <button type="button" class="btn btn-danger" data-bs-toggle="modal"
+                            data-bs-target="#deleteModal">
+                        Deactivate User
+                    </button>
+                    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel"
+                         aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="deleteModalLabel">Confirm Deactivation</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    Are you sure you want to deactivate this user?
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel
+                                    </button>
+                                    <form method="POST" action="{% url 'deactivate_user' report.reported.id %}">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-danger">Deactivate User</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            {% else %}
+                <form method="POST" action="{% url 'activate_user' report.reported.id %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-info">Activate User</button>
+                </form>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

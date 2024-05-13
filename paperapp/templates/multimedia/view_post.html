@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% load humanize %}
 {% block content %}
+    {% include 'includes/banner.advert.html' %}
     <div class="container">
         <div class="row">
             <div class="col-lg-9 col-sm-12">
@@ -68,7 +69,7 @@
                 </div>
             </div>
             <div class="col-lg-3 col-sm-12 bg-dark">
-            {% include 'includes/sidebar.advert.html' %}
+                {% include 'includes/sidebar.advert.html' %}
                 <div class="container mb-2 mt-2">
                     <h6>Tags</h6>
                     <div class="container">
@@ -94,7 +95,7 @@
                     <div class="row">
                         {% with media_type=post_type %}
                             {% for media in similar_posts %}
-                                {% if media.id != post.id and media.author.user.id != post.author.user.id %}
+                                {% if media.id != post.id or media.author.user.id != post.author.user.id %}
                                     <div class="col-lg-6 col-sm-12">
                                         {% include 'includes/card.media_preview.html' %}
                                     </div>
@@ -103,10 +104,14 @@
                         {% endwith %}
                     </div>
                     <hr>
-                    <a class="btn btn-sm btn-info" href="#">Report</a>
+                    {% if post.author.id != request.user.id %}
+                        <a class="btn btn-sm btn-info"
+                           href="{% url 'report_post' post_id=post.id post_type=post_type %}">Report</a>
+                    {% endif %}
                     {# Show Edit and Delete if ti belongs to current user #}
                     {% if post.author.id == request.user.id %}
-                        <a class="btn btn-sm btn-warning" href="{% url 'edit_post' post_type=post_type post_id=post.id %}">Edit/Delete</a>
+                        <a class="btn btn-sm btn-warning"
+                           href="{% url 'edit_post' post_type=post_type post_id=post.id %}">Edit/Delete</a>
                     {% endif %}
                 </div>
             </div>

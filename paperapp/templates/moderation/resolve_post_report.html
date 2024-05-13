@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+{% load humanize %}
+{% block content %}
+    <h3>{{ report }}</h3>
+    <p>You are about to resolve the following post report:</p>
+    <div class="mb-2">
+        {% if report.image %}
+            <img src="{{ report.image.file.url }}" alt="{{ report.image.title }}" class="img-fluid">
+            <h5 class="mt-2">{{ report.image.title }}</h5>
+            <p>{{ report.image.description }}</p>
+        {% elif report.audio %}
+            <img src="{{ report.audio.thumbnail.url }}" alt="{{ report.audio.title }}">
+            <audio controls>
+                <source src="{{ report.audio.file.url }}" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+            <h5 class="mt-2">{{ report.audio.title }}</h5>
+            <p>{{ report.audio.description }}</p>
+        {% elif report.video %}
+            <video controls>
+                <source src="{{ report.video.file.url }}" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+            <h5 class="mt-2">{{ report.video.title }}</h5>
+            <p>{{ report.video.description }}</p>
+        {% endif %}
+    </div>
+
+    <form method="POST">
+        <div class="card text-white bg-dark mb-2">
+            <div class="card-header">Reason: {{ report.reason }} {% if report.image.hidden %}
+                <span class="badge bg-warning">Currently Hidden</span>{% endif %}</div>
+            <div class="card-body">
+                <h4 class="card-title">Reported by: <a
+                        href="{% url 'view_user' user_id=report.reporter.id %}">{{ report.reporter }}</a></h4>
+                <p class="card-text">Reported at: {{ report.created_at|naturalday }}</p>
+                <hr>
+                <p>
+                    In order for the moderator to resolve this report, the Reporters reasoning needs to be evaluated
+                    against
+                    community guidelines and the content of the post.<br>
+                    The Moderator can then either Hide the post, Delete the Post or Dismiss the report. Once they have
+                    done
+                    so, they can set the report as resolved and provide the rationale for their decision.<br>
+                    <strong class="text-danger">Remember, deletion is irreversible.</strong><br>
+                    Once resolved, the reporter and author will be notified of the action taken.
+                </p>
+            </div>
+            <div class="card-footer">
+                {% csrf_token %}
+                {{ form.as_p }}
+                {% if report.image %}
+                    {% if report.image.hidden %}
+                        <a href="{% url 'unhide_post' post_type='image' post_id=report.image.id %}"
+                           class="btn btn-success">Unhide Image</a>
+                    {% else %}
+                        <a href="{% url 'hide_post' post_type='image' post_id=report.image.id %}"
+                           class="btn btn-danger">Hide Image</a>
+                    {% endif %}
+                {% elif report.audio %}
+                    {% if report.audio.hidden %}
+                        <a href="{% url 'hide_post' post_type='audio' post_id=report.audio.id %}"
+                           class="btn btn-warning">Hide Audio</a>
+                    {% else %}
+                        <a href="{% url 'unhide_post' post_type='audio' post_id=report.audio.id %}"
+                           class="btn btn-danger">Unhide Audio</a>
+                    {% endif %}
+                {% elif report.video %}
+                    {% if report.video.hidden %}
+                        <a href="{% url 'hide_post' post_type='video' post_id=report.video.id %}"
+                           class="btn btn-warning">Hide Video</a>
+                    {% else %}
+                        <a href="{% url 'unhide_post' post_type='video' post_id=report.video.id %}"
+                           class="btn btn-danger">Unhide Video</a>
+                    {% endif %}
+                {% endif %}
+            </div>
+            <div class="card-footer">
+                <button type="submit" class="btn btn-warning">Resolve</button>
+                <a href="{% url 'moderator_dashboard' %}" class="btn btn-primary">Cancel</a>
+            </div>
+        </div>
+    </form>
+
+{% endblock %}

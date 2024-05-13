@@ -11,6 +11,12 @@ urlpatterns = [
         views.delete_post,
         name="delete_post",
     ),
+    path("hide_post/<str:post_type>/<int:post_id>/", views.hide_post, name="hide_post"),
+    path(
+        "unhide_post/<str:post_type>/<int:post_id>/",
+        views.unhide_post,
+        name="unhide_post",
+    ),
     path("view_post/<str:post_type>/<int:post_id>/", views.view_post, name="view_post"),
     path("search/", views.search, name="search"),
     path(

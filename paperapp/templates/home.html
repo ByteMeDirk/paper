@@ -1,11 +1,12 @@
 {% extends "base.html" %}
 
 {% block content %}
+        {% include 'includes/banner.advert.html' %}
     <div class="row">
         <div class="col-lg-2 col-md-3 col-sm-12">
             <small>
-                <p>Recent Tags</p>
-                {% for tag in recent_20_tags %}
+                <p>Common Tags</p>
+                {% for tag in recent_tags %}
                     <a href="{% url 'search' %}?q={{ tag.name }}" class="badge bg-info">{{ tag.name }}</a>
                 {% endfor %}
             </small>

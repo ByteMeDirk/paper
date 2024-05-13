@@ -1,0 +1,279 @@
+{% extends 'base.html' %}
+{% load humanize %}
+
+{% block content %}
+    <h3>Moderator Dashboard</h3>
+    <hr>
+    <h5>User Reports</h5>
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th scope="col">Reporter</th>
+            <th scope="col">Reported</th>
+            <th scope="col">Reason</th>
+            <th scope="col">Resolved</th>
+            <th scope="col">Created At</th>
+            <th scope="col">Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for user_report in user_reports_page_obj %}
+            <tr class="table-active">
+                <td>
+                    <a href="{% url 'view_user' user_id=user_report.reporter.id %}">{{ user_report.reporter }}</a>
+                </td>
+                <td>
+                    <a href="{% url 'view_user' user_id=user_report.reported.id %}">{{ user_report.reported }}</a>
+                </td>
+                <td>{{ user_report.reason }}</td>
+                <td>{{ user_report.resolved }}</td>
+                <td>{{ user_report.created_at|naturalday }}</td>
+                <td>
+                    <a href="{% url 'resolve_user_report' report_id=user_report.id %}" class="btn btn-sm btn-success">Resolve</a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <nav aria-label="Page navigation example">
+        <ul class="pagination">
+            {% if user_reports_page_obj.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?user_reports_page={{ user_reports_page_obj.previous_page_number }}">Previous</a>
+                </li>
+            {% else %}
+                <li class="page-item disabled">
+                    <a class="page-link" href="#">Previous</a>
+                </li>
+            {% endif %}
+
+            {% for i in user_reports_page_obj.paginator.page_range %}
+                {% if user_reports_page_obj.number == i %}
+                    <li class="page-item"><a class="page-link" href="?user_reports_page={{ i }}">{{ i }}</a></li>
+                {% else %}
+                    <li class="page-item"><a class="page-link" href="?user_reports_page={{ i }}">{{ i }}</a></li>
+                {% endif %}
+            {% endfor %}
+
+            {% if user_reports_page_obj.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?user_reports_page={{ user_reports_page_obj.next_page_number }}">Next</a>
+                </li>
+            {% else %}
+                <li class="page-item disabled">
+                    <a class="page-link" href="#">Next</a>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
+    <hr>
+    <h5>Post Reports</h5>
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th scope="col">Reporter</th>
+            <th scope="col">Post</th>
+            <th scope="col">Reason</th>
+            <th scope="col">Resolved</th>
+            <th scope="col">Created At</th>
+            <th scope="col">Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for post_report in post_reports_page_obj %}
+            <tr class="table-active">
+                <td>
+                    <a href="{% url 'view_user' user_id=post_report.reporter.id %}">{{ post_report.reporter }}</a>
+                </td>
+                <td>
+                    {% if post_report.image %}
+                        <a href="{% url 'view_post' post_type='image' post_id=post_report.image.id %}">Image: {{ post_report.image.title }}</a>
+                    {% elif post_report.video %}
+                        <a href="{% url 'view_post' post_type='video' post_id=post_report.video.id %}">Video: {{ post_report.video.title }}</a>
+                    {% elif post_report.audio %}
+                        <a href="{% url 'view_post' post_type='audio' post_id=post_report.audio.id %}">Audio: {{ post_report.audio.title }}</a>
+                    {% endif %}
+                </td>
+                <td>{{ post_report.reason }}</td>
+                <td>{{ post_report.resolved }}</td>
+                <td>{{ post_report.created_at|naturalday }}</td>
+                <td>
+                    <a href="{% url 'resolve_post_report' report_id=post_report.id %}"
+                       class="btn btn-sm btn-success">Resolve</a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <nav aria-label="Page navigation example">
+        <ul class="pagination">
+            {% if post_reports_page_obj.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?post_reports_page={{ post_reports_page_obj.previous_page_number }}">Previous</a>
+                </li>
+            {% else %}
+                <li class="page-item disabled">
+                    <a class="page-link" href="#">Previous</a>
+                </li>
+            {% endif %}
+
+            {% for i in post_reports_page_obj.paginator.page_range %}
+                {% if post_reports_page_obj.number == i %}
+                    <li class="page-item"><a class="page-link" href="?post_reports_page={{ i }}">{{ i }}</a></li>
+                {% else %}
+                    <li class="page-item"><a class="page-link" href="?post_reports_page={{ i }}">{{ i }}</a></li>
+                {% endif %}
+            {% endfor %}
+
+            {% if post_reports_page_obj.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?post_reports_page={{ post_reports_page_obj.next_page_number }}">Next</a>
+                </li>
+            {% else %}
+                <li class="page-item disabled">
+                    <a class="page-link" href="#">Next</a>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
+    <hr>
+    <h5>Resolved User Reports</h5>
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th scope="col">Reporter</th>
+            <th scope="col">Reported</th>
+            <th scope="col">Resolved Reason</th>
+            <th scope="col">Resolved By</th>
+            <th scope="col">Created At</th>
+            <th scope="col">Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for user_report in resolved_user_reports_page_obj %}
+            <tr class="table-active">
+                <td>
+                    <a href="{% url 'view_user' user_id=user_report.reporter.id %}">{{ user_report.reporter }}</a>
+                </td>
+                <td>
+                    <a href="{% url 'view_user' user_id=user_report.reported.id %}">{{ user_report.reported }}</a>
+                </td>
+                <td>{{ user_report.resolved_message }}</td>
+                <td>{{ user_report.resolved_by }}</td>
+                <td>{{ user_report.created_at|naturalday }}</td>
+                <td>
+                     <a href="{% url 'reopen_report' report_id=user_report.id report_type='user' %}" class="btn btn-sm btn-warning">Reopen</a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <nav aria-label="Page navigation example">
+        <ul class="pagination">
+            {% if resolved_user_reports_page_obj.has_previous %}
+                <li class="page-item">
+                    <a class="page-link"
+                       href="?resolved_user_reports_page={{ resolved_user_reports_page_obj.previous_page_number }}">Previous</a>
+                </li>
+            {% else %}
+                <li class="page-item disabled">
+                    <a class="page-link" href="#">Previous</a>
+                </li>
+            {% endif %}
+
+            {% for i in resolved_user_reports_page_obj.paginator.page_range %}
+                {% if resolved_user_reports_page_obj.number == i %}
+                    <li class="page-item"><a class="page-link" href="?resolved_user_reports_page={{ i }}">{{ i }}</a>
+                    </li>
+                {% else %}
+                    <li class="page-item"><a class="page-link" href="?resolved_user_reports_page={{ i }}">{{ i }}</a>
+                    </li>
+                {% endif %}
+            {% endfor %}
+
+            {% if resolved_user_reports_page_obj.has_next %}
+                <li class="page-item">
+                    <a class="page-link"
+                       href="?resolved_user_reports_page={{ resolved_user_reports_page_obj.next_page_number }}">Next</a>
+                </li>
+            {% else %}
+                <li class="page-item disabled">
+                    <a class="page-link" href="#">Next</a>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
+    <hr>
+    <h5>Resolved Post Reports</h5>
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th scope="col">Reporter</th>
+            <th scope="col">Post</th>
+               <th scope="col">Resolved Reason</th>
+            <th scope="col">Resolved By</th>
+            <th scope="col">Created At</th>
+            <th scope="col">Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for post_report in resolved_post_reports_page_obj %}
+            <tr class="table-active">
+                <td>
+                    <a href="{% url 'view_user' user_id=post_report.reporter.id %}">{{ post_report.reporter }}</a>
+                </td>
+                <td>
+                    {% if post_report.image %}
+                        <a href="{% url 'view_post' post_type='image' post_id=post_report.image.id %}">Image: {{ post_report.image.title }}</a>
+                    {% elif post_report.video %}
+                        <a href="{% url 'view_post' post_type='video' post_id=post_report.video.id %}">Video: {{ post_report.video.title }}</a>
+                    {% elif post_report.audio %}
+                        <a href="{% url 'view_post' post_type='audio' post_id=post_report.audio.id %}">Audio: {{ post_report.audio.title }}</a>
+                    {% endif %}
+                </td>
+                <td>{{ post_report.resolved_message }}</td>
+                <td>{{ post_report.resolved_by }}</td>
+                <td>{{ post_report.created_at|naturalday }}</td>
+                <td>
+                    <a href="{% url 'reopen_report' report_id=post_report.id report_type='post' %}" class="btn btn-sm btn-warning">Reopen</a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <nav aria-label="Page navigation example">
+        <ul class="pagination">
+            {% if resolved_post_reports_page_obj.has_previous %}
+                <li class="page-item">
+                    <a class="page-link"
+                       href="?resolved_post_reports_page={{ resolved_post_reports_page_obj.previous_page_number }}">Previous</a>
+                </li>
+            {% else %}
+                <li class="page-item disabled">
+                    <a class="page-link" href="#">Previous</a>
+                </li>
+            {% endif %}
+
+            {% for i in resolved_post_reports_page_obj.paginator.page_range %}
+                {% if resolved_post_reports_page_obj.number == i %}
+                    <li class="page-item"><a class="page-link" href="?resolved_post_reports_page={{ i }}">{{ i }}</a>
+                    </li>
+                {% else %}
+                    <li class="page-item"><a class="page-link" href="?resolved_post_reports_page={{ i }}">{{ i }}</a>
+                    </li>
+                {% endif %}
+            {% endfor %}
+
+            {% if resolved_post_reports_page_obj.has_next %}
+                <li class="page-item">
+                    <a class="page-link"
+                       href="?resolved_post_reports_page={{ resolved_post_reports_page_obj.next_page_number }}">Next</a>
+                </li>
+            {% else %}
+                <li class="page-item disabled">
+                    <a class="page-link" href="#">Next</a>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
+{% endblock %}

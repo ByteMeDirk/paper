@@ -25,9 +25,9 @@ def get_media_pagination(
         video_media = VideoPost.objects.filter(author__id=user_id).order_by(order_by)
         audio_media = AudioPost.objects.filter(author__id=user_id).order_by(order_by)
     else:
-        image_media = ImagePost.objects.all().order_by(order_by)
-        video_media = VideoPost.objects.all().order_by(order_by)
-        audio_media = AudioPost.objects.all().order_by(order_by)
+        image_media = ImagePost.objects.filter(hidden=False).order_by(order_by)
+        video_media = VideoPost.objects.filter(hidden=False).order_by(order_by)
+        audio_media = AudioPost.objects.filter(hidden=False).order_by(order_by)
 
     # Define Media Pagination
     image_paginator = Paginator(image_media, page_limit)

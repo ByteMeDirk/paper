@@ -1,6 +1,9 @@
 from django.contrib import messages
+from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
+from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
 
 from multimedia.models import ImagePost, VideoPost, AudioPost
@@ -104,10 +107,15 @@ def view_user(request, user_id):
     )
 
     total_posts = (
-        ImagePost.objects.filter(author=profile.user).count()
-        + VideoPost.objects.filter(author=profile.user).count()
-        + AudioPost.objects.filter(author=profile.user).count()
+            ImagePost.objects.filter(author=profile.user).count()
+            + VideoPost.objects.filter(author=profile.user).count()
+            + AudioPost.objects.filter(author=profile.user).count()
     )
+
+    if not profile.user.is_active:
+        messages.error(request, "This user's profile is hidden.")
+        return redirect("home")
+
     return render(
         request,
         "users/view_user.html",
@@ -119,3 +127,39 @@ def view_user(request, user_id):
             "total_posts": total_posts,
         },
     )
+
+
+@login_required(login_url="login")
+@staff_member_required
+def hide_user(request, user_id):
+    """
+    This view hides a user's profile from the public view.
+    It is only accessible to staff members.
+    """
+    user = Profile.objects.get(user_id=user_id)
+    user.hidden = True
+    user.save()
+    messages.success(request, "User hidden successfully.")
+    return redirect("moderator_dashboard")
+
+
+@login_required
+@staff_member_required
+def deactivate_user(request, user_id):
+    previous_page = request.META.get("HTTP_REFERER")
+    user = User.objects.get(id=user_id)
+    user.is_active = False
+    user.save()
+    messages.success(request, f"User {user.username} has been deactivated.")
+    return HttpResponseRedirect(previous_page)
+
+
+@login_required
+@staff_member_required
+def activate_user(request, user_id):
+    previous_page = request.META.get("HTTP_REFERER")
+    user = User.objects.get(id=user_id)
+    user.is_active = True
+    user.save()
+    messages.success(request, f"User {user.username} has been activated.")
+    return HttpResponseRedirect(previous_page)

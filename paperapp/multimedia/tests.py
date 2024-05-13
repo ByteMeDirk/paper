@@ -89,23 +89,23 @@ class EditPostViewTest(TestCase):
 
         # Get or create Profile
         self.profile, created = Profile.objects.get_or_create(user=self.user)
-        self.client.login(username='testuser', password='testpassword')
+        self.client.login(username="testuser", password="testpassword")
 
         self.image_file = SimpleUploadedFile(
-            name='avatars/default.png',
-            content=open('media/avatars/default.png', 'rb').read(),
-            content_type='image/jpeg'
+            name="avatars/default.png",
+            content=open("media/avatars/default.png", "rb").read(),
+            content_type="image/jpeg",
         )
 
         self.post = ImagePost.objects.create(
             author=self.user,
-            title='Test Image',
-            description='Test Description',
+            title="Test Image",
+            description="Test Description",
             file=self.image_file,
-            tags='test, image'
+            tags="test, image",
         )
 
-        self.edit_post_url = reverse('edit_post', args=['image', self.post.id])
+        self.edit_post_url = reverse("edit_post", args=["image", self.post.id])
 
     def tearDown(self):
         self.profile.delete()
@@ -115,7 +115,7 @@ class EditPostViewTest(TestCase):
     def test_edit_post_view(self):
         response = self.client.get(self.edit_post_url)
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'multimedia/edit_post.html')
+        self.assertTemplateUsed(response, "multimedia/edit_post.html")
 
 
 class DeletePostViewTest(TestCase):
@@ -130,23 +130,23 @@ class DeletePostViewTest(TestCase):
 
         # Get or create Profile
         self.profile, created = Profile.objects.get_or_create(user=self.user)
-        self.client.login(username='testuser', password='testpassword')
+        self.client.login(username="testuser", password="testpassword")
 
         self.image_file = SimpleUploadedFile(
-            name='avatars/default.png',
-            content=open('media/avatars/default.png', 'rb').read(),
-            content_type='image/jpeg'
+            name="avatars/default.png",
+            content=open("media/avatars/default.png", "rb").read(),
+            content_type="image/jpeg",
         )
 
         self.post = ImagePost.objects.create(
             author=self.user,
-            title='Test Image',
-            description='Test Description',
+            title="Test Image",
+            description="Test Description",
             file=self.image_file,
-            tags='test, image'
+            tags="test, image",
         )
 
-        self.delete_post_url = reverse('delete_post', args=['image', self.post.id])
+        self.delete_post_url = reverse("delete_post", args=["image", self.post.id])
 
     def tearDown(self):
         self.profile.delete()
@@ -155,7 +155,7 @@ class DeletePostViewTest(TestCase):
     def test_delete_post_view(self):
         response = self.client.post(self.delete_post_url, follow=True)
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'home.html')
+        self.assertTemplateUsed(response, "home.html")
         with self.assertRaises(ImagePost.DoesNotExist):
             ImagePost.objects.get(pk=self.post.id)
 
@@ -172,23 +172,23 @@ class ViewPostTest(TestCase):
 
         # Get or create Profile
         self.profile, created = Profile.objects.get_or_create(user=self.user)
-        self.client.login(username='testuser', password='testpassword')
+        self.client.login(username="testuser", password="testpassword")
 
         self.image_file = SimpleUploadedFile(
-            name='avatars/default.png',
-            content=open('media/avatars/default.png', 'rb').read(),
-            content_type='image/jpeg'
+            name="avatars/default.png",
+            content=open("media/avatars/default.png", "rb").read(),
+            content_type="image/jpeg",
         )
 
         self.post = ImagePost.objects.create(
             author=self.user,
-            title='Test Image',
-            description='Test Description',
+            title="Test Image",
+            description="Test Description",
             file=self.image_file,
-            tags='test, image'
+            tags="test, image",
         )
 
-        self.view_post_url = reverse('view_post', args=['image', self.post.id])
+        self.view_post_url = reverse("view_post", args=["image", self.post.id])
 
     def tearDown(self):
         self.profile.delete()
@@ -199,7 +199,7 @@ class ViewPostTest(TestCase):
         initial_views = self.post.views
         response = self.client.get(self.view_post_url, follow=True)
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'multimedia/view_post.html')
+        self.assertTemplateUsed(response, "multimedia/view_post.html")
         self.post.refresh_from_db()
         self.assertEqual(self.post.views, initial_views + 1)
 
@@ -216,26 +216,26 @@ class SearchViewTest(TestCase):
 
         # Get or create Profile
         self.profile, created = Profile.objects.get_or_create(user=self.user)
-        self.client.login(username='testuser', password='testpassword')
+        self.client.login(username="testuser", password="testpassword")
 
         self.image_file = SimpleUploadedFile(
-            name='avatars/default.png',
-            content=open('media/avatars/default.png', 'rb').read(),
-            content_type='image/jpeg'
+            name="avatars/default.png",
+            content=open("media/avatars/default.png", "rb").read(),
+            content_type="image/jpeg",
         )
 
         self.post = ImagePost.objects.create(
             author=self.user,
-            title='Test Image',
-            description='Test Description',
+            title="Test Image",
+            description="Test Description",
             file=self.image_file,
-            tags='test, image'
+            tags="test, image",
         )
 
         with connection.cursor() as cursor:
             cursor.execute("CREATE EXTENSION IF NOT EXISTS pg_trgm;")
 
-        self.search_url = reverse('search') + '?q=test'
+        self.search_url = reverse("search") + "?q=test"
 
     def tearDown(self):
         self.profile.delete()
@@ -245,7 +245,7 @@ class SearchViewTest(TestCase):
     def test_search_view(self):
         response = self.client.get(self.search_url, follow=True)
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'multimedia/search_results.html')
+        self.assertTemplateUsed(response, "multimedia/search_results.html")
 
 
 class VoteViewTest(TestCase):
@@ -260,23 +260,23 @@ class VoteViewTest(TestCase):
 
         # Get or create Profile
         self.profile, created = Profile.objects.get_or_create(user=self.user)
-        self.client.login(username='testuser', password='testpassword')
+        self.client.login(username="testuser", password="testpassword")
 
         self.image_file = SimpleUploadedFile(
-            name='avatars/default.png',
-            content=open('media/avatars/default.png', 'rb').read(),
-            content_type='image/jpeg'
+            name="avatars/default.png",
+            content=open("media/avatars/default.png", "rb").read(),
+            content_type="image/jpeg",
         )
 
         self.post = ImagePost.objects.create(
             author=self.user,
-            title='Test Image',
-            description='Test Description',
+            title="Test Image",
+            description="Test Description",
             file=self.image_file,
-            tags='test, image'
+            tags="test, image",
         )
 
-        self.vote_url = reverse('vote', args=[self.post.id, 'image', 'up'])
+        self.vote_url = reverse("vote", args=[self.post.id, "image", "up"])
 
     def tearDown(self):
         self.profile.delete()
@@ -284,11 +284,13 @@ class VoteViewTest(TestCase):
         self.post.delete()
 
     def test_vote_view(self):
-        initial_votes = MediaRating.get_total_votes(self.post.id, 'image')
+        initial_votes = MediaRating.get_total_votes(self.post.id, "image")
         response = self.client.post(self.vote_url, follow=True)
         self.assertEqual(response.status_code, 200)
         self.post.refresh_from_db()
-        self.assertEqual(MediaRating.get_total_votes(self.post.id, 'image'), initial_votes + 1)
+        self.assertEqual(
+            MediaRating.get_total_votes(self.post.id, "image"), initial_votes + 1
+        )
 
 
 class ViewGalleryTest(TestCase):
@@ -303,23 +305,23 @@ class ViewGalleryTest(TestCase):
 
         # Get or create Profile
         self.profile, created = Profile.objects.get_or_create(user=self.user)
-        self.client.login(username='testuser', password='testpassword')
+        self.client.login(username="testuser", password="testpassword")
 
         self.image_file = SimpleUploadedFile(
-            name='avatars/default.png',
-            content=open('media/avatars/default.png', 'rb').read(),
-            content_type='image/jpeg'
+            name="avatars/default.png",
+            content=open("media/avatars/default.png", "rb").read(),
+            content_type="image/jpeg",
         )
 
         self.post = ImagePost.objects.create(
             author=self.user,
-            title='Test Image',
-            description='Test Description',
+            title="Test Image",
+            description="Test Description",
             file=self.image_file,
-            tags='test, image'
+            tags="test, image",
         )
 
-        self.view_gallery_url = reverse('view_gallery', args=['image'])
+        self.view_gallery_url = reverse("view_gallery", args=["image"])
 
     def tearDown(self):
         self.profile.delete()
@@ -329,7 +331,7 @@ class ViewGalleryTest(TestCase):
     def test_view_gallery(self):
         response = self.client.get(self.view_gallery_url, follow=True)
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'multimedia/view_gallery.html')
+        self.assertTemplateUsed(response, "multimedia/view_gallery.html")
 
 
 class TestImagePost(unittest.TestCase):
@@ -542,6 +544,7 @@ class TestMediaRating(unittest.TestCase):
 
     def test_media_rating_str(self):
         self.assertEqual(str(self.media_rating), "testuser rated 1 for None")
+
 
 # ToDo: After Moderation Feature is implemented
 # class TestMediaModeration(unittest.TestCase):
