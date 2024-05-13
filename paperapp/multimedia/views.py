@@ -420,18 +420,3 @@ def unhide_post(request, post_type, post_id):
     messages.success(request, "Post unhidden successfully.")
     return HttpResponseRedirect(previous_page)
 
-
-def download_image(url, file_path):
-    """
-    Download an image from a URL and save it to a file.
-
-    Args:
-    url (str): The URL of the image to download.
-    file_path (str): The path to the file where the image will be saved.
-    """
-    response = requests.get(url)
-
-    with open(file_path, 'wb') as file:
-        file.write(response.content)
-
-    return file_path
